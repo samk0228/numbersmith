@@ -1,0 +1,86 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Startup Financial Model Template: What Investors Expect | Numbersmith</title>
+<meta name="description" content="A startup financial model template walkthrough covering driver-based forecasting, the 8 things investors check, and a worked runway and raise-sizing example.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/startup-financial-model-what-investors-expect.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article><h1>Startup Financial Model Template: What Investors Expect</h1>
+<p>Most first-time founder models get the format right and the substance wrong. The tabs look correct, income statement, balance sheet, cash flow, but the numbers underneath are typed in rather than driven by assumptions, and the balance sheet does not actually balance. Investors notice within the first two minutes of opening the file. This guide covers how to build a model that holds up, and the specific things a diligence-minded investor checks before they check anything else.</p>
+<h2>Driver-based vs. top-down</h2>
+<p>A <strong>top-down</strong> model starts from a market size and assumes a share of it: "the market is $10B, if we capture 1% that's $100M." It is fast to build and tells an investor almost nothing about how the business actually works.</p>
+<p>A <strong>driver-based</strong> model starts from the mechanics of the business: how many leads you generate, what fraction convert, what they pay, how long they stay, what it costs to serve them, and how many people you need to hire to support that growth. Revenue and costs are formulas built from those drivers, not typed-in targets.</p>
+<p>The test is simple: if you change one assumption cell, for example the sales conversion rate, does the effect ripple correctly through pipeline, revenue, cost of goods sold, headcount, and cash. In a driver-based model it does. In a top-down model, nothing moves, because nothing was ever connected.</p>
+<h2>The three statements, and why the balance sheet must balance</h2>
+<p>A complete model has three linked statements:</p>
+<ul>
+<li>The <strong>income statement</strong>, which shows whether the business is profitable on paper.</li>
+<li>The <strong>cash flow statement</strong>, which shows what actually happened to cash, including timing effects that the income statement ignores.</li>
+<li>The <strong>balance sheet</strong>, which shows what the company owns and owes at a point in time.</li>
+</ul>
+<p>The balance sheet has to balance: <code>Assets = Liabilities + Equity</code>, every month, every year, with no plug. If it does not balance, something in the model is broken, usually a cash flow item that is not flowing back into the cash balance, or a change in a balance sheet account that never hit the cash flow statement. Investors who know how to build models will check this first, often by scrolling straight to the balance sheet tab and looking at whether assets minus liabilities minus equity nets to zero in every column. A model that fails this test does not get a second look, regardless of how good the story is.</p>
+<h2>The 8 assumptions investors pull on</h2>
+<p>These are the cells an experienced investor clicks into first, because they reveal whether the founder understands their own unit economics or is telling a story on top of round numbers.</p>
+<ol>
+<li><strong>Growth rate.</strong> Month-over-month or year-over-year, and whether it is consistent with what similar companies actually achieved at the same stage, not an aspirational curve that bends upward for no operational reason.</li>
+<li><strong>Churn.</strong> Monthly logo churn and revenue churn, separately. A model with 2% monthly churn typed in but no explanation of how that compares to the company's actual cohort data is a red flag.</li>
+<li><strong>CAC (customer acquisition cost).</strong> Fully loaded, including sales and marketing salaries, not just ad spend. A model that only counts ad spend in CAC is undercounting it, often by half or more.</li>
+<li><strong>CAC payback period.</strong> How many months of gross profit from a customer it takes to recover the cost of acquiring them. Investors read this as a proxy for capital efficiency.</li>
+<li><strong>Gross margin.</strong> The percentage of revenue left after the direct cost of delivering the product, and whether it is trending toward a defensible long-run number for the business model, not held flat at an optimistic figure indefinitely.</li>
+<li><strong>Hiring plan.</strong> Headcount by function and month, each with a fully loaded cost (salary, payroll tax, benefits, roughly 1.25 to 1.3x base salary). This is usually the largest cost line and the one most often modeled with a single "average salary" number instead of role-by-role detail.</li>
+<li><strong>Burn multiple.</strong> Net burn divided by net new annualized recurring revenue over the same period. It answers: how much cash does it take to generate a dollar of new recurring revenue.</li>
+<li><strong>Runway.</strong> Months of cash remaining at the current or projected burn rate, and whether it is calculated against a burn rate that changes over time (it almost always does) rather than a single static number.</li>
+</ol>
+<h2>A worked runway and raise-sizing example</h2>
+<p>Say the company has <strong>$600,000</strong> in the bank. Current monthly revenue is <strong>$40,000</strong> and current monthly operating expense is <strong>$140,000</strong>, for a net monthly burn of <strong>$100,000</strong>.</p>
+<ul>
+<li>Runway today = Cash / Monthly burn = 600,000 / 100,000 = <strong>6 months</strong></li>
+</ul>
+<p>The company plans to hire four people at a fully loaded cost of <strong>$12,000 per month</strong> each, adding <strong>$48,000</strong> a month in new operating expense starting immediately.</p>
+<ul>
+<li>New monthly burn = 100,000 + 48,000 = <strong>$148,000</strong></li>
+</ul>
+<p>The target is 18 months of runway after the raise closes. The raise amount needed:</p>
+<ul>
+<li>Raise = (New monthly burn × Target runway in months) − Cash on hand</li>
+<li>Raise = (148,000 × 18) − 600,000 = 2,664,000 − 600,000 = <strong>$2,064,000</strong></li>
+</ul>
+<p>Add a buffer for one-time costs (legal fees, a security deposit on new office space, a slower-than-planned ramp in revenue), typically 10% to 15%:</p>
+<ul>
+<li>Raise with buffer = 2,064,000 × 1.15 ≈ <strong>$2,373,600</strong></li>
+</ul>
+<p>So the founder should be raising roughly <strong>$2.1M to $2.4M</strong>, not a round number pulled from what a peer company raised. That is the difference between a raise size that is defensible in a partner meeting and one that is not.</p>
+<p>For the burn multiple check on this same business: if the $48,000 in new hires is expected to drive <strong>$1,200,000</strong> in net new annualized recurring revenue over the following year, and annualized net burn is 148,000 × 12 = $1,776,000:</p>
+<ul>
+<li>Burn multiple = Net burn / Net new ARR = 1,776,000 / 1,200,000 ≈ <strong>1.5</strong></li>
+</ul>
+<p>A burn multiple near 1.5 is reasonable for an early-stage company still building its go-to-market motion; below 1 is strong, and above 2 to 3 invites questions about whether growth spend is actually working.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Typing in revenue instead of deriving it</strong> from leads, conversion rate, and average deal size, or from signups, activation rate, and pricing.</li>
+<li><strong>Flat gross margin forever</strong>, with no modeling of how margin improves (or does not) as the business scales.</li>
+<li><strong>A hiring plan with no start dates</strong>, so every new hire's cost hits the model on day one of the year instead of the month they actually start.</li>
+<li><strong>A balance sheet that does not balance</strong>, usually because retained earnings is not correctly rolling forward net income, or a cash flow line item was never linked back to its balance sheet account.</li>
+<li><strong>CAC that excludes salaries</strong>, which understates the true cost of growth and makes the payback period look better than it is.</li>
+<li><strong>No sensitivity or downside case</strong>, so the only version of the future in the model is the one where everything goes right.</li>
+<li><strong>Circular references left unresolved</strong>, commonly from a revolving credit line or cash-interest calculation, that make the file recalculate unpredictably or crash when opened on someone else's machine.</li>
+</ul>
+<h2>Checklist</h2>
+<p>Before sending a model to an investor, confirm:</p>
+<ul>
+<li>Revenue and costs are formulas driven by assumptions, not typed-in numbers.</li>
+<li>The balance sheet balances in every period, with no plug.</li>
+<li>All three statements are linked, so a change in one flows through the others.</li>
+<li>Growth, churn, CAC, payback, and gross margin are each in their own labeled assumption cell, with an inline note on the source (actual data vs. estimate).</li>
+<li>The hiring plan has a start month for every role and a fully loaded cost, not a base salary alone.</li>
+<li>Burn multiple and runway are calculated as formulas, not typed in, so they update automatically as assumptions change.</li>
+<li>There is a base case, an upside case, and a downside case, not just one scenario.</li>
+<li>The file opens cleanly with no broken links, no broken cell references, and no unresolved circular references.</li>
+</ul>
+<p>If you want a starting point that already has these links built correctly, see <a href="/numbersmith/products/startup-financial-model.html">a finished startup financial model template</a>. For a quick runway and raise-size check without opening a full model, try the free <a href="/numbersmith/tools/runway-calculator.html">runway calculator</a>.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>

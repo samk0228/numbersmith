@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Startup runway and raise calculator | Numbersmith</title>
+<meta name="description" content="Free calculator: months of runway from cash and burn, cash-out date, and how much to raise for the runway you want. Runs in your browser.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/tools/runway-calculator.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><!-- title: Startup runway and raise calculator -->
+<!-- desc: Free calculator: months of runway from cash and burn, cash-out date, and how much to raise for the runway you want. Runs in your browser. -->
+<h1>Startup runway and raise calculator</h1>
+<p>Type your numbers. Everything runs in your browser; nothing is sent anywhere.</p>
+<div class="tool">
+<div class="row">
+<div><label>Cash in the bank ($)</label><input id="cash" type="number" value="400000"></div>
+<div><label>Monthly revenue ($)</label><input id="rev" type="number" value="20000"></div>
+<div><label>Monthly expenses ($)</label><input id="exp" type="number" value="65000"></div>
+</div>
+<div class="row">
+<div><label>Revenue growth per month (%)</label><input id="g" type="number" value="8" step="0.5"></div>
+<div><label>Expense growth per month (%)</label><input id="eg" type="number" value="2" step="0.5"></div>
+<div><label>Runway you want after raising (months)</label><input id="want" type="number" value="18"></div>
+</div>
+<div class="out" id="out"></div>
+</div>
+<p><small>Runway counts months until cash goes below zero using compounding growth on revenue and expenses. Raise needed is the extra cash required so that the minimum cash balance over the target window stays at or above zero, plus a 10% buffer. For education and planning only, not financial advice.</small></p>
+<p>Want the full model behind this, with hiring plan, unit economics, and three statements? See the <a href="/numbersmith/products/startup-financial-model.html">Startup Financial Model</a>.</p>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  function fmt(n){return n.toLocaleString(undefined,{maximumFractionDigits:0});}
+  function calc(){
+    let cash=+$("cash").value, rev=+$("rev").value, exp=+$("exp").value, g=+$("g").value/100, eg=+$("eg").value/100, want=+$("want").value;
+    let c=cash, m=0, out=null, minBal=cash, r=rev, e=exp, burn0=exp-rev;
+    for(m=1;m<=120;m++){ c += r - e; if(c<minBal) minBal=c; if(c<0 && out===null){out=m;} r*= (1+g); e*=(1+eg); }
+    // raise needed for `want` months: simulate again over want months, find min balance
+    let c2=cash, r2=rev, e2=exp, min2=cash;
+    for(let i=1;i<=want;i++){ c2 += r2-e2; if(c2<min2) min2=c2; r2*=(1+g); e2*=(1+eg); }
+    let raise = min2<0 ? Math.ceil((-min2)*1.10/1000)*1000 : 0;
+    const d=new Date(); const co = out? new Date(d.getFullYear(), d.getMonth()+out, 1) : null;
+    let profitMonth=null; let rr=rev, ee=exp; for(let i=1;i<=120;i++){ rr*=(1+g); ee*=(1+eg); if(rr>=ee){profitMonth=i;break;} }
+    $("out").innerHTML =
+      `<p>Net burn today: <b>$${fmt(Math.max(burn0,0))}/mo</b></p>`+
+      (out? `<p>Runway: <b>${out} months</b> (cash-out around ${co.toLocaleString(undefined,{month:"short",year:"numeric"})})</p>` : `<p>Runway: <b>more than 10 years</b> on these numbers (cash never goes negative)</p>`)+
+      (profitMonth? `<p>Revenue passes expenses in month <b>${profitMonth}</b> at these growth rates</p>` : `<p>Revenue does not pass expenses within 10 years at these growth rates</p>`)+
+      (raise>0? `<p>To have ${want} months of runway from today: raise about <b>$${fmt(raise)}</b> (includes 10% buffer)</p>` : `<p>You already have ${want} months of runway. No raise needed for that window.</p>`);
+  }
+  ["cash","rev","exp","g","eg","want"].forEach(id=>$(id).addEventListener("input",calc)); calc();
+})();
+</script>
+</main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>

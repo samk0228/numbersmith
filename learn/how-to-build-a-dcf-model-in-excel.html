@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Build a DCF Model in Excel: A Step-by-Step Guide | Numbersmith</title>
+<meta name="description" content="Build a DCF model in Excel from the 10-K up: a 5-year FCF projection, WACC with CAPM, two terminal value methods, mid-year discounting, and a bridge to price.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/how-to-build-a-dcf-model-in-excel.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article><h1>How to Build a DCF Model in Excel: A Step-by-Step Guide</h1>
+<p>A discounted cash flow model answers one question: what is the business worth today, given the cash it will generate in the future. Everything else, the tabs, the formatting, the scenario toggles, is in service of that one number. This guide walks through building a full DCF in Excel with a worked example using round numbers, so you can follow the arithmetic by hand and then rebuild it in your own workbook.</p>
+<h2>Step 1: Gather your inputs from the 10-K</h2>
+<p>Before opening Excel, pull the following from the company's most recent 10-K (or 10-Q for the trailing quarter):</p>
+<ul>
+<li><strong>Revenue and segment detail</strong> from the income statement in Item 8, plus the segment footnote for growth by business line.</li>
+<li><strong>Operating margin history</strong> (3 to 5 years) from the income statement, so your projected margin is grounded in what the company has actually done.</li>
+<li><strong>Depreciation and amortization</strong> from the cash flow statement and the PP&amp;E footnote, expressed as a percent of revenue.</li>
+<li><strong>Capital expenditure</strong> from the investing section of the cash flow statement, same treatment.</li>
+<li><strong>Working capital accounts</strong> (receivables, inventory, payables) from the balance sheet, to estimate how much cash gets tied up as revenue grows.</li>
+<li><strong>Effective tax rate</strong> from the income tax footnote, and the statutory rate the company expects to trend toward.</li>
+<li><strong>Debt schedule</strong> from the long-term debt footnote, for the interest rate and the mix of fixed and floating debt.</li>
+<li><strong>Share count</strong>, basic and diluted, from the cover page and the earnings-per-share footnote.</li>
+<li><strong>Net debt</strong>, cash plus short-term investments minus total debt, from the balance sheet.</li>
+</ul>
+<p>Management's Discussion and Analysis (Item 7) is where you find the qualitative color: why margins moved, what capex is funding, what management expects for the next year. Use it to sanity-check the numbers you project, not as a substitute for them.</p>
+<h2>Step 2: Project free cash flow (a worked 5-year example)</h2>
+<p>Free cash flow to the firm is <code>NOPAT + D&amp;A − Capex − Increase in net working capital</code>. Here is a full five-year projection using clean, round inputs so the mechanics are easy to follow.</p>
+<p>Assumptions: revenue starts at <strong>$1,000</strong> and grows <strong>10% a year</strong>, operating margin holds at <strong>20%</strong>, the tax rate is <strong>25%</strong>, D&amp;A runs at <strong>5% of revenue</strong>, capex runs at <strong>6% of revenue</strong>, and working capital equals <strong>10% of revenue</strong> (so the cash tied up each year is 10% of the year-over-year revenue increase).</p>
+<ul>
+<li><strong>Year 1:</strong> revenue $1,100, EBIT $220, NOPAT $165, D&amp;A $55, capex $66, change in NWC $10 → <strong>FCF $144</strong></li>
+<li><strong>Year 2:</strong> revenue $1,210, EBIT $242, NOPAT $182, D&amp;A $61, capex $73, change in NWC $11 → <strong>FCF $159</strong></li>
+<li><strong>Year 3:</strong> revenue $1,331, EBIT $266, NOPAT $200, D&amp;A $67, capex $80, change in NWC $12 → <strong>FCF $175</strong></li>
+<li><strong>Year 4:</strong> revenue $1,464, EBIT $293, NOPAT $220, D&amp;A $73, capex $88, change in NWC $13 → <strong>FCF $192</strong></li>
+<li><strong>Year 5:</strong> revenue $1,610, EBIT $322, NOPAT $242, D&amp;A $81, capex $97, change in NWC $15 → <strong>FCF $211</strong></li>
+</ul>
+<p>In Excel, build this as five rows (revenue, EBIT, tax, NOPAT, D&amp;A, capex, change in NWC, FCF) across five year columns, with every line as a formula off the assumptions cell, not a typed number. That is what lets the sensitivity table in Step 7 actually work.</p>
+<h2>Step 3: Calculate WACC</h2>
+<p>The weighted average cost of capital is the discount rate. It blends the cost of equity and the after-tax cost of debt, weighted by their share of the capital structure.</p>
+<p><strong>Cost of equity, using CAPM:</strong> <code>Cost of equity = Risk-free rate + Beta × Equity risk premium</code></p>
+<p>With a risk-free rate of <strong>4.0%</strong> (the 10-year Treasury yield), a beta of <strong>1.2</strong>, and an equity risk premium of <strong>5.5%</strong>:</p>
+<ul>
+<li>Cost of equity = 4.0% + (1.2 × 5.5%) = 4.0% + 6.6% = <strong>10.6%</strong></li>
+</ul>
+<p><strong>After-tax cost of debt:</strong> <code>Pre-tax cost of debt × (1 − Tax rate)</code></p>
+<p>With a pre-tax cost of debt of <strong>5.0%</strong> and the same 25% tax rate:</p>
+<ul>
+<li>After-tax cost of debt = 5.0% × (1 − 0.25) = <strong>3.75%</strong></li>
+</ul>
+<p><strong>Weights:</strong> use market values, not book values. Here, equity is 80% of the capital structure and debt is 20%.</p>
+<ul>
+<li>WACC = (0.80 × 10.6%) + (0.20 × 3.75%) = 8.48% + 0.75% = <strong>9.2%</strong> (rounded)</li>
+</ul>
+<p>In Excel, build each input as its own labeled cell (risk-free rate, beta, ERP, pre-tax cost of debt, tax rate, weights) and let WACC be a formula that references them. You will want to flex beta and the risk-free rate later without hunting for where they live.</p>
+<h2>Step 4: Terminal value, two ways</h2>
+<p>The terminal value captures everything after the explicit forecast period, and it is usually the majority of enterprise value, so build it two ways and compare.</p>
+<p><strong>Gordon growth method:</strong> <code>TV = FCF_final × (1 + g) / (WACC − g)</code></p>
+<p>Using Year 5 FCF of $211, a long-run growth rate of <strong>2.5%</strong>, and WACC of 9.2%:</p>
+<ul>
+<li>TV = 211 × 1.025 / (0.092 − 0.025) = 216.3 / 0.067 = <strong>$3,228</strong></li>
+</ul>
+<p><strong>Exit multiple method:</strong> <code>TV = Final-year EBITDA × Exit multiple</code></p>
+<p>Year 5 EBITDA is EBIT plus D&amp;A: 322 + 81 = $403. At a <strong>10x EV/EBITDA</strong> exit multiple:</p>
+<ul>
+<li>TV = 403 × 10 = <strong>$4,030</strong></li>
+</ul>
+<p>Run both. If they imply wildly different growth rates or multiples once you back into them, that is a signal one of your assumptions is off, not a reason to pick whichever number you like better.</p>
+<h2>Step 5: Discount back to present value (mid-year convention)</h2>
+<p>Standard end-of-year discounting assumes every dollar of cash flow arrives on December 31, which understates value since real businesses generate cash all year round. The mid-year convention corrects for this by discounting each cash flow at <code>t − 0.5</code> instead of <code>t</code>.</p>
+<p>Discount factor: <code>1 / (1 + WACC)^(t − 0.5)</code>. At a 9.2% WACC:</p>
+<ul>
+<li>Year 1 (t=0.5): factor 0.957 → PV of FCF = 144 × 0.957 = <strong>$138</strong></li>
+<li>Year 2 (t=1.5): factor 0.876 → PV of FCF = 159 × 0.876 = <strong>$139</strong></li>
+<li>Year 3 (t=2.5): factor 0.803 → PV of FCF = 175 × 0.803 = <strong>$140</strong></li>
+<li>Year 4 (t=3.5): factor 0.735 → PV of FCF = 192 × 0.735 = <strong>$141</strong></li>
+<li>Year 5 (t=4.5): factor 0.673 → PV of FCF = 211 × 0.673 = <strong>$142</strong></li>
+</ul>
+<p>Sum of PV of explicit cash flows: <strong>$701</strong> (rounded).</p>
+<p>Apply the same Year 5 factor (0.673) to the terminal value:</p>
+<ul>
+<li>PV of TV, Gordon growth: 3,228 × 0.673 = <strong>$2,172</strong></li>
+<li>PV of TV, exit multiple: 4,030 × 0.673 = <strong>$2,712</strong></li>
+</ul>
+<p><strong>Enterprise value:</strong></p>
+<ul>
+<li>Gordon growth: 701 + 2,172 = <strong>$2,873</strong></li>
+<li>Exit multiple: 701 + 2,712 = <strong>$3,413</strong></li>
+</ul>
+<h2>Step 6: Bridge from enterprise value to per-share value</h2>
+<p>Enterprise value belongs to everyone with a claim on the business, debt and equity alike. To get to what a share is worth, subtract net debt.</p>
+<p>Say the company carries <strong>$400</strong> of total debt and <strong>$150</strong> of cash, for net debt of <strong>$250</strong>, and has <strong>100 million</strong> diluted shares outstanding.</p>
+<ul>
+<li>Equity value (Gordon growth) = 2,873 − 250 = <strong>$2,623</strong>, or <strong>$26.23 per share</strong></li>
+<li>Equity value (exit multiple) = 3,413 − 250 = <strong>$3,163</strong>, or <strong>$31.63 per share</strong></li>
+</ul>
+<p>That $26 to $32 spread between the two terminal value methods is normal. It is the model telling you where its uncertainty lives, and it is exactly what the sensitivity table in the next step is for.</p>
+<h2>Step 7: Build a sensitivity table with formulas, not Excel's Data Table</h2>
+<p>Excel's built-in Data Table feature works, but it is slow to recalculate, opaque to anyone else opening the file, and easy to break by inserting a row. A formula-driven grid is faster and auditable. Five steps:</p>
+<ol>
+<li>Lay out WACC values across a row (for example 8.2%, 8.7%, 9.2%, 9.7%, 10.2%) and terminal growth values down a column (1.5%, 2.0%, 2.5%, 3.0%, 3.5%), on a dedicated sensitivity tab.</li>
+<li>In the top-left result cell, write one formula that recomputes enterprise value directly from that row's WACC and that column's growth rate, referencing the live FCF cells rather than a single cached output, for example: <code>=SUMPRODUCT($C$10:$G$10,1/(1+C$4)^({1,2,3,4,5}-0.5))+($G$10*(1+$B5)/(C$4-$B5))/(1+C$4)^4.5</code></li>
+<li>Anchor the FCF range and the year exponents with dollar signs so they stay fixed, but leave the WACC cell (<code>C$4</code>) and growth cell (<code>$B5</code>) free so each references its own row and column as you copy the formula.</li>
+<li>Fill that formula right and down across the full grid. Because each cell recalculates independently from the underlying FCF, it updates instantly with the rest of the model and survives being copied into a new workbook.</li>
+<li>Wrap it in <code>=IFERROR(...,"n/a")</code> to handle the case where WACC equals the growth rate, which divides by zero.</li>
+</ol>
+<p>The result is a 5x5 grid of implied enterprise values you can scan in one glance, built entirely from formulas you can trace, cell by cell, back to the assumptions tab.</p>
+<p>If you would rather start from a finished version of everything above, complete with the sensitivity grid pre-built, see <a href="/numbersmith/products/dcf-valuation-model.html">a finished version of everything above</a>.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>

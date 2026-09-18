@@ -1,0 +1,100 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rental Property Cash Flow Formula and Cash-on-Cash Return | Numbersmith</title>
+<meta name="description" content="Calculate rental property cash flow from gross rent to NOI, debt service, and cash-on-cash return, with a worked duplex example and a 10-year IRR view.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/rental-property-cash-flow-formula.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article><h1>Rental Property Cash Flow Formula and Cash-on-Cash Return</h1>
+<p>Rental property cash flow is what is left after every real cost of owning and operating the property is subtracted from the rent it collects, including the mortgage payment. Investors who skip straight from gross rent to a profit estimate almost always overstate their return, because vacancy, management, maintenance, and reserves quietly eat 25% to 35% of gross rent before the mortgage payment is even considered. This guide walks the full formula with a worked duplex example, using real numbers at every step.</p>
+<h2>From gross rent to NOI</h2>
+<p>Net operating income (NOI) is the property's income before debt service. The formula:</p>
+<p><code>NOI = Effective Gross Income − Operating Expenses</code></p>
+<p>where Effective Gross Income (EGI) is gross rent minus vacancy loss, and operating expenses cover everything required to run the property except the mortgage.</p>
+<p><strong>Worked example: a duplex, two units at $1,500 a month each.</strong></p>
+<ul>
+<li>Gross Potential Rent (GPR): $1,500 × 2 × 12 = <strong>$36,000/year</strong></li>
+<li>Vacancy loss at 5%: −$1,800</li>
+<li><strong>Effective Gross Income: $34,200</strong></li>
+</ul>
+<p>Operating expenses, as a percent of EGI unless noted:</p>
+<ul>
+<li>Property management, 8% of EGI: $2,736</li>
+<li>Maintenance, 5% of EGI: $1,710</li>
+<li>Capex reserve, 5% of EGI: $1,710</li>
+<li>Property taxes (fixed, based on a $350,000 purchase price): $4,200</li>
+<li>Insurance (fixed): $1,200</li>
+<li><strong>Total operating expenses: $11,556</strong></li>
+</ul>
+<ul>
+<li><strong>NOI = 34,200 − 11,556 = $22,644</strong></li>
+</ul>
+<p>The capex reserve is the line most beginner analyses skip. It is not a real bill this year, but a roof, a water heater, or a parking lot does not last forever, and setting aside 5% of EGI now is cheaper than a surprise $12,000 special assessment on your own cash flow later.</p>
+<h2>Debt service, with the PMT formula written out</h2>
+<p>Debt service is the mortgage payment. The standard amortization formula:</p>
+<p><code>M = P × [r(1 + r)^n] / [(1 + r)^n − 1]</code></p>
+<p>where <code>P</code> is the loan amount, <code>r</code> is the monthly interest rate (annual rate divided by 12), and <code>n</code> is the total number of monthly payments.</p>
+<p><strong>Worked example, continued:</strong> 25% down on the $350,000 duplex means a loan of $262,500. At a 7% annual rate over 30 years, <code>r = 0.07 / 12 = 0.005833</code> and <code>n = 360</code>.</p>
+<ul>
+<li>M = 262,500 × [0.005833 × (1.005833)^360] / [(1.005833)^360 − 1] ≈ <strong>$1,746/month</strong></li>
+<li><strong>Annual debt service: 1,746 × 12 = $20,952</strong></li>
+</ul>
+<p>In Excel this is <code>=PMT(rate/12, nper, -loan_amount)</code>, which returns the same number without doing the algebra by hand. The formula above is what that function is computing.</p>
+<h2>Cash flow</h2>
+<p><code>Cash Flow = NOI − Annual Debt Service</code></p>
+<ul>
+<li>Cash flow = 22,644 − 20,952 = <strong>$1,692/year</strong>, or about $141 a month</li>
+</ul>
+<p>That is a thin margin on a $350,000 property, and it is a realistic one. This is the number most listing sites never show you, because they stop at gross rent or, at best, NOI.</p>
+<h2>Cap rate, cash-on-cash return, and DSCR</h2>
+<p>These three ratios answer different questions, and mixing them up is the most common analysis mistake in rental investing.</p>
+<p><strong>Cap rate</strong>, a measure of the property's return independent of financing: <code>Cap Rate = NOI / Purchase Price</code></p>
+<ul>
+<li>Cap rate = 22,644 / 350,000 = <strong>6.5%</strong></li>
+</ul>
+<p><strong>Cash-on-cash return</strong>, the actual return on the cash you put in: <code>Cash-on-Cash = Annual Cash Flow / Total Cash Invested</code></p>
+<p>Total cash invested is the down payment plus closing costs. Here, $87,500 down plus roughly $7,000 in closing costs is $94,500.</p>
+<ul>
+<li>Cash-on-cash = 1,692 / 94,500 = <strong>1.8%</strong></li>
+</ul>
+<p><strong>DSCR (debt service coverage ratio)</strong>, the metric your lender cares about most: <code>DSCR = NOI / Annual Debt Service</code></p>
+<ul>
+<li>DSCR = 22,644 / 20,952 = <strong>1.08</strong></li>
+</ul>
+<p>Most lenders want a DSCR of 1.20 to 1.25 or higher. At 1.08, this specific deal, at these specific terms, would likely need a larger down payment, a lower purchase price, or higher rent to qualify for financing at all. That is a real constraint a cap rate alone will never show you.</p>
+<h2>The 1% rule and the 50% rule, and when they mislead</h2>
+<p>The <strong>1% rule</strong> says monthly rent should be at least 1% of the purchase price. Here, $3,000 / $350,000 = 0.86%, below the threshold. That correctly flags this as a thin deal, but the rule says nothing about financing terms, so two properties that both pass the 1% rule can have very different cash-on-cash returns depending on the interest rate and down payment.</p>
+<p>The <strong>50% rule</strong> says to assume operating expenses (excluding debt service) will run about 50% of gross rent. Applied here: 50% of $36,000 is $18,000. The actual operating expenses plus vacancy came to $11,556 + $1,800 = $13,356, or 37% of gross rent, well under the rule's assumption. If this investor had used the 50% rule instead of building the real expense line, they would have underestimated NOI by roughly $4,600 a year, enough to mistakenly walk away from a deal that actually works, or, in an older property with higher maintenance costs, the same rule could just as easily understate expenses and make a bad deal look acceptable.</p>
+<p>Both rules are fine for a 30-second first screen on a list of twenty properties. Neither should be the basis for an actual offer.</p>
+<h2>The 10-year view: appreciation, principal paydown, and why IRR is the honest number</h2>
+<p>Cash-on-cash return only measures the cash that comes out of the property each year. It ignores two of the three ways real estate actually builds wealth: appreciation and principal paydown.</p>
+<p><strong>Appreciation</strong>, assuming 3% annual growth on the $350,000 purchase price:</p>
+<ul>
+<li>Value after 10 years = 350,000 × (1.03)^10 ≈ <strong>$470,000</strong></li>
+</ul>
+<p><strong>Principal paydown</strong> on the $262,500 loan at 7% over 30 years, after 120 payments:</p>
+<ul>
+<li>Remaining balance after 10 years ≈ <strong>$225,300</strong></li>
+<li>Principal paid down = 262,500 − 225,300 = <strong>$37,200</strong></li>
+</ul>
+<p><strong>Equity at year 10</strong> = property value − remaining balance = 470,000 − 225,300 = <strong>$244,700</strong></p>
+<p>Against the original $94,500 of cash invested, that is a gain of roughly $150,000 in equity alone, on top of the $1,692-a-year cash flow collected along the way. Laid out as a cash flow schedule (initial investment as a negative number, annual cash flow each year, and the equity value added to the final year as a sale), and solved with Excel's <code>=IRR()</code> function, this deal returns somewhere in the neighborhood of <strong>11% annually</strong> over the ten years.</p>
+<p>That 11% IRR, not the 1.8% cash-on-cash return from year one, is the honest measure of the deal, because it is the only number that accounts for all three ways the investment actually pays: cash flow, principal paydown, and appreciation, each arriving on its own timeline.</p>
+<h2>Checklist</h2>
+<p>Before you make an offer on a rental property, confirm you have:</p>
+<ul>
+<li>Built EGI from gross rent minus a realistic vacancy assumption, not zero.</li>
+<li>Itemized operating expenses, including a capex reserve, rather than applying a flat 50% guess.</li>
+<li>Calculated actual debt service with the real interest rate and term you can get quoted, using the PMT formula.</li>
+<li>Checked DSCR against what your likely lender requires, not just your own cap rate target.</li>
+<li>Run cash-on-cash return on total cash invested, including closing costs, not just the down payment.</li>
+<li>Modeled a 10-year (or longer) view with appreciation and principal paydown, and estimated IRR rather than relying on year-one cash flow alone.</li>
+<li>Used the 1% and 50% rules only as a first screen, never as the basis for a final decision.</li>
+</ul>
+<p>For a ready-built version of this entire workflow, gross rent through 10-year IRR, see <a href="/numbersmith/products/rental-property-analyzer.html">a finished rental property analyzer</a>.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>

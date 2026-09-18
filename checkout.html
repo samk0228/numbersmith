@@ -1,0 +1,138 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout | Numbersmith</title>
+<meta name="description" content="Pay with USDC on Base and download instantly.">
+
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article class="tool" id="co">
+<h1 id="title">Checkout</h1>
+<p id="lead">Pay with USDC on the Base network. The download unlocks on this page as soon as the payment confirms, usually under a minute.</p>
+
+<div id="order" hidden>
+  <p>Send <b>exactly</b> this amount of USDC on <b>Base</b> to this address. The exact amount is how we match your payment, so do not round it.</p>
+  <div class="row">
+    <div><label>Amount (USDC on Base)</label><input id="amt" readonly><button class="btn secondary" data-copy="amt">Copy amount</button></div>
+    <div><label>Address</label><input id="addr" readonly><button class="btn secondary" data-copy="addr">Copy address</button></div>
+  </div>
+  <div class="row" style="align-items:center">
+    <div id="qr" style="background:#fff;padding:8px;width:fit-content;border:1px solid var(--hair);border-radius:8px"></div>
+    <div>
+      <p><a id="walletlink" class="btn" href="#">Open in wallet app</a></p>
+      <p><small>Works with any wallet that holds USDC on Base (Coinbase Wallet, MetaMask, Rainbow, Phantom). Sending USDC on another network, or another token, will not be matched. If that happens, email hello@numbersmith.co with the transaction and we will sort it out.</small></p>
+    </div>
+  </div>
+  <div class="out" id="status">Waiting for payment. Keep this page open.</div>
+</div>
+
+<div id="done" hidden>
+  <h2>Paid. Thank you.</h2>
+  <p>Your file: <a id="dl" class="btn" href="#">Download</a></p>
+  <p><small>Bookmark this link or save the file now. Transaction: <span id="tx"></span></small></p>
+  <p><small>If anything in the file is unclear, email hello@numbersmith.co with the cell reference. Refunds on request within 30 days.</small></p>
+</div>
+
+<p id="err" hidden class="out"></p>
+<p><small>For education and planning only, not financial advice. Numbersmith is not a money transmitter; you pay directly from your own wallet to ours.</small></p>
+</article>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+  const PRODUCTS = {"budget-net-worth-tracker": {"name": "Annual Budget and Net Worth Tracker", "price": 14.0, "dl": "/numbersmith/dl/049316bb17fc7b866cac/Numbersmith_Budget_and_Net_Worth_Tracker.xlsx", "file": "Numbersmith_Budget_and_Net_Worth_Tracker.xlsx"}, "cap-table-dilution-calculator": {"name": "Cap Table and Dilution Calculator (SAFEs, Option Pool, Waterfall)", "price": 29.0, "dl": "/numbersmith/dl/c3eba6d559d70c704a79/Numbersmith_Cap_Table_and_Dilution_Calculator.xlsx", "file": "Numbersmith_Cap_Table_and_Dilution_Calculator.xlsx"}, "dcf-valuation-model": {"name": "DCF Valuation Model (WACC + Sensitivity Tables)", "price": 39.0, "dl": "/numbersmith/dl/e5d23143b2c4086297b0/Numbersmith_DCF_Valuation_Model.xlsx", "file": "Numbersmith_DCF_Valuation_Model.xlsx"}, "mortgage-payoff-calculator": {"name": "Mortgage and Loan Payoff Calculator (Extra Payments, Refinance, Biweekly)", "price": 12.0, "dl": "/numbersmith/dl/191ea4ec9c222f223382/Numbersmith_Mortgage_and_Loan_Payoff_Calculator.xlsx", "file": "Numbersmith_Mortgage_and_Loan_Payoff_Calculator.xlsx"}, "rental-property-analyzer": {"name": "Rental Property Analyzer (Cash Flow, ROI, 10-Year IRR)", "price": 24.0, "dl": "/numbersmith/dl/ff98f20e942458424fdf/Numbersmith_Rental_Property_Analyzer.xlsx", "file": "Numbersmith_Rental_Property_Analyzer.xlsx"}, "startup-financial-model": {"name": "Startup Financial Model (3-Statement, Driver-Based)", "price": 59.0, "dl": "/numbersmith/dl/568b5b7aed6315ab1f95/Numbersmith_Startup_Financial_Model.xlsx", "file": "Numbersmith_Startup_Financial_Model.xlsx"}};
+  const ADDRESS = "0xCe8B6A5b9279Bc714a9B2fBF148b4FaD18df2a5C";
+  const MODE = "static";           // static | server
+  const SERVER = "";       // pay server base URL in server mode
+  const RPCS = ["https://mainnet.base.org", "https://base-rpc.publicnode.com", "https://base.drpc.org"];
+  const USDC = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+  const TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+  const $ = id => document.getElementById(id);
+  const slug = new URLSearchParams(location.search).get("p");
+  const prod = PRODUCTS[slug];
+  if (!prod) { $("err").hidden = false; $("err").textContent = "Unknown product. Go back and pick one from the templates page."; return; }
+  $("title").textContent = "Checkout: " + prod.name;
+
+  // one order per product per browser; survives refresh
+  const key = "ns-order-" + slug;
+  let order = null;
+  try { order = JSON.parse(localStorage.getItem(key) || "null"); } catch {}
+  const micro = 1e6;
+
+  async function rpc(method, params) {
+    let lastErr;
+    for (const url of RPCS) {
+      try {
+        const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
+        const j = await r.json(); if (j.error) throw new Error(j.error.message); return j.result;
+      } catch (e) { lastErr = e; }
+    }
+    throw lastErr;
+  }
+
+  async function newOrder() {
+    const bn = parseInt(await rpc("eth_blockNumber", []), 16);
+    const frac = 1 + Math.floor(Math.random() * 9999);           // 0.000001 to 0.009999 USDC, makes the amount unique
+    const units = Math.round(prod.price * micro) + frac;          // integer micro-USDC
+    order = { slug, units, startBlock: Math.max(0, bn - 3), created: Date.now() };
+    localStorage.setItem(key, JSON.stringify(order));
+  }
+
+  function render() {
+    const amount = (order.units / micro).toFixed(6);
+    $("amt").value = amount; $("addr").value = ADDRESS;
+    // EIP-681 transfer request understood by several wallets
+    $("walletlink").href = `ethereum:${USDC}@8453/transfer?address=${ADDRESS}&uint256=${order.units}`;
+    $("qr").innerHTML = ""; new QRCode($("qr"), { text: ADDRESS, width: 140, height: 140 });
+    $("order").hidden = false;
+    document.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => { navigator.clipboard.writeText($(b.dataset.copy).value); b.textContent = "Copied"; setTimeout(() => b.textContent = b.dataset.copy === "amt" ? "Copy amount" : "Copy address", 1500); });
+  }
+
+  async function check() {
+    const to = "0x" + ADDRESS.slice(2).toLowerCase().padStart(64, "0");
+    const logs = await rpc("eth_getLogs", [{ address: USDC, fromBlock: "0x" + order.startBlock.toString(16), toBlock: "latest", topics: [TRANSFER, null, to] }]);
+    for (const l of logs) {
+      const v = BigInt(l.data);
+      if (v === BigInt(order.units)) return l.transactionHash;
+    }
+    return null;
+  }
+
+  async function unlock(tx) {
+    $("order").hidden = true; $("done").hidden = false; $("tx").textContent = tx;
+    if (MODE === "server" && SERVER) {
+      const r = await fetch(`${SERVER}/download?slug=${encodeURIComponent(slug)}&tx=${tx}`);
+      const j = await r.json(); $("dl").href = j.url;
+    } else {
+      $("dl").href = prod.dl;
+    }
+    $("dl").setAttribute("download", prod.file);
+    localStorage.setItem(key + "-paid", tx);
+  }
+
+  (async () => {
+    try {
+      const paid = localStorage.getItem(key + "-paid");
+      if (paid) { if (!order) order = { slug }; await unlock(paid); return; }
+      if (!order || Date.now() - order.created > 6 * 3600 * 1000) await newOrder();
+      render();
+      let tries = 0;
+      const timer = setInterval(async () => {
+        tries++;
+        try {
+          const tx = await check();
+          if (tx) { clearInterval(timer); await unlock(tx); return; }
+          $("status").textContent = "Waiting for payment. Checked " + tries + " time" + (tries === 1 ? "" : "s") + ". Keep this page open.";
+        } catch (e) { $("status").textContent = "Network hiccup while checking, retrying. " + e.message; }
+        if (tries > 360) { clearInterval(timer); $("status").textContent = "Stopped checking after an hour. Reload this page after you pay and it will pick the payment up."; }
+      }, 10000);
+    } catch (e) { $("err").hidden = false; $("err").textContent = "Could not start checkout: " + e.message; }
+  })();
+})();
+</script>
+</main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>

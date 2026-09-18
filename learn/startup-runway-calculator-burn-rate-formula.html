@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Startup Runway Calculator: Burn Rate Formula and a Worked Example | Numbersmith</title>
+<meta name="description" content="How to calculate startup runway from cash, gross burn, and net burn, why the one-line formula overstates it, and how to build a month-by-month runway table that tells you the real zero-cash date.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/startup-runway-calculator-burn-rate-formula.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article><h1>Startup Runway Calculator: Burn Rate Formula and a Worked Example</h1>
+<p>Runway is the number of months a startup can keep operating before its cash hits zero. It is the single number most founders track weekly, and it is also the number most often calculated wrong, because the one-line formula everyone learns assumes costs and revenue stay flat. They never do. This guide walks the simple formula, shows where it breaks, and then builds the month-by-month version that gives you the actual date the money runs out.</p>
+<h2>Gross burn versus net burn</h2>
+<p>Two different numbers get called "burn rate," and mixing them up produces runway estimates that are off by months.</p>
+<p><strong>Gross burn</strong> is total monthly cash spend: payroll, rent, software, contractors, marketing, everything that leaves the bank account in a typical month.</p>
+<p><strong>Net burn</strong> is gross burn minus monthly cash revenue. It is the amount the bank balance actually drops each month.</p>
+<p><code>Net burn = Gross burn − Monthly cash revenue</code></p>
+<p>If revenue is zero, gross and net burn are the same. Once revenue starts, net burn is the number that matters for runway, and gross burn is the number that matters for understanding how big the company's cost base has become.</p>
+<p>Use cash revenue, not booked or recognized revenue. An annual contract invoiced upfront is cash today; a monthly subscription paid net 30 is cash next month. Runway is a bank balance question, so it follows the bank balance.</p>
+<h2>The simple runway formula</h2>
+<p><code>Runway (months) = Cash on hand ÷ Net monthly burn</code></p>
+<p><strong>Worked example.</strong> A seed-stage software company has:</p>
+<ul>
+<li>Cash in the bank: $1,200,000</li>
+<li>Gross burn: $150,000 per month (six people at a fully loaded $18,000 each, plus $42,000 of rent, tools, and marketing)</li>
+<li>Monthly cash revenue: $40,000</li>
+</ul>
+<p>Net burn is $150,000 − $40,000 = <strong>$110,000 per month</strong>.</p>
+<p>Runway is $1,200,000 ÷ $110,000 = <strong>10.9 months</strong>.</p>
+<p>That is the number you would get from a quick calculator, and it is useful as a first read. It is also probably wrong by two to four months, in one direction or the other, for the reasons below.</p>
+<h2>Why the simple formula overstates or understates runway</h2>
+<p><strong>1. The hiring plan.</strong> Almost every startup with 10 months of runway is also planning to hire. Two engineers starting in month 3 at $18,000 each add $36,000 to gross burn from that point on. Net burn is then $146,000 for months 3 onward, not $110,000. Real runway drops to about 9 months, and the simple formula never saw it coming.</p>
+<p><strong>2. Revenue growth.</strong> The reverse error. If cash revenue grows 8% a month, net burn shrinks every month and runway stretches. In the example, revenue reaches roughly $80,000 by month 10, which cuts net burn by more than a third by then. Ignoring growth understates runway and can push a founder into raising earlier, and on worse terms, than necessary.</p>
+<p><strong>3. One-time costs.</strong> A $30,000 legal bill for a fundraise, a $25,000 conference sponsorship, an annual insurance premium, a software renewal paid yearly. These do not show up in a "typical month" but they show up in the bank account.</p>
+<p><strong>4. Timing of cash.</strong> Payroll runs twice a month, some customers pay 45 days late, and a large annual prepayment can land in one month and nothing the next. A monthly model smooths this; a weekly view catches it. For runway, monthly is usually fine as long as receivables are modeled with a realistic collection delay rather than assumed to be instant.</p>
+<p><strong>5. The fundraising gap.</strong> Cash does not need to reach zero for the company to be in trouble. Most rounds take three to six months from first pitch to money in the bank. A company with 10.9 months of runway has, in practice, about five months to start a raise, or it will be negotiating from a position of weakness.</p>
+<h2>Building the month-by-month runway table</h2>
+<p>The fix for all five problems is the same: stop dividing two numbers and instead project the bank balance forward one month at a time. The structure is:</p>
+<p>| Month | Opening cash | Cash revenue | Gross burn | Net burn | Closing cash | |---|---|---|---|---|---| | 1 | 1,200,000 | 40,000 | 150,000 | 110,000 | 1,090,000 | | 2 | 1,090,000 | 43,200 | 150,000 | 106,800 | 983,200 | | 3 | 983,200 | 46,656 | 186,000 | 139,344 | 843,856 | | 4 | 843,856 | 50,388 | 186,000 | 135,612 | 708,244 | | ... | | | | | |</p>
+<p>Each row's opening cash is the previous row's closing cash. Revenue grows at the assumed monthly rate. Gross burn steps up when a hire starts and includes any one-time costs in the month they hit. Runway is simply the number of the first month in which closing cash goes below zero (or, better, below a minimum cash threshold you set, such as one month of gross burn).</p>
+<p>In Excel, with opening cash in column B, revenue in C, gross burn in D, and closing cash in F:</p>
+<p><code>F2 = B2 + C2 − D2</code> <code>B3 = F2</code></p>
+<p>Then find the zero-cash month with:</p>
+<p><code>=MATCH(TRUE, INDEX(F2:F37 &lt; 0, 0), 0)</code></p>
+<p>which returns the first row where closing cash is negative. Continuing the example with the two hires in month 3 and 8% monthly revenue growth, closing cash goes negative in <strong>month 10</strong> (about $97,500 left at the end of month 9, against a month-10 net burn of roughly $106,000), so the hiring plan and the revenue growth roughly cancel each other out here. Change either assumption and the answer moves immediately, which is exactly the point: a runway table lets you see the effect of a decision before you make it.</p>
+<h2>Default alive or default dead</h2>
+<p>A useful check, popularized by Paul Graham, is to ask whether the company is "default alive": if revenue keeps growing at the current rate and costs stay as planned, does it reach profitability before the cash runs out? If yes, the company is default alive and a fundraise is a choice. If no, it is default dead and a fundraise is a requirement, with a deadline.</p>
+<p>The month-by-month table answers this directly. Extend it until net burn turns positive (revenue exceeds gross burn). If that month comes before the zero-cash month, the company is default alive. In the worked example, at 8% monthly growth, revenue passes $186,000 of gross burn around month 21, well after cash runs out in month 11, so the company is default dead at its current growth rate and needs to either raise or cut.</p>
+<p>The free <a href="/numbersmith/tools/runway-calculator.html">runway calculator</a> on this site runs the simple version of this math in the browser if you want a first read before building the table.</p>
+<h2>How much runway to raise for</h2>
+<p>A common target is 18 to 24 months of runway after the round closes. The reasoning: 12 to 18 months to hit the milestones that justify the next round, plus a six-month cushion for the raise itself. Working backward with the table, a founder can set a target closing cash for month 24, then solve for the raise amount that gets there. That number, plus the table that produced it, is a far more convincing use-of-funds slide than a round number picked because it sounded right.</p>
+<h2>Checklist</h2>
+<p>Before you quote a runway number to a co-founder, a board, or an investor, confirm that:</p>
+<ul>
+<li>You used net burn (gross burn minus cash revenue), not gross burn, and revenue is on a cash basis.</li>
+<li>Planned hires are in the model from their start month, at fully loaded cost.</li>
+<li>One-time and annual costs are placed in the month they are paid.</li>
+<li>Revenue growth is an explicit assumption, not zero by default.</li>
+<li>Runway is the first month cash drops below your minimum cash threshold, from a month-by-month table, not a single division.</li>
+<li>You know whether the company is default alive or default dead at its current growth rate.</li>
+<li>You have subtracted the three to six months a raise takes, and know the month you must start pitching.</li>
+</ul>
+<p>For the full month-by-month build, with the hiring plan, revenue streams, working capital timing, and a raise-sizing calculator already wired to a three-statement model, see the <a href="/numbersmith/products/startup-financial-model.html">Numbersmith startup financial model</a>.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>
