@@ -1,0 +1,82 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mortgage Extra Payment Formula in Excel: How Much Interest You Save and When You Finish | Numbersmith</title>
+<meta name="description" content="The exact Excel formulas for a mortgage amortization schedule with extra payments, how to compute interest saved and months saved against a no-extras baseline, and the three mistakes that make most homemade payoff calculators overstate the savings.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/mortgage-extra-payment-formula-excel.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article><h1>Mortgage Extra Payment Formula in Excel: How Much Interest You Save and When You Finish</h1>
+<p>Paying extra on a mortgage is one of the few money decisions where the math is fully knowable in advance. The lender's rate, the balance, and the term are fixed, so a spreadsheet can tell you to the month when you will finish and to the dollar how much interest you will avoid. This guide builds that spreadsheet in Excel from scratch: the monthly payment, a month-by-month schedule that accepts extra payments, a baseline schedule with no extras, and the two summary numbers people actually want, interest saved and months saved.</p>
+<p>Nothing here requires macros or add-ins. Every cell is a plain formula that also works in Google Sheets and LibreOffice.</p>
+<h2>The four inputs</h2>
+<p>Put these in their own cells at the top of the sheet so every formula below can reference them. Assume the following layout for the examples:</p>
+<p>| Cell | Input | Example | |---|---|---| | B2 | Loan amount | 420,000 | | B3 | Annual interest rate | 6.5% | | B4 | Term in years | 30 | | B5 | Extra payment per month | 200 |</p>
+<p>Enter the rate as a percentage, not as 6.5. Excel stores 6.5% as 0.065 and the formulas below divide by 12 to get a monthly rate.</p>
+<h2>Step 1: the scheduled monthly payment</h2>
+<p>Excel's PMT function gives the fixed principal-and-interest payment:</p>
+<p><code>`</code> =ROUND(PMT(B3/12, B4*12, -B2), 2) <code>`</code></p>
+<p>Three things to notice. The rate is divided by 12 because payments are monthly. The number of periods is years times 12. The loan amount is negative so PMT returns a positive number. For the example inputs this gives 2,654.69.</p>
+<p>Put that in B7 and label it. This number does not change when you add extra payments. What changes is how many of them you make.</p>
+<h2>Step 2: the amortization schedule with extras</h2>
+<p>Build a table starting on row 10 with these columns:</p>
+<p>| Column | Header | |---|---| | A | Payment number | | B | Beginning balance | | C | Interest | | D | Scheduled principal | | E | Extra applied | | F | Ending balance |</p>
+<p>Row 10 is payment 1. The first row's beginning balance is the loan amount:</p>
+<p><code>`</code> A10: 1 B10: =B2 C10: =IF(B10&lt;=0, 0, ROUND(B10*$B$3/12, 2)) D10: =IF(B10&lt;=0, 0, ROUND(MIN(B10, $B$7-C10), 2)) E10: =IF(B10&lt;=0, 0, ROUND(MIN(B10-D10, $B$5), 2)) F10: =ROUND(MAX(0, B10-D10-E10), 2) <code>`</code></p>
+<p>Row 11 and below are the same except the beginning balance is the previous ending balance:</p>
+<p><code>`</code> A11: =A10+1 B11: =F10 <code>`</code></p>
+<p>Copy C10:F10 down, then fill the whole block down to at least 360 rows for a 30-year loan. If you want the sheet to handle 40-year terms, go to 480.</p>
+<p>Walk through what each formula does, because the details are where homemade calculators go wrong.</p>
+<p><strong>Interest</strong> is the beginning balance times the monthly rate. The IF guard returns zero once the balance is paid off, so the rows after payoff show zeros instead of negative numbers.</p>
+<p><strong>Scheduled principal</strong> is the payment minus interest, capped by MIN at the remaining balance. Without the cap, the final payment overshoots and the ending balance goes negative, which then throws off the totals.</p>
+<p><strong>Extra applied</strong> is the extra payment, capped at whatever balance is left after scheduled principal. This is the second cap most people forget. In the last month of the loan the balance might be 900 and you do not want the sheet recording a 200 extra payment against a balance that was already zero.</p>
+<p><strong>Ending balance</strong> is what is left. The MAX with zero is a belt-and-suspenders guard so rounding can never produce a balance of negative one cent.</p>
+<h2>Step 3: the baseline schedule</h2>
+<p>To measure savings you need something to compare against. Copy the entire schedule to a second sheet, or to columns H through M on the same sheet, and set the extra applied column to zero:</p>
+<p><code>`</code> E10 (baseline): 0 <code>`</code></p>
+<p>Everything else stays identical. This baseline is the loan as the lender scheduled it. It should end exactly on payment 360 for a 30-year loan with a zero ending balance. If it does not, the rounding in your PMT cell is the usual culprit; make sure PMT is rounded to cents and that the interest formula is also rounded to cents each month.</p>
+<h2>Step 4: total interest, months, and savings</h2>
+<p>Now the summary formulas. These sit at the top of the sheet next to the inputs.</p>
+<p>Total interest with extras:</p>
+<p><code>`</code> =SUM(C10:C489) <code>`</code></p>
+<p>Total interest without extras (the baseline's interest column):</p>
+<p><code>`</code> =SUM(Baseline!C10:C489) <code>`</code></p>
+<p>Interest saved is the difference between those two.</p>
+<p>Months to pay off is the count of rows where a payment actually happened. The cleanest way is to count rows where the beginning balance was above zero:</p>
+<p><code>`</code> =COUNTIF(B10:B489, "&gt;0") <code>`</code></p>
+<p>Do the same on the baseline sheet. Months saved is baseline months minus your-plan months.</p>
+<p>For the example inputs, 420,000 at 6.5% over 30 years with 200 extra every month, the numbers are:</p>
+<p>| | Baseline | With 200 extra | |---|---|---| | Months | 360 | 296 | | Total interest | 535,683.53 | 422,462.43 | | Interest saved | | 113,221.10 | | Months saved | | 64 |</p>
+<p>Five years and four months sooner, and 113 thousand in interest that never leaves your account, for 200 a month. That is the number that makes the decision concrete. Total extra paid over those 296 months is 59,200, so each extra dollar removed roughly 1.91 dollars of interest.</p>
+<h2>Step 5: the payoff date</h2>
+<p>If you have a start date in a cell, say B6 holds the date of the first payment, add a date column to the schedule:</p>
+<p><code>`</code> Row 10: =$B$6 Row 11: =EDATE(B10, 1) <code>`</code></p>
+<p>and then the payoff date is the date on the last row with a positive balance:</p>
+<p><code>`</code> =INDEX(DateColumn, COUNTIF(B10:B489, "&gt;0")) <code>`</code></p>
+<p>INDEX takes the nth value in a range, and COUNTIF gives you n, so together they return the date of the final payment without any lookup tricks.</p>
+<h2>The three mistakes that overstate savings</h2>
+<p><strong>Applying extra payments to interest instead of principal.</strong> An extra payment reduces the balance, which reduces next month's interest. It does not reduce this month's interest. If your sheet subtracts the extra before computing interest, you are giving yourself a month of savings that does not exist. The order in the formulas above is deliberate: interest on the beginning balance first, then principal, then extra.</p>
+<p><strong>No cap on the last payment.</strong> Without the two MIN caps, the schedule pays the full 2,654.69 plus 200 in a month when only 900 is owed. The ending balance goes negative, the row after it charges negative interest, and the total interest ends up too low by a few dollars. It is a small error but it is the difference between a sheet you trust and one you double-check by hand.</p>
+<p><strong>Counting months by the last non-zero row instead of the first zero row.</strong> If your months formula looks for the last row with any value in it, it will return 360 or 480 every time because the zero rows still have formulas in them. Count rows with a positive beginning balance, as above.</p>
+<h2>Extending the sheet</h2>
+<p>Once the base schedule works, three extensions are common and each is a small change:</p>
+<p>Put the new inputs in a second block, say D2:E5, so they stay clear of the schedule rows. The formulas below name them by label; use whichever cells you chose.</p>
+<p><strong>A one-time lump sum.</strong> Add an input for the amount (LumpAmount) and another for the payment number it lands on (LumpAt). In the extra column, add <code>IF(A10=LumpAt, LumpAmount, 0)</code> to the monthly extra before the MIN cap.</p>
+<p><strong>An annual lump sum.</strong> Add an input for the amount (AnnualAmount) and one for the calendar month, 1 to 12 (AnnualMonth). If you have a date column, add <code>IF(MONTH(DateCell)=AnnualMonth, AnnualAmount, 0)</code> to the extra.</p>
+<p><strong>Starting the extra later.</strong> Not everyone can start paying extra today. Add an input for the payment number the extra begins at (StartAt), and wrap the monthly extra in <code>IF(A10&gt;=StartAt, $B$5, 0)</code>. Set it to 1 for "start now." This lets you answer "what if I start in two years when the car is paid off" without rebuilding the sheet.</p>
+<h2>Checking your work</h2>
+<p>Before trusting the sheet, run these checks:</p>
+<ul>
+<li>Set the extra to zero. Months should equal the term times 12 and the ending balance on the last scheduled row should be exactly zero.</li>
+<li>Set the extra to a huge number, say the whole loan amount. Months should be 1 and total interest should be one month of interest on the full balance.</li>
+<li>Add up the scheduled principal column plus the extra column on your-plan sheet. The total must equal the loan amount to the cent.</li>
+<li>Compare your baseline total interest to the classic shortcut, payment times number of payments minus loan amount. They should match within a few cents of rounding.</li>
+</ul>
+<p>If all four pass, the schedule is right and any scenario you type into the blue cells can be trusted.</p>
+<h2>Where this fits</h2>
+<p>The sheet above is the core of every mortgage payoff calculator, including the free one on this site. If you want the finished version with the refinance break-even comparison, a biweekly payment view, the lump sum and start-later inputs already wired in, and charts of balance and interest over time, the <a href="/numbersmith/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has all of it on open formulas. For education and planning only, not financial advice.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>
