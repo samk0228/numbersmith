@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Debt Snowball vs Avalanche in Excel: The Rollover Formula Most Calculators Skip | Numbersmith</title>
+<meta name="description" content="How to build a debt payoff spreadsheet that actually rolls a paid-off debt&#x27;s payment into the next one, with the ranking, cascade, and summary formulas, and a worked example showing why the no-rollover shortcut is off by years.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/debt-snowball-vs-avalanche-excel-rollover-formula.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article><h1>Debt Snowball vs Avalanche in Excel: The Rollover Formula Most Calculators Skip</h1>
+<p>Most debt payoff spreadsheets you can download do the same thing: one NPER formula per debt, minimum payment in, months out. That answers "how long does each debt take on its own," which is not the question. The point of a snowball or avalanche plan is that when one debt is gone, its payment does not disappear. It rolls into the next debt, and the next, so the last debt gets crushed by everything you were paying before. A spreadsheet that skips the roll can overstate your payoff time by years. This guide builds the version that does the roll, month by month, with formulas you can copy.</p>
+<h2>The two strategies in one sentence each</h2>
+<p><strong>Avalanche</strong>: pay minimums on everything, put every spare dollar on the debt with the highest interest rate, and when it is gone, move that whole payment to the next-highest rate. This minimizes total interest.</p>
+<p><strong>Snowball</strong>: same mechanics, but the order is smallest balance first. It costs a little more interest and clears individual debts sooner, which is why many people stick with it.</p>
+<p>Both share one rule that makes the math work: your total monthly outlay stays fixed. If your minimums add to 870 and you can add 300, you pay 1,170 every month until the last balance is zero. The order only decides which debt gets the extra.</p>
+<h2>Why the no-rollover shortcut is wrong</h2>
+<p>Take five debts, the sample set in the workbook linked at the end:</p>
+<p>| Debt | Balance | Rate | Minimum | |---|---|---|---| | Credit Card A | 4,200 | 22.99% | 130 | | Credit Card B | 1,800 | 19.99% | 60 | | Auto Loan | 14,000 | 6.50% | 350 | | Student Loan | 26,000 | 5.00% | 220 | | Personal Loan | 3,000 | 10.50% | 110 |</p>
+<p>Total 49,000, minimums 870, extra 300 a month.</p>
+<p>The per-debt NPER approach gives the extra to Credit Card A and leaves everything else on minimums. Under that math the student loan takes 164 months and the plan "finishes" in year 14. The rollover version, with the same 1,170 a month, is debt-free in month 48. Same money, same debts, a difference of almost ten years, purely because one calculation forgets that the 430 a month you were paying on Credit Card A keeps getting paid after it hits zero.</p>
+<h2>Step 1: rank the debts without ties</h2>
+<p>Put the debts in rows 6 to 11 with Name in A, Balance in B, Annual Rate in C, Minimum in D. RANK gives you the order, but if two debts share a rate you get two 1s and no 2, and every lookup downstream breaks. The fix is to break ties by input order with COUNTIF:</p>
+<p><code>`</code> Avalanche order (row 6): =RANK(C6,$C$6:$C$11,0)+COUNTIF($C$6:C6,C6)-1</p>
+<p>Snowball order (row 6): =RANK(B6,$B$6:$B$11,1)+COUNTIF($B$6:B6,B6)-1 <code>`</code></p>
+<p>The RANK third argument is 0 for descending (highest rate first) and 1 for ascending (smallest balance first). COUNTIF counts how many debts above this row share the same value, so the second of two tied debts gets rank plus one. Wrap the whole thing in <code>IF(B6="","",...)</code> so empty rows stay blank.</p>
+<h2>Step 2: lay the schedule out by payoff position, not by debt</h2>
+<p>This is the trick that keeps the formulas simple. Instead of one column block per debt, build one block per <strong>position</strong>: position 1 is whichever debt is ranked first, position 2 is ranked second, and so on. Then the cascade always flows left to right and never needs to know which debt is which.</p>
+<p>Above the schedule, a header block pulls each position's inputs with INDEX and MATCH. For position 1 (column B, orders in a helper column called Order):</p>
+<p><code>`</code> Name:       =IFERROR(INDEX($A$6:$A$11,MATCH(1,Order,0)),"") Rate/month: =IFERROR(INDEX($C$6:$C$11,MATCH(1,Order,0))/12,0) Minimum:    =IFERROR(INDEX($D$6:$D$11,MATCH(1,Order,0)),0) Start bal:  =IFERROR(INDEX($B$6:$B$11,MATCH(1,Order,0)),0) <code>`</code></p>
+<p>Position 2 uses MATCH(2,...), and so on through 6. IFERROR turns unused positions into zeros, which is exactly what you want: a debt with a zero balance and a zero minimum takes nothing and gives nothing.</p>
+<p>One more header cell, the monthly budget:</p>
+<p><code>`</code> Total paid each month: =SUM(minimums for all six positions) + Extra <code>`</code></p>
+<h2>Step 3: the monthly row</h2>
+<p>Each month row has, for each position, a starting balance, a capped minimum, and a payment, plus one shared cell for the extra pool. Say row 27 is month 1, balances are in B:G, capped minimums in H:M, the pool in N, payments in O:T, and row 15, 16, 17 hold the monthly rate, minimum, and starting balance for each position.</p>
+<p><strong>Starting balance.</strong> Month 1 is the input. Every later month is last month's balance with interest, less last month's payment:</p>
+<p><code>`</code> B27: =B$17 B28: =MAX(0,ROUND(B27*(1+B$15),2)-O27) <code>`</code></p>
+<p>ROUND to cents once per month keeps the schedule matching a statement, and MAX(0,...) makes a cleared debt sit at zero instead of drifting into tiny negatives.</p>
+<p><strong>Capped minimum.</strong> You cannot pay more than the debt is worth this month, so cap the minimum at balance plus interest:</p>
+<p><code>`</code> H27: =MIN(B$16,ROUND(B27*(1+B$15),2)) <code>`</code></p>
+<p>When the balance is zero, this returns zero, and that freed-up minimum is what feeds the roll.</p>
+<p><strong>Extra pool.</strong> The budget less whatever the minimums actually took this month:</p>
+<p><code>`</code> N27: =B$20-SUM(H27:M27) <code>`</code></p>
+<p>In month 1 the pool equals the extra payment. Once any debt is cleared, the pool grows by that debt's minimum, automatically. That single subtraction is the entire rollover.</p>
+<p><strong>Payment with cascade.</strong> Position 1 pays its minimum plus as much of the pool as it can absorb. Position 2 pays its minimum plus whatever position 1 left, and so on:</p>
+<p><code>`</code> O27 (position 1): =MIN(ROUND(B27<em>(1+B$15),2),H27+MAX(0,N27)) P27 (position 2): =MIN(ROUND(C27</em>(1+C$15),2),I27+MAX(0,N27-O27+H27)) Q27 (position 3): =MIN(ROUND(D27*(1+D$15),2),J27+MAX(0,N27-O27+H27-P27+I27)) <code>`</code></p>
+<p>Read the inner expression as "pool, minus the extra that earlier positions already took," where the extra a position took is its payment minus its capped minimum. The outer MIN stops any position from paying more than it owes, and the overflow lands on the next position in the same month. That is what lets a plan clear two small debts in the same month without wasting a dollar.</p>
+<p>Fill the row down for 360 months. Add two helper columns, total balance <code>=SUM(B27:G27)</code> and total paid <code>=SUM(O27:T27)</code>, and you are done with the schedule.</p>
+<h2>Step 4: the summary formulas</h2>
+<p>With total balance in column U:</p>
+<p><code>`</code> Debt-free month:    =COUNTIF(U27:U386,"&gt;0") Total paid:         =SUM(O27:T386) Total interest:     =SUM(O27:T386)-SUM(starting balances) Paid off in month, position 1: =COUNTIF(B27:B386,"&gt;0") <code>`</code></p>
+<p>The debt-free month is simply the number of months that started with a balance above zero. Interest is total paid minus principal, which only holds if the schedule reaches zero, so add a guard: compute the balance left after month 360, and if it is above zero, show "360+" instead of a month number and subtract the remaining balance from principal in the interest formula.</p>
+<p>Build one block for the avalanche order and a second, identical block for the snowball order, and the comparison falls out as two cells side by side.</p>
+<h2>The worked example, with rollover</h2>
+<p>For the five debts above at 1,170 a month:</p>
+<p>| | Avalanche | Snowball | |---|---|---| | Debt-free in month | 48 | 48 | | Total interest | 6,298.12 | 6,538.99 | | Credit Card A paid off | month 11 | month 18 | | Credit Card B paid off | month 14 | month 6 | | Personal Loan paid off | month 17 | month 11 | | Auto Loan paid off | month 27 | month 28 | | Student Loan paid off | month 48 | month 48 |</p>
+<p>Avalanche saves 240.87 in interest. Snowball clears its first debt a year sooner. Both finish in the same month, because the total outlay is identical and the last debt absorbs everything either way. That is the honest answer most people need: on typical consumer debt, the order changes when the small wins arrive far more than it changes the finish line, and the interest gap is real but modest. Where avalanche pulls away is when the rate spread is wide and the balances are large.</p>
+<h2>Three checks before you trust the sheet</h2>
+<ol>
+<li><strong>Month 1 total paid equals your budget.</strong> If it does not, a minimum is not being capped or the pool formula is pointing at the wrong row.</li>
+<li><strong>No payment exceeds balance plus interest.</strong> Look at the last month of each debt: the payment should equal the balance with interest exactly, and the next month's balance should read zero, not a negative number and not a few cents.</li>
+<li><strong>The two strategies finish within a month of each other.</strong> With a fixed budget they nearly always do. A gap of several months usually means one block's budget cell references the other block's minimums.</li>
+</ol>
+<p>If you would rather not build the 360-row schedule by hand, the Numbersmith budget workbook includes both rollover blocks, the tie-broken ranking, and a Rollover Plan summary wired to a Debt Payoff input tab, alongside the transaction-driven monthly budget and net worth tracker: <a href="/numbersmith/products/budget-net-worth-tracker.html">Annual Budget and Net Worth Tracker</a>.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>
