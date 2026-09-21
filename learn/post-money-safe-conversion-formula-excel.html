@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Post-Money SAFE Conversion in Excel: The Formula That Gets the Share Count Right | Numbersmith</title>
+<meta name="description" content="How a post-money SAFE turns into shares at a priced round, why the shortcut most cap table spreadsheets use shorts the SAFE holder, and the Excel formulas that solve it in closed form with no circular reference, with a worked seed round.">
+<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/post-money-safe-conversion-formula-excel.html">
+<link rel="stylesheet" href="/numbersmith/assets/style.css">
+
+</head><body>
+<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
+<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<main><article><h1>Post-Money SAFE Conversion in Excel: The Formula That Gets the Share Count Right</h1>
+<p>A post-money SAFE promises the investor a fixed slice of the company: purchase amount divided by the post-money valuation cap. Five hundred thousand dollars on an eight million dollar cap is 6.25 percent, full stop. The trouble starts when you try to turn that percent into a share count in a spreadsheet, because the percent is measured against a base that includes the SAFE itself and every other SAFE and note that converts alongside it. Most cap table templates skip that last part and quietly hand the SAFE holder fewer shares than the document says. This guide walks through the correct base, shows the size of the error on a realistic seed round, and gives you formulas that solve it without a circular reference.</p>
+<h2>What the document actually says</h2>
+<p>The YC post-money SAFE converts at a price equal to the valuation cap divided by Company Capitalization. Company Capitalization is measured immediately before the priced round and includes:</p>
+<ul>
+<li>every share already outstanding, founders and employees alike;</li>
+<li>the unissued option pool as it stands before the round (an increase made for the round is mostly excluded);</li>
+<li>every converting security, meaning this SAFE, all other SAFEs, and all convertible notes, on an as-converted basis.</li>
+</ul>
+<p>What it excludes: the new money shares the priced-round investors buy, and the option pool top-up created for the round. So the SAFE holder's 6.25 percent is 6.25 percent of the company as it exists the instant before new cash arrives, with all the convertibles already turned into shares. Then the new pool and the new money dilute everyone, the SAFE holder included, by the same proportion.</p>
+<p>The design intent is simple: the founders, not the SAFE holder, absorb the dilution from any other SAFEs sold later. Each post-money SAFE holder knows exactly what they own when the round prices.</p>
+<h2>The shortcut and how far off it is</h2>
+<p>The common spreadsheet shortcut solves the percent against the pre-round shares plus the SAFE alone:</p>
+<p><code>`</code> shares = (amount / cap) * pre_round_shares / (1 - amount / cap) <code>`</code></p>
+<p>With 9,000,000 pre-round shares and a 6.25 percent SAFE that gives 0.0625 times 9,000,000 divided by 0.9375, which is 600,000 shares. Check it against the definition: 600,000 out of 9,600,000 is indeed 6.25 percent. But the moment a second convertible exists, the base is wrong. Say a 250,000 dollar pre-money SAFE at a 6,000,000 dollar cap converts in the same round. Its cap price is 6,000,000 divided by 9,000,000, which is 0.6667 dollars, so it becomes 375,000 shares. Now the true base is 9,000,000 plus 375,000 plus the post-money SAFE's own shares, and 600,000 out of 9,975,000 is only 6.02 percent. The shortcut shorted the SAFE holder 0.23 points.</p>
+<p>The correct count solves the percent against the full base. Call B the pre-round shares, N the shares from every fixed-price instrument (pre-money SAFEs, notes, anything that converts at a known price), and p the post-money SAFE's ownership percent. Then:</p>
+<p><code>`</code> S = p <em> (B + N) / (1 - p) = 0.0625 </em> (9,000,000 + 375,000) / 0.9375 = 625,000 <code>`</code></p>
+<p>Check: 625,000 out of 9,000,000 plus 375,000 plus 625,000 is 625,000 out of 10,000,000, exactly 6.25 percent. The shortcut was 25,000 shares light. At the exit modeled below that is about 38,900 dollars the SAFE holder was owed and the spreadsheet gave to someone else.</p>
+<p>With several post-money SAFEs the same closed form still works. Add up all their ownership percents and divide by one minus that sum: each SAFE gets its own p times (B + N) divided by (1 minus the total p). No iteration, no circular reference, because the fixed-price instruments do not depend on the post-money SAFEs at all.</p>
+<h2>Laying it out in Excel</h2>
+<p>Put your SAFEs and notes in a table, one per row, with columns for type, accrued amount (D), valuation cap (E), and discount (F). Put the pre-round fully diluted share count in a cell called Base (here $D$16) and the round's pre-money valuation in $D$5. Then add two helper columns before you compute anything.</p>
+<p><strong>Column K, post-money ownership percent.</strong> Only a capped post-money SAFE gets a value; everything else is zero.</p>
+<p><code>`</code> =IF(AND(C23="Post-money SAFE",D23&gt;0,E23&gt;0),D23/E23,0) <code>`</code></p>
+<p><strong>Column L, fixed-price shares.</strong> For every instrument that is not a capped post-money SAFE, convert at the lower of its cap price (cap divided by Base) and its discount price (pre-money divided by Base, times one minus the discount). If it has neither, it converts at the round price approximation.</p>
+<p><code>`</code> =IF(OR(D23=0,AND(C23="Post-money SAFE",E23&gt;0)),0, D23/IF(AND(E23&gt;0,F23&gt;0),MIN(E23/$D$16,($D$5/$D$16)<em>(1-F23)), IF(E23&gt;0,E23/$D$16,IF(F23&gt;0,($D$5/$D$16)</em>(1-F23),$D$5/$D$16)))) <code>`</code></p>
+<p>Total both columns at the bottom of the table: $K$29 is the sum of the post-money percents, $L$29 is the sum of the fixed-price shares.</p>
+<p><strong>Cap price per share (column G).</strong> This is where the two kinds of SAFE differ. A pre-money SAFE or note divides its cap by Base. A post-money SAFE divides its cap by Company Capitalization, which is (Base + $L$29) divided by (1 minus $K$29). Rearranged so the cell never divides by zero:</p>
+<p><code>`</code> =IF(E23=0,"",IF(C23="Post-money SAFE",E23*(1-$K$29)/($D$16+$L$29),E23/$D$16)) <code>`</code></p>
+<p><strong>Discount price (H), conversion price (I), shares (J).</strong> The discount price is the same for every type. The conversion price is the lower of cap and discount, falling back to whichever exists, then to the round price approximation. Shares are amount divided by conversion price.</p>
+<p><code>`</code> H23: =IF(F23&gt;0,($D$5/$D$16)*(1-F23),"") I23: =IF(D23=0,"",IF(AND(G23&lt;&gt;"",H23&lt;&gt;""),MIN(G23,H23),IF(G23&lt;&gt;"",G23,IF(H23&lt;&gt;"",H23,$D$5/$D$16)))) J23: =IF(D23=0,0,IF(I23="",0,D23/I23)) <code>`</code></p>
+<p>Because G reads the totals in K and L, and K and L read only the input columns, Excel sees a straight chain and never flags a circular reference.</p>
+<p><strong>One check cell.</strong> Every post-money SAFE's shares, divided by Base plus total conversion shares, must equal its ownership percent. One SUMPRODUCT covers all rows:</p>
+<p><code>`</code> =IF($K$29&gt;=1,"ERROR",IF(ROUND(SUMPRODUCT(($C$23:$C$28="Post-money SAFE")<em>($E$23:$E$28&gt;0)</em>$J$23:$J$28)/($D$16+$J$29)-$K$29,6)=0,"OK","ERROR")) <code>`</code></p>
+<p>If this ever reads ERROR, the base is wrong somewhere, usually because a note's accrued interest was left out of column D or a SAFE was typed with the wrong type label.</p>
+<h2>The worked seed round</h2>
+<p>Two founders hold 4,500,000 and 3,500,000 shares, with a 1,000,000 share unallocated pool, so Base is 9,000,000. Two SAFEs are outstanding: the 500,000 dollar post-money SAFE at an 8,000,000 dollar cap, and the 250,000 dollar pre-money SAFE at a 6,000,000 dollar cap with a 20 percent discount. The seed round is 3,000,000 dollars at a 12,000,000 dollar pre-money valuation, with a 10 percent post-money option pool topped up before the money comes in.</p>
+<p>| Step | Value | |---|---| | Pre-money SAFE cap price | 6,000,000 / 9,000,000 = $0.6667 | | Pre-money SAFE discount price | (12,000,000 / 9,000,000) x 0.8 = $1.0667, so the cap wins | | Pre-money SAFE shares (N) | 250,000 / 0.6667 = 375,000 | | Post-money SAFE percent (p) | 500,000 / 8,000,000 = 6.25% | | Post-money SAFE shares | 0.0625 x 9,375,000 / 0.9375 = 625,000 | | Total conversion shares | 1,000,000 | | Pre-pool fully diluted | 10,000,000 | | Pool top-up | (0.125 x 10,000,000 minus 1,000,000) / 0.875 = 285,714 | | Price per share | 12,000,000 / 10,285,714 = $1.1667 | | New investor shares | 3,000,000 / 1.1667 = 2,571,429 | | Post-money fully diluted | 12,857,143 |</p>
+<p>Post-round ownership: founders 62.22 percent, option pool 10.00 percent, post-money SAFE 4.86 percent, pre-money SAFE 2.92 percent, new investors 20.00 percent. The 0.125 pool sizing factor is the target 10 percent scaled by post-money over pre-money, which is how you size a pool that must be 10 percent after the round while being created before the money.</p>
+<p>Compare the shortcut version: 600,000 SAFE shares, a 282,143 pool top-up, a 1.1699 dollar price per share, and founders at 62.40 percent. The difference is not in the founders' favor once a lawyer reconciles the closing cap table against the SAFE itself, so it is better to have the right number in the model before the term sheet is negotiated.</p>
+<h2>Three things to watch</h2>
+<ol>
+<li><strong>Notes accrue.</strong> A convertible note converts on principal plus accrued interest, so column D must hold the accrued amount, not the face amount, or every downstream base is short.</li>
+<li><strong>Discount on a post-money SAFE.</strong> The cap-and-discount variant converts at the lower price. The formulas above handle it, but if two post-money SAFEs are present and one converts on the discount, the other's base shifts slightly; the closed form assumes the caps bind, which is the normal case.</li>
+<li><strong>Round price approximation.</strong> The discount price uses pre-money over Base, which is a little higher than the true round price because it ignores the pool top-up and the conversions themselves. A discount that just barely beats the cap in the spreadsheet may lose to it in the real closing. When they are within a few percent, run both.</li>
+</ol>
+<p>If you would rather not wire this by hand, the Numbersmith cap table workbook has the helper columns, the closed-form conversion, the check cell, three side-by-side raise scenarios, and an exit waterfall already built and formula-checked: <a href="/numbersmith/products/cap-table-dilution-calculator.html">Cap Table and Dilution Calculator</a>.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+</body></html>
