@@ -90,13 +90,21 @@
     document.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => { navigator.clipboard.writeText($(b.dataset.copy).value); b.textContent = "Copied"; setTimeout(() => b.textContent = b.dataset.copy === "amt" ? "Copy amount" : "Copy address", 1500); });
   }
 
+  // Public Base RPCs cap eth_getLogs at 2,000 blocks per call, so walk back from
+  // the tip in windows until the order's start block (or ~24h, whichever is first).
   async function check() {
     const to = "0x" + ADDRESS.slice(2).toLowerCase().padStart(64, "0");
-    const logs = await rpc("eth_getLogs", [{ address: USDC, fromBlock: "0x" + order.startBlock.toString(16), toBlock: "latest", topics: [TRANSFER, null, to] }]);
-    for (const l of logs) {
-      const v = BigInt(l.data);
-      if (v === BigInt(order.units)) return l.transactionHash;
+    const latest = parseInt(await rpc("eth_blockNumber", []), 16);
+    const floor = Math.max(order.startBlock, latest - 45000);
+    for (let hi = latest; hi >= floor; hi -= 1900) {
+      const lo = Math.max(floor, hi - 1899);
+      const logs = await rpc("eth_getLogs", [{ address: USDC, fromBlock: "0x" + lo.toString(16), toBlock: "0x" + hi.toString(16), topics: [TRANSFER, null, to] }]);
+      for (const l of logs) {
+        if (BigInt(l.data) === BigInt(order.units)) return l.transactionHash;
+      }
+      if (order.checkedOnce) break;   // after the first full sweep, only the newest window matters
     }
+    order.checkedOnce = true;
     return null;
   }
 
