@@ -3,11 +3,11 @@
 <title>Checkout | Numbersmith</title>
 <meta name="description" content="Pay with USDC on Base and download instantly.">
 
-<link rel="stylesheet" href="/numbersmith/assets/style.css">
+<link rel="stylesheet" href="/assets/style.css">
 
 </head><body>
-<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
-<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
 <main><article class="tool" id="co">
 <h1 id="title">Checkout</h1>
 <p id="lead">Pay with USDC on the Base network. The download unlocks on this page as soon as the payment confirms, usually under a minute.</p>
@@ -22,7 +22,7 @@
     <div id="qr" style="background:#fff;padding:8px;width:fit-content;border:1px solid var(--hair);border-radius:8px"></div>
     <div>
       <p><a id="walletlink" class="btn" href="#">Open in wallet app</a></p>
-      <p><small>Works with any wallet that holds USDC on Base (Coinbase Wallet, MetaMask, Rainbow, Phantom). Sending USDC on another network, or another token, will not be matched. If that happens, email hello@numbersmith.co with the transaction and we will sort it out.</small></p>
+      <p><small>Works with any wallet that holds USDC on Base (Coinbase Wallet, MetaMask, Rainbow, Phantom). Sending USDC on another network, or another token, will not be matched. If that happens, email hello@numbersmithfinance.com with the transaction and we will sort it out.</small></p>
     </div>
   </div>
   <div class="out" id="status">Waiting for payment. Keep this page open.</div>
@@ -32,7 +32,7 @@
   <h2>Paid. Thank you.</h2>
   <p>Your file: <a id="dl" class="btn" href="#">Download</a></p>
   <p><small>Bookmark this link or save the file now. Transaction: <span id="tx"></span></small></p>
-  <p><small>If anything in the file is unclear, email hello@numbersmith.co with the cell reference. Refunds on request within 30 days.</small></p>
+  <p><small>If anything in the file is unclear, email hello@numbersmithfinance.com with the cell reference. Refunds on request within 30 days.</small></p>
 </div>
 
 <p id="err" hidden class="out"></p>
@@ -42,7 +42,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 (function(){
-  const PRODUCTS = {"budget-net-worth-tracker": {"name": "Annual Budget and Net Worth Tracker", "price": 14.0, "dl": "/numbersmith/dl/049316bb17fc7b866cac/Numbersmith_Budget_and_Net_Worth_Tracker.xlsx", "file": "Numbersmith_Budget_and_Net_Worth_Tracker.xlsx"}, "cap-table-dilution-calculator": {"name": "Cap Table and Dilution Calculator (SAFEs, Option Pool, Waterfall)", "price": 29.0, "dl": "/numbersmith/dl/c3eba6d559d70c704a79/Numbersmith_Cap_Table_and_Dilution_Calculator.xlsx", "file": "Numbersmith_Cap_Table_and_Dilution_Calculator.xlsx"}, "dcf-valuation-model": {"name": "DCF Valuation Model (WACC + Sensitivity Tables)", "price": 39.0, "dl": "/numbersmith/dl/e5d23143b2c4086297b0/Numbersmith_DCF_Valuation_Model.xlsx", "file": "Numbersmith_DCF_Valuation_Model.xlsx"}, "mortgage-payoff-calculator": {"name": "Mortgage and Loan Payoff Calculator (Extra Payments, Refinance, Biweekly)", "price": 12.0, "dl": "/numbersmith/dl/191ea4ec9c222f223382/Numbersmith_Mortgage_and_Loan_Payoff_Calculator.xlsx", "file": "Numbersmith_Mortgage_and_Loan_Payoff_Calculator.xlsx"}, "rental-property-analyzer": {"name": "Rental Property Analyzer (Cash Flow, ROI, 10-Year IRR)", "price": 24.0, "dl": "/numbersmith/dl/ff98f20e942458424fdf/Numbersmith_Rental_Property_Analyzer.xlsx", "file": "Numbersmith_Rental_Property_Analyzer.xlsx"}, "startup-financial-model": {"name": "Startup Financial Model (3-Statement, Driver-Based)", "price": 59.0, "dl": "/numbersmith/dl/568b5b7aed6315ab1f95/Numbersmith_Startup_Financial_Model.xlsx", "file": "Numbersmith_Startup_Financial_Model.xlsx"}};
+  const PRODUCTS = {"budget-net-worth-tracker": {"name": "Annual Budget and Net Worth Tracker", "price": 14.0, "dl": "/dl/049316bb17fc7b866cac/Numbersmith_Budget_and_Net_Worth_Tracker.xlsx", "file": "Numbersmith_Budget_and_Net_Worth_Tracker.xlsx"}, "cap-table-dilution-calculator": {"name": "Cap Table and Dilution Calculator (SAFEs, Option Pool, Waterfall)", "price": 29.0, "dl": "/dl/c3eba6d559d70c704a79/Numbersmith_Cap_Table_and_Dilution_Calculator.xlsx", "file": "Numbersmith_Cap_Table_and_Dilution_Calculator.xlsx"}, "dcf-valuation-model": {"name": "DCF Valuation Model (WACC + Sensitivity Tables)", "price": 39.0, "dl": "/dl/e5d23143b2c4086297b0/Numbersmith_DCF_Valuation_Model.xlsx", "file": "Numbersmith_DCF_Valuation_Model.xlsx"}, "mortgage-payoff-calculator": {"name": "Mortgage and Loan Payoff Calculator (Extra Payments, Refinance, Biweekly)", "price": 12.0, "dl": "/dl/191ea4ec9c222f223382/Numbersmith_Mortgage_and_Loan_Payoff_Calculator.xlsx", "file": "Numbersmith_Mortgage_and_Loan_Payoff_Calculator.xlsx"}, "rental-property-analyzer": {"name": "Rental Property Analyzer (Cash Flow, ROI, 10-Year IRR)", "price": 24.0, "dl": "/dl/ff98f20e942458424fdf/Numbersmith_Rental_Property_Analyzer.xlsx", "file": "Numbersmith_Rental_Property_Analyzer.xlsx"}, "startup-financial-model": {"name": "Startup Financial Model (3-Statement, Driver-Based)", "price": 59.0, "dl": "/dl/568b5b7aed6315ab1f95/Numbersmith_Startup_Financial_Model.xlsx", "file": "Numbersmith_Startup_Financial_Model.xlsx"}};
   const ADDRESS = "0xCe8B6A5b9279Bc714a9B2fBF148b4FaD18df2a5C";
   const MODE = "static";           // static | server
   const SERVER = "";       // pay server base URL in server mode
@@ -142,5 +142,5 @@
 </script>
 </main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
-<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 </body></html>

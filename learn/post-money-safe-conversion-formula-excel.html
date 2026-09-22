@@ -2,12 +2,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Post-Money SAFE Conversion in Excel: The Formula That Gets the Share Count Right | Numbersmith</title>
 <meta name="description" content="How a post-money SAFE turns into shares at a priced round, why the shortcut most cap table spreadsheets use shorts the SAFE holder, and the Excel formulas that solve it in closed form with no circular reference, with a worked seed round.">
-<link rel="canonical" href="https://samk0228.github.io/numbersmith/learn/post-money-safe-conversion-formula-excel.html">
-<link rel="stylesheet" href="/numbersmith/assets/style.css">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/post-money-safe-conversion-formula-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
 
 </head><body>
-<header class="top"><a class="logo" href="/numbersmith/">Numbersmith</a>
-<nav><a href="/numbersmith/#products">Templates</a><a href="/numbersmith/model-in-24-hours.html">Model in 24h</a><a href="/numbersmith/tools/">Tools</a><a href="/numbersmith/learn/">Learn</a></nav></header>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
 <main><article><h1>Post-Money SAFE Conversion in Excel: The Formula That Gets the Share Count Right</h1>
 <p>A post-money SAFE promises the investor a fixed slice of the company: purchase amount divided by the post-money valuation cap. Five hundred thousand dollars on an eight million dollar cap is 6.25 percent, full stop. The trouble starts when you try to turn that percent into a share count in a spreadsheet, because the percent is measured against a base that includes the SAFE itself and every other SAFE and note that converts alongside it. Most cap table templates skip that last part and quietly hand the SAFE holder fewer shares than the document says. This guide walks through the correct base, shows the size of the error on a realistic seed round, and gives you formulas that solve it without a circular reference.</p>
 <h2>What the document actually says</h2>
@@ -53,7 +53,7 @@
 <li><strong>Discount on a post-money SAFE.</strong> The cap-and-discount variant converts at the lower price. The formulas above handle it, but if two post-money SAFEs are present and one converts on the discount, the other's base shifts slightly; the closed form assumes the caps bind, which is the normal case.</li>
 <li><strong>Round price approximation.</strong> The discount price uses pre-money over Base, which is a little higher than the true round price because it ignores the pool top-up and the conversions themselves. A discount that just barely beats the cap in the spreadsheet may lose to it in the real closing. When they are within a few percent, run both.</li>
 </ol>
-<p>If you would rather not wire this by hand, the Numbersmith cap table workbook has the helper columns, the closed-form conversion, the check cell, three side-by-side raise scenarios, and an exit waterfall already built and formula-checked: <a href="/numbersmith/products/cap-table-dilution-calculator.html">Cap Table and Dilution Calculator</a>.</p></article></main>
+<p>If you would rather not wire this by hand, the Numbersmith cap table workbook has the helper columns, the closed-form conversion, the check cell, three side-by-side raise scenarios, and an exit waterfall already built and formula-checked: <a href="/products/cap-table-dilution-calculator.html">Cap Table and Dilution Calculator</a>.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
-<p><a href="/numbersmith/learn/">Learn</a> · <a href="/numbersmith/support.html">Support and refunds</a> · <a href="/numbersmith/privacy.html">Privacy</a></p></footer>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 </body></html>
