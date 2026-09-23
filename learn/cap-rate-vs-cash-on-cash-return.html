@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;Cap Rate vs Cash-on-Cash Return: Formulas, Excel, and the Leverage Test&quot; | Numbersmith</title>
+<meta name="description" content="Cap rate prices the property and cash-on-cash prices your deal. Here is how to calculate both in Excel, why they disagree, and the one comparison that tells you whether the mortgage helps or hurts.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/cap-rate-vs-cash-on-cash-return.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>Cap Rate vs Cash-on-Cash Return: Formulas, Excel, and the Leverage Test</h1>
+<p>Cap rate and cash-on-cash return both describe the yield on a rental property, so people treat them as two names for the same thing. They are not. Cap rate measures the property as if you paid cash. Cash-on-cash measures what your own money earns after the mortgage is paid. The gap between them is the effect of your financing, and reading that gap correctly is the difference between a deal that works and one that only looks like it works.</p>
+<p>This guide uses one worked example all the way through: a duplex bought for $485,000 with $3,900 a month in combined rent, 25% down, and a 30-year loan at 6.75%.</p>
+<h2>The two formulas</h2>
+<p><strong>Cap rate</strong> is net operating income divided by purchase price:</p>
+<p><code>Cap Rate = NOI / Purchase Price</code></p>
+<p>NOI is rent after vacancy minus operating expenses. It excludes the mortgage on purpose, so cap rate describes the building and not the buyer.</p>
+<p><strong>Cash-on-cash return</strong> is annual cash flow after debt service divided by the cash you actually put in:</p>
+<p><code>Cash-on-Cash = (NOI − Annual Debt Service) / Total Cash Invested</code></p>
+<p>Total cash invested is the down payment plus closing costs plus any rehab. Leaving closing costs out is the most common way this number gets overstated.</p>
+<h2>Step 1: NOI for the duplex</h2>
+<p>Monthly figures, with vacancy at 5% of rent, management at 8% of collected rent, maintenance and capex reserve at 5% of rent each:</p>
+<p>| Line | Monthly | |---|---| | Gross rent | $3,900.00 | | Vacancy (5%) | −$195.00 | | Effective gross income | $3,705.00 | | Management (8% of EGI) | −$296.40 | | Maintenance (5%) | −$195.00 | | Capex reserve (5%) | −$195.00 | | Property tax ($4,200/yr) | −$350.00 | | Insurance ($1,800/yr) | −$150.00 | | Owner-paid utilities | −$150.00 | | <strong>NOI</strong> | <strong>$2,368.60</strong> |</p>
+<p>Annual NOI is $28,423.20.</p>
+<h2>Step 2: Cap rate</h2>
+<p><code>Cap Rate = 28,423.20 / 485,000 = 5.86%</code></p>
+<p>In Excel, with annual NOI in B20 and price in B2:</p>
+<p><code>=B20/B2</code></p>
+<p>A 5.86% cap rate says that if you bought this duplex with no loan, the building would return 5.86% a year on the purchase price before any appreciation.</p>
+<h2>Step 3: Cash-on-cash</h2>
+<p>The loan is 75% of $485,000, or $363,750. The monthly payment:</p>
+<p><code>=PMT(6.75%/12, 360, -363750)</code> returns <strong>$2,359.28</strong>, so annual debt service is <strong>$28,311.31</strong>.</p>
+<p>Cash invested is the $121,250 down payment plus 2% closing costs of $9,700, for <strong>$130,950</strong>.</p>
+<p><code>Cash flow = 28,423.20 − 28,311.31 = $111.89 a year</code></p>
+<p><code>Cash-on-Cash = 111.89 / 130,950 = 0.09%</code></p>
+<p>That is about $9 a month on $130,950 of your money. The cap rate looked ordinary. The cash-on-cash return is close to zero.</p>
+<p>In Excel:</p>
+<p><code>=(B20-12<em>PMT(B6/12,B7</em>12,-B5))/(B3+B4)</code></p>
+<p>where B3 is down payment, B4 is closing costs, B5 is loan amount, B6 is the rate, and B7 is the term in years.</p>
+<h2>Why they disagree: the mortgage constant</h2>
+<p>The number that connects the two metrics is the <strong>mortgage constant</strong>, which is annual debt service divided by the loan amount:</p>
+<p><code>Mortgage Constant = Annual Debt Service / Loan Amount</code></p>
+<p>For this loan: <code>28,311.31 / 363,750 = 7.78%</code>. In Excel:</p>
+<p><code>=12<em>PMT(rate/12, years</em>12, -1)</code></p>
+<p>The constant is what the borrowed money costs you each year, interest plus principal. Now compare it with what the property earns on every dollar you put in unlevered. Bought all cash, the duplex costs $494,700 including closing, so its unlevered yield is <code>28,423.20 / 494,700 = 5.75%</code>.</p>
+<p>The rule:</p>
+<ul>
+<li><strong>Constant below the unlevered yield:</strong> positive leverage. Each borrowed dollar earns more than it costs, and cash-on-cash rises above the all-cash return.</li>
+<li><strong>Constant above the unlevered yield:</strong> negative leverage. Each borrowed dollar costs more than it earns, and the loan drags your return down.</li>
+</ul>
+<p>Here the constant is 7.78% against a 5.75% yield. The loan is costing about two points more than the property earns on it, which is why the return collapses from 5.75% all cash to 0.09% with 25% down.</p>
+<h2>The same property under five financing setups</h2>
+<p>The NOI and the cap rate never change in this table. Only the financing does.</p>
+<p>| Setup | Constant | Annual cash flow | Cash-on-cash | DSCR | |---|---|---|---|---| | All cash | none | $28,423 | 5.75% | none | | 25% down, 6.75% | 7.78% | $112 | 0.09% | 1.00x | | 40% down, 6.75% | 7.78% | $5,774 | 2.83% | 1.25x | | 25% down, 5.50% | 6.81% | $3,639 | 2.78% | 1.15x | | 25% down, 4.50% | 6.08% | $6,306 | 4.82% | 1.29x |</p>
+<p>Two things stand out. Putting more money down <em>raised</em> cash-on-cash from 0.09% to 2.83%, which is backwards from what most people expect, and it happens every time leverage is negative. And even at 4.50% the loan still hurts, because the 6.08% constant is above the 5.75% yield.</p>
+<p>Solving for the break-even, a 30-year loan on this duplex turns neutral at about <strong>4.02%</strong>. Below that rate, borrowing helps. At 3.75%, for example, the constant drops to 5.56% and cash-on-cash rises to 6.27%, above the all-cash figure.</p>
+<h2>Which number to use when</h2>
+<p><strong>Use cap rate</strong> to compare properties with each other and against the local market. Because it ignores financing, two buyers with different loans can agree on it, which is why brokers quote it and appraisers use it to value income property.</p>
+<p><strong>Use cash-on-cash</strong> to decide whether <em>you</em> should buy with <em>your</em> loan. It is the number that shows up in your bank account in year one.</p>
+<p><strong>Use the mortgage constant</strong> as the quick test between them. Before you run a full model, compute the constant for the loan you can actually get and compare it with the cap rate. If the constant is higher, no amount of optimism on rent growth will make year-one cash flow good. You either need a lower price, higher rent, more cash down, or a cheaper loan.</p>
+<p>For this duplex, the fixes look like this:</p>
+<ul>
+<li><strong>Price.</strong> To reach a 7.0% cap rate on the same NOI, the price would need to be about $406,000.</li>
+<li><strong>Rent.</strong> To reach an 8% cash-on-cash return at the original financing, combined rent would need to be about $5,020 a month, which pushes the cap rate to about 8.0%.</li>
+</ul>
+<h2>Three mistakes to avoid</h2>
+<ol>
+<li><strong>Comparing cap rate to your mortgage rate.</strong> The interest rate understates the true cost of a loan because it leaves out principal. Compare cap rate to the mortgage constant instead. A 6.75% loan costs 7.78% a year on a 30-year schedule.</li>
+<li><strong>Counting only the down payment as cash invested.</strong> Closing costs and rehab are cash out of your pocket. Leaving out $9,700 of closing costs here would inflate every cash-on-cash figure in the table.</li>
+<li><strong>Treating a thin cash-on-cash as fine because of appreciation.</strong> Appreciation and principal paydown are real, but they belong in a multi-year IRR, not in a year-one yield. Judge the cash flow on its own first, then add the long view.</li>
+</ol>
+<h2>Summary</h2>
+<p>Cap rate is the property's yield. Cash-on-cash is your yield after the loan. The mortgage constant tells you which way the loan pushes the second number, and comparing it with the unlevered yield before you model anything saves a lot of wasted analysis on deals that cannot work at today's rates.</p>
+<p>If you want this whole comparison built already, with NOI, cap rate, cash-on-cash, DSCR, a pass or fail scorecard, and a 10-year IRR view that updates when you change a single input, see the <a href="/products/rental-property-analyzer.html">rental property analyzer</a>.</p>
+<p><em>For education and planning only, not financial advice.</em></p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
