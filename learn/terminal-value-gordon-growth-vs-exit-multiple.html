@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;Terminal Value: Gordon Growth vs Exit Multiple (and How to Reconcile Them)&quot; | Numbersmith</title>
+<meta name="description" content="Terminal value is usually three quarters of a DCF. Here is how both methods work in Excel, why they disagree, and the cross-check that keeps your assumption honest.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/terminal-value-gordon-growth-vs-exit-multiple.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>Terminal Value: Gordon Growth vs Exit Multiple (and How to Reconcile Them)</h1>
+<p>In most DCF models the terminal value is about three quarters of the answer. In the worked example below it is 75% of enterprise value. That means the five years you carefully forecast decide a quarter of the valuation, and one assumption about what happens afterward decides the rest.</p>
+<p>So the terminal value method is not a formatting choice at the bottom of the tab. It is the model.</p>
+<p>There are two standard methods. This guide builds both in Excel, shows why they disagree, and gives you the cross-check that catches a terminal assumption you would be embarrassed to defend.</p>
+<h2>The setup</h2>
+<p>One company, round numbers, so you can follow the arithmetic by hand.</p>
+<p>| Input | Value | |---|---| | Year 5 unlevered free cash flow | $120M | | Year 5 EBITDA | $200M | | WACC | 9.0% | | Perpetual growth rate | 2.5% | | Comparable exit multiple | 9.0x EBITDA | | Explicit forecast FCF, years 1 to 5 | 85, 95, 105, 112, 120 |</p>
+<h2>Method 1: Gordon growth</h2>
+<p>The perpetuity growth method assumes the business keeps generating cash forever, growing at a constant rate.</p>
+<p><code>`</code> TV = FCF_final × (1 + g) / (WACC − g) <code>`</code></p>
+<p>In Excel, with year 5 FCF in <code>D12</code>, WACC in <code>Inputs!B20</code>, and g in <code>Inputs!B21</code>:</p>
+<p><code>`</code>excel =D12*(1+Inputs!B21)/(Inputs!B20-Inputs!B21) <code>`</code></p>
+<p>Worked: 120 × 1.025 / (0.09 − 0.025) = <strong>$1,892.3M</strong></p>
+<p>Two rules for <code>g</code>. It must be below your WACC, because the formula divides by the difference and returns nonsense otherwise. And it should not exceed long-run nominal GDP growth, roughly 2 to 3% for a developed market. A company growing faster than the economy forever eventually becomes the economy.</p>
+<h2>Method 2: Exit multiple</h2>
+<p>The exit multiple method assumes you sell the business in year 5 at a multiple the market is currently paying for similar companies.</p>
+<p><code>`</code> TV = Metric_final × Multiple <code>`</code></p>
+<p>In Excel, with year 5 EBITDA in <code>D14</code> and the multiple in <code>Inputs!B23</code>:</p>
+<p><code>`</code>excel =D14*Inputs!B23 <code>`</code></p>
+<p>Worked: 200 × 9.0 = <strong>$1,800.0M</strong></p>
+<p>Pull the multiple from trading comparables or precedent transactions, and use the same metric definition the comps use. If your comp set quotes EV/EBITDA, your numerator has to be enterprise value and your denominator has to be EBITDA on the same basis, before any stock compensation adjustment you have made and they have not.</p>
+<h2>Why they disagree</h2>
+<p>$1,892M against $1,800M is a 5.1% gap on terminal value alone. That is small here because the inputs were chosen to be roughly consistent. They usually are not.</p>
+<p>The gap matters because the two methods are answering different questions. Gordon growth asks what the cash stream is worth in perpetuity given your own cost of capital. The exit multiple asks what someone else would pay, which embeds the market's current mood about the sector. In a frothy market the multiple method prints a higher number. After a repricing it prints a lower one, even though the cash flows have not moved.</p>
+<h2>The cross-check that keeps you honest</h2>
+<p>This is the part most models skip, and it is the reason to build both.</p>
+<p><strong>Take the multiple your Gordon assumption implies.</strong></p>
+<p><code>`</code> Implied multiple = TV_gordon / Final EBITDA <code>`</code></p>
+<p>1,892.3 / 200 = <strong>9.5x</strong></p>
+<p>Now ask whether 9.5x is defensible for this business in five years. If comparable companies trade at 7x today and your perpetuity assumption quietly implies 9.5x, you are not forecasting, you are hoping.</p>
+<p><strong>Then run it backwards.</strong></p>
+<p><code>`</code> Implied g = (WACC × TV_multiple − FCF_final) / (TV_multiple + FCF_final) <code>`</code></p>
+<p>(0.09 × 1,800 − 120) / (1,800 + 120) = <strong>2.19%</strong></p>
+<p>So a 9.0x exit multiple is the same as assuming the business grows at 2.19% forever. That is a reasonable number. If the arithmetic had come back at 6%, your "market-based" multiple was actually a growth assumption nobody would sign off on stated plainly.</p>
+<p>In Excel, side by side:</p>
+<p><code>`</code>excel Implied exit multiple  =E20/D14 Implied perpetual g    =(Inputs!B20*E21-D12)/(E21+D12) <code>`</code></p>
+<p>Both methods should land in a range you can defend. When they do not, the disagreement is the finding. Do not average them and move on.</p>
+<h2>Discounting the terminal value</h2>
+<p>One detail that changes the answer by a few percent and is easy to get wrong.</p>
+<p>If you use the mid-year convention for the explicit forecast, because cash arrives through the year rather than in a lump on December 31, then those flows discount at <code>t − 0.5</code>. The terminal value is different. It is measured <strong>as of the end of year 5</strong>, so it discounts at the full <code>t = 5</code>.</p>
+<p><code>`</code>excel PV of explicit FCF   =D12/(1+$B$20)^(D$5-0.5) PV of terminal value =E20/(1+$B$20)^5 <code>`</code></p>
+<p>Discounting the terminal value at 4.5 instead of 5 overstates it by about 4%, and because terminal value is three quarters of the model, it overstates your whole valuation by roughly 3%.</p>
+<h2>What this does to enterprise value</h2>
+<p>| | Gordon growth | Exit multiple | |---|---|---| | PV of explicit FCF (years 1-5) | $413.8M | $413.8M | | PV of terminal value | $1,229.9M | $1,169.9M | | <strong>Enterprise value</strong> | <strong>$1,643.7M</strong> | <strong>$1,583.7M</strong> | | Terminal value as share of total | 75% | 74% |</p>
+<p>A 5% difference in terminal value became a 3.8% difference in enterprise value. That is the leverage: the terminal assumption dominates, and it is also the assumption with the least evidence behind it.</p>
+<h2>How fragile is <code>g</code>, really</h2>
+<p>Hold everything else and move the perpetual growth rate by one percentage point either way.</p>
+<p>| g | Terminal value | Change | |---|---|---| | 1.5% | $1,624.0M | −14.2% | | 2.5% | $1,892.3M | base | | 3.5% | $2,258.2M | +19.3% |</p>
+<p>A one point move in an assumption you cannot observe swings terminal value by roughly 15 to 19%. This is why a DCF should be presented as a range from a sensitivity table, not as a single price with two decimal places. The decimals imply a precision the inputs do not have.</p>
+<h2>The practical rule</h2>
+<p>Build both. Report the one your reader expects, which is usually the exit multiple for a sale process and Gordon growth for a long-hold valuation. Show the implied cross-check for whichever one you did not lead with. And put a sensitivity grid on WACC against terminal growth next to it, so the number is presented as the range it actually is.</p>
+<p>---</p>
+<p><em>Built with AI assistance and formula-checked. For education and planning only, not financial advice.</em></p>
+<p>If you want this already wired up, the <a href="/products/dcf-valuation-model.html">DCF Valuation Model</a> has both terminal value methods on a one-click switch, the implied multiple and implied growth cross-checks, mid-year convention handled correctly, and two 5x5 sensitivity grids built from formulas rather than Excel's Data Table tool, so they survive sheet protection and a move to Google Sheets.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){try{var i=new Image();i.referrerPolicy="no-referrer";i.src="https://numbersmith-analytics.numbersmith.workers.dev/px?k=page&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();}catch(e){}})();</script>
+</body></html>
