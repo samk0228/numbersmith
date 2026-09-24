@@ -1,0 +1,91 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LTV to CAC Ratio Formula: How to Calculate It in Excel Without Fooling Yourself | Numbersmith</title>
+<meta name="description" content="The LTV and CAC formulas for a SaaS startup, a worked example from a sample B2B model, and the two adjustments (fully loaded CAC and a capped lifetime) that turn a 14.7x ratio into an honest 5x.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/ltv-to-cac-ratio-formula-saas.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>LTV to CAC Ratio Formula: How to Calculate It in Excel Without Fooling Yourself</h1>
+<p>The LTV to CAC ratio compares what a customer is worth over their whole relationship with you to what it cost to win them. Investors ask for it because it answers one question fast: does spending another dollar on growth create value or destroy it. The formula is simple. The problem is that each half has a few inputs you get to choose, and nearly every choice makes the ratio look better. This guide walks the formulas, runs them on a sample B2B SaaS company, and then applies the two adjustments that separate a pitch-deck ratio from one that survives diligence.</p>
+<h2>The two formulas</h2>
+<p><strong>Customer acquisition cost (CAC)</strong> is sales and marketing spend in a period divided by new customers won in that period.</p>
+<p><code>CAC = Sales and marketing spend ÷ New customers added</code></p>
+<p><strong>Lifetime value (LTV)</strong> for a subscription business is the gross profit one customer produces per month, divided by the monthly churn rate.</p>
+<p><code>LTV = (ARPU × Gross margin %) ÷ Monthly churn %</code></p>
+<p>ARPU is average revenue per customer per month. Dividing by churn works because a business that loses 4% of its customers each month keeps the average customer for 1 ÷ 0.04 = 25 months.</p>
+<p>Use gross margin, not revenue. A customer paying $500 a month who costs you $90 a month to host and support is worth $410 a month to you, not $500. Revenue-based LTV is the most common error in early decks and the easiest one for an investor to spot.</p>
+<p>The ratio is then:</p>
+<p><code>LTV:CAC = LTV ÷ CAC</code></p>
+<p>A related number, <strong>CAC payback</strong>, tells you how many months of gross profit it takes to earn back the acquisition cost:</p>
+<p><code>CAC payback (months) = CAC ÷ (ARPU × Gross margin %)</code></p>
+<p>The common rules of thumb are an LTV:CAC of at least 3x and a payback under 12 months. They are rules of thumb, not laws, but they are what most people will hold your numbers against.</p>
+<h2>A worked example</h2>
+<p>Take a sample B2B SaaS company in its first year. It sells a $500 a month core subscription and a $180 a month add-on. Its marketing budget is 25% of revenue. In Year 1 it:</p>
+<ul>
+<li>Spends $242,951 on marketing</li>
+<li>Adds 465 new customers</li>
+<li>Earns a blended ARPU of $414.29 a month</li>
+<li>Runs a blended gross margin of 81.2%</li>
+<li>Loses about 4.4% of customers a month</li>
+</ul>
+<p>CAC is $242,951 ÷ 465 = <strong>$522.77</strong>.</p>
+<p>Monthly gross profit per customer is $414.29 × 81.2% = $336.40.</p>
+<p>LTV is $336.40 ÷ 4.4% = about <strong>$7,650</strong>. The model computes $7,662.45 because it carries churn to more decimal places than the rounded 4.4%.</p>
+<p>LTV:CAC is $7,662.45 ÷ $522.77 = <strong>14.66x</strong>, and payback is $522.77 ÷ $336.40 = <strong>1.6 months</strong>.</p>
+<p>That is five times the 3x benchmark with payback in under two months. If you saw this in a pitch deck you should be suspicious, and so should the founder who built it. Two things are inflating it.</p>
+<h2>Adjustment 1: fully load the CAC</h2>
+<p>The CAC above counts only the marketing budget. It leaves out the people whose job is to win customers. This company hires a sales lead in month 4 at a fully loaded $9,500 a month and a marketing manager in month 11 at $8,500. In Year 2 a sales rep joins in month 18 at $8,000.</p>
+<p>Their Year 1 cost is:</p>
+<ul>
+<li>Sales lead: 9 months × $9,500 = $85,500</li>
+<li>Marketing manager: 2 months × $8,500 = $17,000</li>
+<li>Total: $102,500</li>
+</ul>
+<p>Fully loaded CAC is ($242,951 + $102,500) ÷ 465 = <strong>$742.91</strong>, up 42%.</p>
+<p>Run the same adjustment across three years and the picture changes:</p>
+<p>| | Year 1 | Year 2 | Year 3 | |---|---|---|---| | Marketing-only CAC | $522.77 | $931.44 | $1,069.46 | | Sales and marketing payroll | $102,500 | $272,000 | $312,000 | | Fully loaded CAC | $742.91 | $1,230.58 | $1,244.90 | | LTV | $7,662.45 | $7,874.60 | $8,073.23 | | LTV:CAC, marketing only | 14.66x | 8.45x | 7.55x | | LTV:CAC, fully loaded | 10.31x | 6.40x | 6.49x | | Payback, fully loaded (months) | 2.2 | 3.6 | 3.6 |</p>
+<p>Two things stand out. The fully loaded ratio is a third lower in every year. And the Year 1 ratio is the least trustworthy number in the table. In year one the sales team is only partly hired and the first customers often come from founder networks at close to zero cost. CAC rises as you exhaust the easy customers, which is exactly what Years 2 and 3 show. If you quote one ratio, quote a mature year, not the first.</p>
+<p>A fair question is how much salary to allocate. Include anyone whose main job is acquiring new customers: sales, sales engineering, marketing, and the tools they use. Leave out customer success if it mainly serves existing accounts. Whatever you choose, write it down and apply it the same way every year.</p>
+<h2>Adjustment 2: cap the lifetime</h2>
+<p>The <code>ARPU × margin ÷ churn</code> formula assumes churn stays constant forever. At 4.4% monthly churn the implied average lifetime is 1 ÷ 0.044 = 22.7 months, which sounds modest. But the formula also counts the small tail of customers who stay for five and ten years. For a young company with two years of data, nobody knows if those customers exist.</p>
+<p>A more conservative approach counts only the gross profit a customer produces in the first 36 months. The Excel formula for a capped LTV is:</p>
+<p><code>= GP_per_month × (1 − (1 − churn)^36) ÷ churn</code></p>
+<p>This is the sum of a geometric series. It adds up expected gross profit month by month, with the chance that the customer is still around shrinking each month, and then stops at month 36.</p>
+<p>For Year 3 of the sample company, gross profit per customer is $428.85 × 81.3% = $348.66 a month and churn is 4.3%. The capped LTV is about <strong>$6,442</strong> against $8,073 uncapped. Against the fully loaded Year 3 CAC of $1,244.90 the ratio is <strong>5.17x</strong>.</p>
+<p>So the same company, from the same model, can honestly report anything from 14.66x to 5.17x depending on the choices above. 5x is still a healthy business. The difference is that 5x survives a skeptical investor's own recalculation, and 14.66x does not.</p>
+<h2>Check the churn number itself</h2>
+<p>The ratio is more sensitive to churn than to anything else, because churn sits in the denominator of LTV. If Year 3 churn were 6% instead of 4.3%, uncapped LTV would fall to $348.66 ÷ 6% = $5,811 and the fully loaded ratio would drop to 4.67x.</p>
+<p>Also translate monthly churn to annual before you present it. 4.4% a month sounds small, but (1 − 0.044)^12 = 58.3%, so the company keeps only about 58% of a starting group of customers after a year. That can be normal for small-business customers and alarming for enterprise ones. Know which you are before someone asks.</p>
+<p>Measure churn on customers who have been around at least a few months. A single month in which three of your first twenty customers leave gives you a 15% churn rate that means almost nothing.</p>
+<h2>Building it in Excel</h2>
+<p>A clean unit economics tab needs only a few rows per year, all linked to your monthly model:</p>
+<ol>
+<li>Sales and marketing spend, including allocated payroll</li>
+<li>New customers added</li>
+<li>CAC, as row 1 ÷ row 2</li>
+<li>Average customers for the period, blended ARPU, and blended gross margin</li>
+<li>Monthly churn, as customers lost ÷ average customers, divided by 12 for an annual period</li>
+<li>LTV, uncapped and capped, side by side</li>
+<li>LTV:CAC and CAC payback for both versions</li>
+</ol>
+<p>Wrap each division in <code>IFERROR(..., 0)</code> so a year with no new customers shows zero instead of an error. Keep churn, margin, and ARPU as formulas pulling from the monthly build, never typed in, so the ratio moves when the plan moves.</p>
+<h2>Checklist</h2>
+<p>Before an LTV:CAC ratio goes in a deck, confirm that:</p>
+<ul>
+<li>LTV uses gross margin, not revenue.</li>
+<li>CAC includes sales and marketing payroll, not only ad spend.</li>
+<li>You quote a mature year, or show all years, rather than the flattering first one.</li>
+<li>You can show a capped LTV (36 months is common) next to the uncapped one.</li>
+<li>Churn is measured on a real cohort and shown as an annual figure too.</li>
+<li>Payback is stated in months alongside the ratio.</li>
+</ul>
+<p>The worked example above comes from the sample company in the <a href="/products/startup-financial-model.html">Numbersmith startup financial model</a>. Its Unit Economics tab computes CAC, LTV, LTV:CAC, and payback by year from a 36-month build. As shipped, its CAC counts the marketing budget only, so add your sales payroll using the steps above.</p>
+<p><em>For education and planning only, not financial advice.</em></p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
