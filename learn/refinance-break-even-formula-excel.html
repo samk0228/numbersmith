@@ -1,0 +1,75 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Refinance Break-Even Formula in Excel: The Simple Version and the One That Tells the Truth | Numbersmith</title>
+<meta name="description" content="How to calculate the break-even month on a mortgage refinance in Excel, why closing costs divided by monthly savings can mislead you in both directions, and the interest-based test that gives the same answer whatever term you choose.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/refinance-break-even-formula-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>Refinance Break-Even Formula in Excel: The Simple Version and the One That Tells the Truth</h1>
+<p>The break-even month is the question behind every refinance. You pay closing costs today and you get a lower rate. The break-even month is when the savings have paid back those costs. If you expect to keep the loan past that month, the refinance pays. If you expect to sell or refinance again before it, the refinance costs you money.</p>
+<p>Most calculators use one formula for this. It is quick and it is often wrong. This guide builds that formula in Excel, shows where it misleads, and then builds a second test that holds up. Every number below comes from one worked example, so you can rebuild it and check each cell.</p>
+<h2>The worked example</h2>
+<p>Put these inputs in their own cells:</p>
+<p>| Cell | Input | Example | |---|---|---| | B2 | Original loan amount | 420,000 | | B3 | Current rate | 7.25% | | B4 | Original term in years | 30 | | B5 | Payments already made | 36 | | B6 | New rate | 6.25% | | B7 | New term in years | 30 | | B8 | Closing costs | 6,000 |</p>
+<p>This is a borrower three years into a 30-year loan who has been quoted a rate one point lower. The closing costs are paid in cash, not rolled into the new loan. Rolling them in is covered further down.</p>
+<h2>Step 1: the current payment and remaining balance</h2>
+<p>The current payment comes from PMT:</p>
+<p><code>`</code> B10: =ROUND(PMT(B3/12, B4*12, -B2), 2) <code>`</code></p>
+<p>That gives 2,865.14.</p>
+<p>The balance after 36 payments is the amount you would refinance. FV gives it in one cell:</p>
+<p><code>`</code> B11: =-FV(B3/12, B5, -B10, B2) <code>`</code></p>
+<p>That gives about 406,868. An amortization schedule that rounds interest to the cent each month lands on 406,868.06, which is the figure used from here on. The two methods agree to within a few cents.</p>
+<h2>Step 2: the new payment</h2>
+<p>The new loan starts at the remaining balance:</p>
+<p><code>`</code> B12: =ROUND(PMT(B6/12, B7*12, -B11), 2) <code>`</code></p>
+<p>At 6.25% over 30 years that is 2,505.16. The monthly saving is:</p>
+<p><code>`</code> B13: =B10-B12 <code>`</code></p>
+<p>That is 359.98 a month.</p>
+<h2>Step 3: the simple break-even</h2>
+<p>Here is the formula almost every calculator uses:</p>
+<p><code>`</code> B14: =B8/B13 <code>`</code></p>
+<p>6,000 divided by 359.98 is 16.7 months. Round up and the simple answer is month 17.</p>
+<p>This number is easy to explain and it is what most people quote. It has one problem. A lower payment is not the same thing as a saving.</p>
+<h2>Why the simple formula misleads</h2>
+<p>A payment is part interest and part principal. Principal is not a cost. It is money moved from your checking account into your home equity. When a refinance lowers your payment, some of that drop is lower interest. That part is a real saving. The rest is slower principal repayment, which is not a saving. You are only paying down your own debt more slowly.</p>
+<p>The example shows this clearly. After 24 months the numbers look like this:</p>
+<p>| After 24 months | Keep current loan | Refinance to 30 years | |---|---|---| | Payments saved | 0 | 8,639.52 | | Loan balance | 396,390.87 | 397,025.98 | | Interest saved | 0 | 8,004.41 |</p>
+<p>The refinance lowered your payments by 8,639.52. But your balance is 635.11 higher than it would have been. So the true saving is 8,004.41, which is exactly the interest you avoided. Payment savings overstate the benefit whenever the new loan pays down principal more slowly.</p>
+<p>Now try the opposite case. Set the new term in B7 to 25 years. The new payment is 2,683.98 and the monthly saving falls to 181.16. The simple formula says 6,000 divided by 181.16 is 33.1 months. That makes the refinance look twice as slow.</p>
+<p>But the shorter loan pays principal faster. After 24 months the balance is 392,467.16, which is 3,923.71 lower than the current loan. Interest saved is 8,271.55, a little more than the 30-year option. The simple formula understates this refinance because it ignores the equity you build.</p>
+<p>So the simple formula leans toward term resets and away from shorter terms. That is the wrong way around for most people.</p>
+<h2>Step 4: the interest break-even</h2>
+<p>The honest test compares cumulative interest on the two loans. The break-even month is the first month where interest saved is at least the closing costs.</p>
+<p>Excel's CUMIPMT gives cumulative interest between two payment numbers. It returns a negative number, so wrap it in a minus sign. Build a helper column with month numbers 1 through 360 in column D starting at D20, then:</p>
+<p><code>`</code> E20: =-CUMIPMT($B$3/12, $B$4<em>12-$B$5, $B$11, 1, D20, 0) F20: =-CUMIPMT($B$6/12, $B$7</em>12, $B$11, 1, D20, 0) G20: =E20-F20 <code>`</code></p>
+<p>The first formula uses the remaining 324 months of the old loan, starting from the current balance. That gives the same interest as continuing the original schedule. Column G is interest saved to date. Fill down, then find the first month where G clears the closing costs:</p>
+<p><code>`</code> B15: =INDEX(D20:D379, MATCH(TRUE, INDEX(G20:G379&gt;=$B$8, 0), 0)) <code>`</code></p>
+<p>For the example the answer is month 18. Interest saved by month 18 is 6,030.77. By month 17 it is still below 6,000.</p>
+<p>Now switch B7 to 25 years. The answer is also month 18. Interest saved at month 18 is 6,177.30.</p>
+<p>That is the useful result. The simple formula said 17 months for one option and 34 for the other. The interest test says both refinances pay back their costs at the same time, because both come from the same one-point rate cut on the same balance. The term changes how fast you build equity. It does not change when the closing costs are repaid.</p>
+<h2>Step 5: check the lifetime cost</h2>
+<p>Break-even tells you when a refinance pays for itself. It does not tell you how much it pays over the full loan. For that, compare total interest plus closing costs over each loan's life:</p>
+<p><code>`</code> B16: =-CUMIPMT(B3/12, B4<em>12-B5, B11, 1, B4</em>12-B5, 0) B17: =-CUMIPMT(B6/12, B7<em>12, B11, 1, B7</em>12, 0)+B8 <code>`</code></p>
+<p>For the example, keeping the current loan costs about 521,437 in remaining interest. The 30-year refinance costs about 494,986 in interest plus 6,000 in closing costs, so it saves about 20,451 over its life. You also make payments for three more years than you would have.</p>
+<p>The 25-year refinance costs about 398,329 in interest plus 6,000. It saves about 117,109 and finishes two years earlier than the current loan. The payment is 181.16 lower rather than 359.98 lower, and that is the trade.</p>
+<h2>If closing costs are rolled into the loan</h2>
+<p>Many refinances add closing costs to the new balance. Then you pay nothing in cash, but you start the new loan owing more. The new payment uses <code>B11+B8</code> as the loan amount, which gives 2,542.10 for the example. The monthly saving drops to 323.04.</p>
+<p>The cleanest test here is your net position. That is payments saved to date minus the extra balance you owe. Add two columns next to the month numbers:</p>
+<p><code>`</code> H20: =-FV($B$3/12, D20, -$B$10, $B$11) I20: =-FV($B$6/12, D20, -$B$12, $B$11+$B$8) J20: =($B$10-$B$12)*D20-(I20-H20) <code>`</code></p>
+<p>Column H is the old loan's balance and column I is the new one. Net position starts at minus 6,000 and turns positive at month 20 in the example. Rolling the costs in costs you two extra months, because you pay interest on the 6,000 too.</p>
+<h2>Checks before you trust the sheet</h2>
+<ul>
+<li>Set the new rate equal to the current rate and the new term to the remaining term. The payment saving should be zero and interest saved should stay at zero every month.</li>
+<li>Set closing costs to zero. The interest break-even should be month 1 whenever the new rate is lower.</li>
+<li>For any month, payments saved minus interest saved should equal the new balance minus the old balance. If it does not, one of the schedules is off.</li>
+</ul>
+<h2>Where this fits</h2>
+<p>The sheet above answers one refinance question. If you want it next to a full amortization schedule, extra payment scenarios, and a biweekly view, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has a Refinance tab with the side by side comparison, a break-even month on closing costs, and a plain verdict, all on open formulas. You enter your own quote, and it does not suggest any lender or loan. For education and planning only, not financial advice.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
