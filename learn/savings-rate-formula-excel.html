@@ -1,0 +1,82 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Savings Rate Formula in Excel: Pick One Definition and Track It Honestly | Numbersmith</title>
+<meta name="description" content="How to calculate your savings rate in Excel, why the same household can land anywhere from 20% to 34% depending on the definition, and how to track it by month without the averaging mistake most spreadsheets make.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/savings-rate-formula-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>Savings Rate Formula in Excel: Pick One Definition and Track It Honestly</h1>
+<p>Your savings rate is the share of your income that you keep. It is the most useful single number in a personal budget, because it moves with both sides of the ledger. If you earn more it goes up. If you spend less it also goes up.</p>
+<p>The formula looks simple: savings divided by income. The trouble is that "savings" and "income" can each mean several things. Pick different versions and one household can report a rate anywhere from 20% to 34%. None of those numbers is wrong. They just answer different questions, and they cannot be compared with each other.</p>
+<p>This guide builds each version in Excel from one worked example. Then it shows how to track the rate month by month without the averaging mistake that inflates or deflates most trackers.</p>
+<h2>The worked example</h2>
+<p>Put these inputs in their own cells:</p>
+<p>| Cell | Input | Example (monthly) | |---|---|---| | B2 | Gross pay | 10,000 | | B3 | Pre-tax 401(k) contribution | 600 | | B4 | Employer match | 300 | | B5 | Take-home pay (after tax and the 401(k)) | 7,800 | | B6 | Spending, everything that leaves checking | 6,200 | | B7 | Mortgage principal inside that spending | 500 |</p>
+<p>This is a household earning $120,000 a year. They put 6% into a 401(k) and get a 3% match. Taxes and payroll deductions take $1,600 a month, which leaves $7,800 of take-home pay. They spend $6,200 of it, and that includes a mortgage payment with $500 of principal in it.</p>
+<p>Cash saved from take-home is one subtraction:</p>
+<p><code>`</code> B8:  =B5-B6          -&gt; 1,600 <code>`</code></p>
+<h2>Version 1: cash saved over take-home pay</h2>
+<p><code>`</code> =B8/B5               -&gt; 20.51% <code>`</code></p>
+<p>This is the version most budget apps show. It only sees money that hit checking. It is easy to measure, but it leaves out the 401(k) and the match. Both of those are real savings. Someone who switches from saving in a brokerage account to saving through payroll would see this rate fall even though nothing changed.</p>
+<h2>Version 2: add the pre-tax contribution back</h2>
+<p>If you count the 401(k) contribution as savings, count it as income too. Otherwise the numerator grows and the denominator does not, and the rate is overstated.</p>
+<p><code>`</code> =(B8+B3)/(B5+B3)     -&gt; 26.19% <code>`</code></p>
+<p>That is 2,200 over 8,400. The 401(k) money was never in your checking account, but it was still your income and you still kept it.</p>
+<h2>Version 3: add the employer match</h2>
+<p>The match is compensation you would lose if you left. Most people who track this seriously include it, on both sides again.</p>
+<p><code>`</code> =(B8+B3+B4)/(B5+B3+B4)     -&gt; 28.74% <code>`</code></p>
+<p>That is 2,500 over 8,700. The denominator here equals take-home pay plus everything that went to savings before it reached you. It is the income you actually had control over after tax.</p>
+<h2>Version 4: the gross pay basis</h2>
+<p>Some people divide by gross pay instead:</p>
+<p><code>`</code> =(B8+B3+B4)/(B2+B4)        -&gt; 24.27% <code>`</code></p>
+<p>That is 2,500 over 10,300. This mixes in your tax bill, which changes with where you live and how you file, so the number tells you more about taxes than about habits. It is fine if you always use it. But it should not be compared with someone else's after-tax rate.</p>
+<h2>Version 5: count mortgage principal as savings</h2>
+<p>Principal paid down on a mortgage raises your net worth the same way a deposit does. Some trackers move it out of spending and into savings:</p>
+<p><code>`</code> =(B8+B3+B4+B7)/(B5+B3+B4)  -&gt; 34.48% <code>`</code></p>
+<p>That is 3,000 over 8,700. It is a defensible view of wealth building. It is also the definition most likely to flatter you, because the principal share of a mortgage payment grows every year even if you do nothing.</p>
+<h2>The same household, five answers</h2>
+<p>| Version | Numerator | Denominator | Rate | |---|---|---|---| | 1. Cash over take-home | 1,600 | 7,800 | 20.51% | | 2. Plus 401(k) | 2,200 | 8,400 | 26.19% | | 3. Plus match | 2,500 | 8,700 | 28.74% | | 4. Gross basis | 2,500 | 10,300 | 24.27% | | 5. Plus principal | 3,000 | 8,700 | 34.48% |</p>
+<p>A 14-point spread from one paycheck. The spread is the reason to write your definition down in the workbook before you start tracking.</p>
+<p>A good default is Version 3. It counts every dollar you kept, and it excludes taxes you cannot control. It also has a useful property: its denominator minus its numerator is exactly your spending. 8,700 minus 2,500 is 6,200, the same as B6. So Version 3 is the only one on the list that connects your savings rate directly to the life you are paying for. If you want to credit principal, track it as a second line rather than blending it in.</p>
+<h2>Why the rate matters more than the dollar amount</h2>
+<p>Each month this household saves $2,500 and spends $6,200. So each month of saving covers about 0.40 months of spending. At the Version 1 rate it would look like 0.26 months.</p>
+<p>That ratio is the reason the savings rate matters more than the dollar amount. A raise that goes straight into spending leaves the ratio flat. A cut in spending moves it twice. You save more and you need less. This is arithmetic, not a forecast of any investment return.</p>
+<h2>Tracking it by month: sum first, then divide</h2>
+<p>Here is where most spreadsheets go wrong. Suppose you track Version 1 for three months:</p>
+<p>| Month | Income | Saved | Monthly rate | |---|---|---|---| | Jan | 7,800 | 1,600 | 20.51% | | Feb | 7,800 | 400 | 5.13% | | Mar | 11,800 | 5,200 | 44.07% |</p>
+<p>February had a car repair. March had a $4,000 bonus. The obvious year-to-date formula averages the monthly rates:</p>
+<p><code>`</code> =AVERAGE(D2:D4)            -&gt; 23.24% <code>`</code></p>
+<p>That is wrong. It gives February's small income the same weight as March's big one. The right answer divides total saved by total income:</p>
+<p><code>`</code> =SUM(C2:C4)/SUM(B2:B4)     -&gt; 26.28% <code>`</code></p>
+<p>That is 7,200 over 27,400. The gap here is 3 points in three months, and it grows in years with bonuses, commissions, or irregular freelance income. An average of ratios is almost never the ratio you want.</p>
+<p>The same rule applies to a trailing 12-month rate, which is the best single number for judging a year. In row 13 of a monthly table:</p>
+<p><code>`</code> =SUM(C2:C13)/SUM(B2:B13) <code>`</code></p>
+<p>For a rolling window as new months are added, use OFFSET or INDEX so the window stays 12 rows long:</p>
+<p><code>`</code> =SUM(INDEX(C:C,ROW()-11):C13)/SUM(INDEX(B:B,ROW()-11):B13) <code>`</code></p>
+<h2>Pulling the inputs from a transaction log</h2>
+<p>If you log each transaction with a date, an amount, and a category, SUMIFS fills the monthly table for you. With dates in column A, categories in column B, and amounts in column C of a sheet called Transactions:</p>
+<p><code>`</code> Income:  =SUMIFS(Transactions!C:C, Transactions!B:B, "Income", Transactions!A:A, "&gt;="&amp;E2, Transactions!A:A, "&lt;"&amp;EDATE(E2,1)) Spent:   =SUMIFS(Transactions!C:C, Transactions!B:B, "&lt;&gt;Income", Transactions!A:A, "&gt;="&amp;E2, Transactions!A:A, "&lt;"&amp;EDATE(E2,1)) <code>`</code></p>
+<p>E2 holds the first day of the month. The EDATE bound catches every date in that month without hard-coding 28, 30, or 31 days. Add the payroll items (the 401(k) and the match) as their own monthly rows, because they never pass through checking and your log will not see them.</p>
+<h2>Three checks before you trust the number</h2>
+<ol>
+<li><strong>Transfers are not spending.</strong> A move from checking to savings is not an expense. If your log counts it as one, your rate drops for no reason. Give transfers their own category and leave them out of the Spent formula.</li>
+<li><strong>Refunds net against the category.</strong> A $200 return should reduce spending, not add to income.</li>
+<li><strong>Annual bills distort single months.</strong> Insurance or property tax paid once a year will make one month look terrible. Judge the trailing 12 months, not the worst month.</li>
+</ol>
+<h2>Summary</h2>
+<ul>
+<li>Savings rate is savings over income. Write down which savings and which income before you track it.</li>
+<li>Anything you add to savings (401(k), match) also belongs in income.</li>
+<li>Version 3, all savings over after-tax income, is a solid default, and its denominator minus its numerator equals your spending.</li>
+<li>For year-to-date and trailing rates, sum first and divide once. Never average monthly rates.</li>
+</ul>
+<p>For education and planning only, not financial advice.</p>
+<p>If you would rather not build this from scratch, the <a href="/products/budget-net-worth-tracker.html">Numbersmith Annual Budget and Net Worth Tracker</a> fills a monthly budget from a transaction log, calculates the savings rate each month and year to date, and charts it against a target you set.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
