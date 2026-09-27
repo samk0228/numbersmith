@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;How to Calculate IRR on a Rental Property in Excel (10-Year Hold, Worked Example)&quot; | Numbersmith</title>
+<meta name="description" content="A step-by-step Excel build for rental property IRR, from yearly cash flow to loan balance at sale, with the equity multiple, MIRR, and a sensitivity table that shows which assumption is really carrying the return.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/rental-property-irr-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>How to Calculate IRR on a Rental Property in Excel</h1>
+<p>Year-one cash-on-cash return tells you what a rental pays you now. It says nothing about loan paydown or the sale at the end. IRR is the metric that puts all of it on one timeline. It is the single annual rate that makes every dollar you put in equal every dollar you get back, adjusted for when each dollar moves.</p>
+<p>This guide builds a 10-year rental IRR in Excel on one worked example. It is the same duplex used in our <a href="/learn/cap-rate-vs-cash-on-cash-return.html">cap rate vs cash-on-cash guide</a>. That deal returned 0.09% cash-on-cash in year one, so it makes a good test of what IRR does and does not tell you.</p>
+<h2>The deal</h2>
+<p>| Input | Value | |---|---| | Purchase price | $485,000 | | Down payment (25%) | $121,250 | | Closing costs (2%) | $9,700 | | Loan | $363,750 at 6.75%, 30 years | | Year-one NOI | $28,423.20 | | Rent and expense growth | 3% a year | | Appreciation | 3% a year | | Hold | 10 years | | Selling costs | 6% of sale price |</p>
+<p>Total cash in on day one is $121,250 plus $9,700, which is <strong>$130,950</strong>.</p>
+<p>Keep the inputs in their own block below the timeline. The formulas in this guide use <code>B20</code> year-one NOI, <code>B21</code> growth, <code>B22</code> appreciation, <code>B23</code> price, <code>B24</code> down payment, <code>B25</code> closing costs, <code>B26</code> loan amount, and <code>B27</code> interest rate.</p>
+<h2>Step 1: Lay out the timeline</h2>
+<p>Put the years across one row. Year 0 is the purchase date and years 1 to 10 are the ends of each year of ownership.</p>
+<ul>
+<li><code>B1</code> = 0</li>
+<li><code>C1</code> = <code>=B1+1</code>, filled right to <code>L1</code></li>
+</ul>
+<p>Each column is one period. IRR in Excel assumes the periods are evenly spaced, so one column per year keeps the math honest.</p>
+<h2>Step 2: Yearly NOI and debt service</h2>
+<p>NOI goes in row 3:</p>
+<p><code>C3 = $B$20*(1+$B$21)^(C1-1)</code></p>
+<p>Rent and every expense grow at 3%, so NOI also grows at exactly 3%. Year 10 NOI comes out to $37,085.83. If your expenses grow faster than rent, give them their own row and their own growth rate.</p>
+<p>Debt service is flat for a fixed-rate loan:</p>
+<p><code>C4 = 12*PMT($B$27/12, 360, -$B$26)</code></p>
+<p>That is $2,359.28 a month, or <strong>$28,311.31 a year</strong>.</p>
+<p>Cash flow before tax in row 5 is <code>=C3-C4</code>. It runs from $111.89 in year 1 to $8,774.52 in year 10. The sum over ten years is <strong>$42,727.07</strong>.</p>
+<h2>Step 3: The sale in year 10</h2>
+<p>Three lines go in the year 10 column only.</p>
+<p><strong>Sale price</strong> is the purchase price grown at the appreciation rate:</p>
+<p><code>=$B$23*(1+$B$22)^10</code> returns <strong>$651,799.44</strong></p>
+<p><strong>Selling costs</strong> at 6% are <strong>$39,107.97</strong>.</p>
+<p><strong>Loan balance</strong> after 120 payments comes from FV:</p>
+<p><code>=FV($B$27/12, 120, PMT($B$27/12, 360, -$B$26), -$B$26)</code> returns <strong>$310,282.38</strong></p>
+<p>The sign convention trips people up here. The loan is entered as a negative present value and the payment as a positive number, so FV returns the balance still owed as a positive figure. Check it the easy way. The balance should be a bit below the original loan, since early payments are mostly interest. Here $53,467.62 of principal was paid off in ten years.</p>
+<p>Net sale proceeds are $651,799.44 minus $39,107.97 minus $310,282.38, which is <strong>$302,409.09</strong>.</p>
+<h2>Step 4: The cash flow row and the IRR</h2>
+<p>Row 7 is the only row IRR reads:</p>
+<ul>
+<li><code>B7</code> = <code>=-($B$24+$B$25)</code>, which is <strong>−$130,950</strong></li>
+<li><code>C7</code> through <code>K7</code> = the yearly cash flow from row 5</li>
+<li><code>L7</code> = year 10 cash flow plus net sale proceeds, which is $8,774.52 + $302,409.09 = <strong>$311,183.61</strong></li>
+</ul>
+<p>Then:</p>
+<p><code>=IRR(B7:L7)</code> returns <strong>10.63%</strong></p>
+<p>The first value has to be negative and the rest mostly positive. If you enter the investment as a positive number, IRR returns an error or a meaningless figure.</p>
+<p>If your cash flows land on irregular dates, use <code>=XIRR(values, dates)</code> instead. A mid-year purchase or a sale in month 7 of year 10 are two examples. XIRR uses the actual day count so a partial year is not treated as a full one.</p>
+<h2>Step 5: Two numbers to show next to IRR</h2>
+<p><strong>Equity multiple</strong> is total cash back divided by cash in:</p>
+<p><code>=SUM(C7:L7)/-B7</code> returns <strong>2.64x</strong></p>
+<p>IRR is a rate and the multiple is a size. A 30% IRR on a deal you exit in six months can return less money than a 10% IRR over ten years. Show both.</p>
+<p><strong>MIRR</strong> fixes the one assumption IRR hides. Plain IRR assumes every cash flow you receive is reinvested at the IRR itself. MIRR lets you set a realistic reinvestment rate instead:</p>
+<p><code>=MIRR(B7:L7, 6.75%, 4%)</code> returns <strong>10.33%</strong></p>
+<p>The gap is small here because most of the money arrives in year 10. On a deal with large early cash flows the gap gets much wider.</p>
+<h2>Where the return comes from</h2>
+<p>Total profit is $214,186.16. Break it into parts and the picture changes:</p>
+<p>| Source | Amount | |---|---| | Ten years of cash flow | $42,727.07 | | Principal paydown | $53,467.62 | | Appreciation after selling costs | $127,691.47 | | Closing costs at purchase | −$9,700.00 | | <strong>Total profit</strong> | <strong>$214,186.16</strong> |</p>
+<p>About 60% of the profit is appreciation. That is the one input you control least.</p>
+<h2>The sensitivity table</h2>
+<p>Same deal with one assumption changed per row:</p>
+<p>| Scenario | IRR | Equity multiple | |---|---|---| | Base case | 10.63% | 2.64x | | Appreciation 0% | 3.96% | 1.44x | | Appreciation 2% | 8.63% | 2.20x | | Appreciation 4% | 12.49% | 3.11x | | Rent and expenses flat | 8.79% | 2.32x | | No selling costs | 11.84% | 2.93x | | 40% down instead of 25% | 9.58% | 2.28x | | All cash, no loan | 8.10% | 1.90x |</p>
+<p>Three lessons come out of it.</p>
+<ol>
+<li><strong>Appreciation carries this deal.</strong> At 0% the IRR drops to 3.96%. That is below what the 6.75% loan costs, because the property never earns its keep on cash flow alone.</li>
+<li><strong>The loan hurts year one but helps the hold.</strong> Levered IRR is 10.63% and all-cash IRR is 8.10%. Leverage was negative on a year-one basis. It turns positive over ten years only because appreciation and paydown land on the full $485,000 while you put in $130,950.</li>
+<li><strong>More cash down lowers IRR.</strong> Going to 40% down raised year-one cash-on-cash in the earlier guide. Here it cuts IRR from 10.63% to 9.58%. The two metrics point in opposite directions, and that tension is the actual decision.</li>
+</ol>
+<h2>Four mistakes to avoid</h2>
+<ol>
+<li><strong>Leaving out selling costs.</strong> Dropping the 6% adds about 1.2 points of IRR in this example. Agent fees and transfer taxes are real cash.</li>
+<li><strong>Using the original loan amount at sale.</strong> Subtract the balance from FV, not the starting loan. Otherwise you understate proceeds by the principal you paid down.</li>
+<li><strong>Treating a pre-tax IRR as after-tax.</strong> This build ignores depreciation, income tax, and tax on the gain at sale. It is fine for comparing deals on the same basis. It is not your take-home return.</li>
+<li><strong>Trusting one IRR.</strong> A single figure hides which assumption drives it. Always build the sensitivity rows. If the deal only works at 4% appreciation, write that down before you buy.</li>
+</ol>
+<h2>Summary</h2>
+<p>Put the years in one row. Grow NOI, subtract flat debt service, and add net sale proceeds in the last year using FV for the loan balance. Then run IRR, the equity multiple, and MIRR on that single row. The sensitivity table matters more than the headline rate because it shows what the deal depends on.</p>
+<p>If you want this built already, the <a href="/products/rental-property-analyzer.html">rental property analyzer</a> has a 10-year projection with IRR, equity multiple, loan paydown, a sale year you choose, and a four-property comparison, all in open formulas.</p>
+<p><em>For education and planning only, not financial advice.</em></p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
