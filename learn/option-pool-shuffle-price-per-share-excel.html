@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;The Option Pool Shuffle: How a Pre-Money Pool Changes Your Price Per Share (Excel Formula)&quot; | Numbersmith</title>
+<meta name="description" content="Why a term sheet that tops up the option pool in the pre-money lowers your real valuation, the closed-form Excel formula for the top-up, and a worked seed round that shows what it costs founders.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/option-pool-shuffle-price-per-share-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>The Option Pool Shuffle: How a Pre-Money Pool Changes Your Price Per Share</h1>
+<p>A seed term sheet says $12 million pre-money for a $3 million raise. Most founders read that as their shares being worth $12 million. Then a line further down says the option pool must equal 10% of the company after the round, and that the pool comes out of the pre-money. That one line is the option pool shuffle. It moves part of the pool's cost from the investor to the founders, and it lowers the price per share without touching the headline number.</p>
+<p>This guide works one seed round three ways. It gives the Excel formula for the top-up in closed form, so you do not need a circular reference or Goal Seek.</p>
+<h2>The round</h2>
+<p>| Input | Value | |---|---| | Founder shares | 8,400,000 | | Existing option pool (granted and unissued) | 1,000,000 | | Fully diluted shares before the round | 9,400,000 | | Pre-money valuation | $12,000,000 | | New money | $3,000,000 | | Post-money valuation | $15,000,000 | | Target pool after the round | 10% |</p>
+<p>The new investor buys $3 million of a $15 million company, so they own 20% in every version below. What changes is who pays for the extra pool.</p>
+<h2>Case 1: no top-up</h2>
+<p>Ignore the pool requirement for a moment. The price per share is the pre-money divided by the shares already out:</p>
+<p><code>=12,000,000 / 9,400,000</code> returns <strong>$1.2766</strong></p>
+<p>The investor gets $3,000,000 divided by $1.2766, which is 2,350,000 shares. The company ends at 11,750,000 shares.</p>
+<p>| Holder | Shares | Ownership | |---|---|---| | Founders | 8,400,000 | 71.49% | | Option pool | 1,000,000 | 8.51% | | Investor | 2,350,000 | 20.00% |</p>
+<p>The existing pool is 8.51% of the company after the round. The investor wants 10%, so about 1.5 points are missing.</p>
+<h2>Case 2: top-up in the pre-money (the shuffle)</h2>
+<p>Here the new pool shares are added to the pre-money share count before the price is set. The $12 million now buys the founders' shares plus the old pool plus the new pool. More shares divided into the same $12 million gives a lower price.</p>
+<p>The top-up has to satisfy two conditions at once. The pool must be 10% of the final company. The pre-money shares, including the top-up, must be 80% of the final company, because the investor holds the other 20%. Solving those together gives a closed form:</p>
+<p><code>`</code> New% = Raise / (PreMoney + Raise) TopUp = (Target <em> PreShares - ExistingPool </em> (1 - New%)) / (1 - New% - Target) <code>`</code></p>
+<p>In Excel, with the inputs named:</p>
+<p><code>=MAX(0, (Target<em>PreShares - ExistingPool</em>(1-NewPct)) / (1-NewPct-Target))</code></p>
+<p>Plug in 10%, 9,400,000, 1,000,000, and 20%:</p>
+<p><code>=(0.10<em>9400000 - 1000000</em>0.80) / (1 - 0.20 - 0.10)</code> returns <strong>200,000</strong></p>
+<p>Then:</p>
+<ul>
+<li>Price per share: <code>=PreMoney / (PreShares + TopUp)</code> = 12,000,000 / 9,600,000 = <strong>$1.25</strong></li>
+<li>Investor shares: <code>=Raise / Price</code> = 3,000,000 / 1.25 = <strong>2,400,000</strong></li>
+<li>Total shares after the round: <strong>12,000,000</strong></li>
+</ul>
+<p>| Holder | Shares | Ownership | |---|---|---| | Founders | 8,400,000 | 70.00% | | Option pool | 1,200,000 | 10.00% | | Investor | 2,400,000 | 20.00% |</p>
+<p>Check it the easy way. The pool is 1,200,000 out of 12,000,000, exactly 10%. The investor's 2,400,000 shares at $1.25 cost exactly $3,000,000.</p>
+<p>The <code>MAX(0, ...)</code> wrapper matters. If the existing pool already meets the target the formula would go negative, and a negative top-up means no new shares.</p>
+<h2>Case 3: top-up after the round</h2>
+<p>Some term sheets size the pool on the post-money share count and let it dilute everyone, the investor included. The price stays at $1.2766 and the investor still gets 2,350,000 shares. Then the pool is topped up to 10% of the final total:</p>
+<p><code>`</code> TopUp = (Target * (PreShares + InvestorShares) - ExistingPool) / (1 - Target) <code>`</code></p>
+<p><code>=(0.10*(9400000+2350000) - 1000000) / 0.90</code> returns <strong>194,444</strong></p>
+<p>| Holder | Shares | Ownership | |---|---|---| | Founders | 8,400,000 | 70.33% | | Option pool | 1,194,444 | 10.00% | | Investor | 2,350,000 | 19.67% |</p>
+<p>The investor now carries part of the pool. Their stake falls from 20% to 19.67%, and the founders keep 0.33 points more than in the shuffle.</p>
+<h2>What the shuffle actually costs</h2>
+<p>Put the three cases side by side.</p>
+<p>| | No top-up | Pool after round | Pool in pre-money | |---|---|---|---| | Price per share | $1.2766 | $1.2766 | $1.25 | | Founder ownership | 71.49% | 70.33% | 70.00% | | Investor ownership | 20.00% | 19.67% | 20.00% | | Value of founder shares at the round price | $10.72M | $10.72M | $10.50M |</p>
+<p>The last row is the useful one. In the shuffle case the founders' 8,400,000 shares are priced at $1.25, which is <strong>$10.5 million</strong>. That is the effective pre-money. There is a faster way to get it:</p>
+<p><code>=PreMoney - Target * PostMoney</code> = 12,000,000 - 0.10 × 15,000,000 = <strong>$10,500,000</strong></p>
+<p>Every point of post-money pool placed in the pre-money takes 1% of the post-money off your real valuation. Here each point is $150,000.</p>
+<p>The dollar gap grows at exit. Take a $50 million sale and ignore liquidation preferences, since at that size the 1x preference converts anyway. The gap between no top-up and the shuffle is 1.49 points of the company. That is about <strong>$744,700</strong> to the founders. The gap between a post-round pool and the shuffle is 0.33 points, about <strong>$162,800</strong>.</p>
+<h2>How to push back</h2>
+<p>The pool size is the real lever, more than where the pool sits. A 10% pool is a default and not a law. Build the hiring plan for the next 18 months, price the grants each hire needs, and size the pool to that number. If the plan needs 8.5%, the existing pool already covers it here and the top-up is zero.</p>
+<p>Then compare offers on effective pre-money, not headline pre-money. A $12 million pre with a 10% pre-money pool is a $10.5 million offer. A $11 million pre with the pool already covered can be the better deal.</p>
+<h2>If you have SAFEs outstanding</h2>
+<p>SAFEs add one step. A post-money SAFE converts on the company as it stands just before the round, and the pool increase for the round is mostly left out of that base. So the SAFE holder's percent is set first, and the pool shuffle then dilutes the SAFE holder along with the founders. The formulas for that step are in our <a href="/learn/post-money-safe-conversion-formula-excel.html">post-money SAFE conversion guide</a>. Run the SAFE conversion first, then add the converted shares to <code>PreShares</code> before you solve the top-up.</p>
+<h2>Three mistakes to avoid</h2>
+<ol>
+<li><strong>Solving the top-up with a circular reference.</strong> It works until someone turns off iterative calculation, and then every cell shows zero. The closed form above needs no iteration.</li>
+<li><strong>Counting only unissued options as the pool.</strong> Term sheets usually define the target as granted plus unissued options. Read the definition and match it.</li>
+<li><strong>Comparing headline pre-money across term sheets.</strong> Two offers with different pool terms are not comparable until you convert both to effective pre-money.</li>
+</ol>
+<h2>Summary</h2>
+<p>The shuffle adds new pool shares to the pre-money count, so the same pre-money buys more shares and the price falls. Solve the top-up in closed form with <code>(Target<em>PreShares - ExistingPool</em>(1-NewPct))/(1-NewPct-Target)</code>. Then report effective pre-money next to the headline, and negotiate the pool size from a hiring plan.</p>
+<p>If you want this built already, the <a href="/products/cap-table-dilution-calculator.html">cap table and dilution calculator</a> sizes the pool top-up before or after the new money and solves the price per share. It also converts SAFEs and notes and runs an exit waterfall, all in open formulas.</p>
+<p><em>For education and planning only, not financial, legal, or tax advice.</em></p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
