@@ -1,0 +1,86 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;How to Calculate WACC in Excel from a 10-K (Step by Step)&quot; | Numbersmith</title>
+<meta name="description" content="Build a weighted average cost of capital in Excel from public filings. Where each input lives in a 10-K, the formulas cell by cell, and the book-weight mistake that moves a DCF by 17%.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/how-to-calculate-wacc-in-excel-from-a-10k.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>How to Calculate WACC in Excel from a 10-K (Step by Step)</h1>
+<p>WACC is the discount rate in a DCF. It is also the input people copy from a website without checking, which is a problem because a one point change in WACC can move the valuation by more than 15%.</p>
+<p>The good news is that almost every input comes from two places. The company's 10-K gives you the capital structure, the interest expense, and the tax rate. The market gives you the share price, the risk-free rate, and beta. This guide walks through one fictional company from filing to finished formula.</p>
+<h2>The formula</h2>
+<p><code>`</code> WACC = E/V × Ke + D/V × Kd × (1 − t) <code>`</code></p>
+<ul>
+<li><strong>E</strong> is the market value of equity</li>
+<li><strong>D</strong> is the value of debt</li>
+<li><strong>V</strong> is E + D</li>
+<li><strong>Ke</strong> is the cost of equity</li>
+<li><strong>Kd</strong> is the pre-tax cost of debt</li>
+<li><strong>t</strong> is the tax rate</li>
+</ul>
+<p>Interest is tax deductible, so debt is cheaper than its coupon suggests. That is why only the debt term gets the (1 − t).</p>
+<h2>Step 1: Pull the inputs from the 10-K</h2>
+<p>Here is where each number lives in a typical US annual report.</p>
+<p>| Input | Where to find it | Example value | |---|---|---| | Shares outstanding | Cover page of the 10-K, or the latest 10-Q cover | 100M | | Total debt | Debt footnote: long-term debt plus current portion | $600M | | Interest expense | Income statement, or the debt footnote | $36M | | Effective tax rate | Income tax footnote, rate reconciliation table | 25% | | Fair value of debt | Fair value footnote (usually close to book) | $600M |</p>
+<p>Two notes on debt. First, use the fair value if the footnote gives one and it differs from book. Second, decide whether operating lease liabilities count as debt. Under ASC 842 they sit on the balance sheet. Either choice is defensible. What matters is doing the same thing in WACC and in the enterprise value bridge.</p>
+<p>The market inputs come from outside the filing.</p>
+<p>| Input | Source | Example value | |---|---|---| | Share price | Any quote page | $30.00 | | Risk-free rate | 10-year US Treasury yield | 4.25% | | Equity risk premium | Damodaran's published estimate, or your own | 5.0% | | Beta | Regression, or relevered comps (Step 3) | 1.20 | | Size premium | Optional, for small caps | 1.0% |</p>
+<h2>Step 2: Lay out the Inputs tab</h2>
+<p>Put every input in its own cell and every calculation in a formula. That way you can change one number and watch the rate move.</p>
+<p>| Cell | Label | Entry | |---|---|---| | B3 | Risk-free rate | 4.25% | | B4 | Beta | 1.20 | | B5 | Equity risk premium | 5.00% | | B6 | Size premium | 1.00% | | B7 | Cost of equity | <code>=B3+B4<em>B5+B6</code> | | B9 | Pre-tax cost of debt | <code>=36/600</code> | | B10 | Tax rate | 25% | | B11 | After-tax cost of debt | <code>=B9</em>(1-B10)</code> | | B13 | Share price | 30.00 | | B14 | Shares outstanding (M) | 100 | | B15 | Equity value | <code>=B13<em>B14</code> | | B16 | Debt | 600 | | B17 | Equity weight | <code>=B15/(B15+B16)</code> | | B18 | Debt weight | <code>=1-B17</code> | | B20 | WACC | <code>=B17</em>B7+B18*B11</code> |</p>
+<h2>Step 3: Cost of equity</h2>
+<p>The model is CAPM with an optional size premium.</p>
+<p><code>`</code> Ke = Rf + β × ERP + size premium Ke = 4.25% + 1.20 × 5.0% + 1.0% = 11.25% <code>`</code></p>
+<p>Beta is the input that deserves the most care. A raw two-year regression on one stock is noisy. The more stable method is to take the median unlevered beta of comparable companies and relever it to your company's capital structure.</p>
+<p><code>`</code> βL = βU × (1 + (1 − t) × D/E) <code>`</code></p>
+<p>Our company has D/E of 600 / 3,000 = 0.20. Say the comps have a median unlevered beta of 1.04. Then:</p>
+<p><code>`</code> βL = 1.04 × (1 + 0.75 × 0.20) = 1.04 × 1.15 = 1.196 <code>`</code></p>
+<p>That rounds to 1.20, which is what the example uses. In Excel with the unlevered beta in B22:</p>
+<p><code>`</code>excel =B22<em>(1+(1-B10)</em>B16/B15) <code>`</code></p>
+<h2>Step 4: Cost of debt</h2>
+<p>There are three ways to estimate Kd, from best to worst.</p>
+<ol>
+<li><strong>Yield to maturity on the company's traded bonds.</strong> This is what lenders demand today.</li>
+<li><strong>A rating-based spread.</strong> Take the company's credit rating, look up the typical spread for that rating, and add it to the risk-free rate.</li>
+<li><strong>Interest expense divided by average debt.</strong> This is what the company pays on old debt, which can be far from today's rate.</li>
+</ol>
+<p>The example uses the third method because it is the one you can always compute from the 10-K: $36M / $600M = 6.0%. If the company issued most of its debt when rates were low, this number will be too low. Check it against method 1 or 2 when you can.</p>
+<p>After tax:</p>
+<p><code>`</code> Kd after tax = 6.0% × (1 − 25%) = 4.50% <code>`</code></p>
+<h2>Step 5: Weights and the finished rate</h2>
+<p><code>`</code> E = $30.00 × 100M = $3,000M D = $600M V = $3,600M</p>
+<p>E/V = 83.33% D/V = 16.67%</p>
+<p>WACC = 83.33% × 11.25% + 16.67% × 4.50% = 9.375% + 0.750% = 10.125% <code>`</code></p>
+<p>Two sanity checks every WACC should pass. It sits below the cost of equity and above the after-tax cost of debt. And the cost of equity sits above the pre-tax cost of debt, because shareholders are paid after lenders. Here 4.50% &lt; 10.125% &lt; 11.25% and 11.25% &gt; 6.0%, so it passes.</p>
+<h2>The mistake that moves the answer: book weights</h2>
+<p>The most common WACC error is using book equity from the balance sheet for E. Book equity is an accounting residual. It has nothing to do with what investors would pay for the shares today.</p>
+<p>Say the balance sheet shows $1,200M of shareholders' equity. With book weights:</p>
+<p><code>`</code> E/V = 1,200 / 1,800 = 66.67% D/V = 600 / 1,800 = 33.33%</p>
+<p>WACC = 66.67% × 11.25% + 33.33% × 4.50% = 7.50% + 1.50% = 9.00% <code>`</code></p>
+<p>That is 1.125 points lower. Here is what it does to a Gordon growth terminal value with year 5 free cash flow of $120M and 2.5% growth.</p>
+<p>| Weights | WACC | Terminal value | |---|---|---| | Market | 10.125% | 120 × 1.025 / 0.07625 = $1,613M | | Book | 9.00% | 120 × 1.025 / 0.065 = $1,892M |</p>
+<p>The book weight version is 17.3% higher, and nothing about the business changed. Use market value for equity every time.</p>
+<h2>How sensitive is WACC to each input</h2>
+<p>It helps to know which inputs are worth arguing about. With the weights above:</p>
+<p>| Change | Effect on Ke | Effect on WACC | |---|---|---| | Beta +0.10 | +0.50 pts | +0.42 pts | | Equity risk premium +1.0 pt | +1.20 pts | +1.00 pt | | Risk-free rate +0.50 pt | +0.50 pts | +0.42 pts | | Pre-tax cost of debt +1.0 pt | none | +0.13 pts |</p>
+<p>Equity inputs dominate because equity is 83% of the capital structure. For a company with little debt, time spent refining the cost of debt is mostly wasted. Time spent on beta and the equity risk premium is not.</p>
+<h2>A short checklist</h2>
+<ul>
+<li>Equity at market value, never book</li>
+<li>Debt at fair value where the footnote gives it</li>
+<li>Leases treated the same way in WACC and in the equity bridge</li>
+<li>Beta relevered to the company's own D/E</li>
+<li>Tax rate is the marginal or normalized rate, not a one-off effective rate distorted by a settlement</li>
+<li>WACC between after-tax Kd and Ke</li>
+</ul>
+<p>---</p>
+<p><em>Built with AI assistance and formula-checked. For education and planning only, not financial advice.</em></p>
+<p>If you want this built already, the <a href="/products/dcf-valuation-model.html">DCF Valuation Model</a> has the full WACC build on its Inputs tab, including CAPM with a size premium, after-tax cost of debt, and market value weights, and a README that shows where to find each input in a 10-K.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
