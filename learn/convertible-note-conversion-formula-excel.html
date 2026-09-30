@@ -1,0 +1,75 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Convertible Note Conversion in Excel: Interest, Cap, Discount, and the Round Price | Numbersmith</title>
+<meta name="description" content="How a convertible note turns into shares at a priced round, with Excel formulas for accrued interest, cap price versus discount price, and a closed-form round price when the note shares sit inside the pre-money. Two worked cases, one where the cap wins and one where the discount wins.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/convertible-note-conversion-formula-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>Convertible Note Conversion in Excel: Interest, Cap, Discount, and the Round Price</h1>
+<p>A convertible note is a loan that turns into equity at the next priced round. The conversion math has three parts. The note converts on principal plus accrued interest. It converts at the lower of the cap price and the discount price. And the round price it is measured against often depends on the note shares themselves. Most spreadsheets get the first two right and fudge the third. This guide builds all three in Excel and shows how much each one moves the share count on a real-sized example.</p>
+<h2>The example</h2>
+<ul>
+<li>Note principal: $500,000</li>
+<li>Interest: 6% simple, and the round closes 18 months after the note was signed</li>
+<li>Valuation cap: $8,000,000 (pre-money)</li>
+<li>Discount: 20%</li>
+<li>Company before the round: 10,000,000 fully diluted shares, including the existing option pool</li>
+<li>Series A: $5,000,000 at a $20,000,000 pre-money valuation</li>
+</ul>
+<p>We ignore a new option pool top-up here so the note math stays visible. The pool adds one more step, covered in our <a href="/learn/option-pool-shuffle-price-per-share-excel.html">option pool shuffle guide</a>.</p>
+<h2>Step 1: accrued interest</h2>
+<p>Most notes accrue simple interest, and the note converts on the full balance. Read your note, because a few compound.</p>
+<p>Put the inputs in named cells: <code>Principal</code>, <code>Rate</code>, <code>IssueDate</code>, <code>CloseDate</code>.</p>
+<p><code>`</code> Years      = YEARFRAC(IssueDate, CloseDate, 1) Accrued    = Principal <em> (1 + Rate </em> Years) <code>`</code></p>
+<p>For 18 months that is $500,000 plus $45,000 of interest, so $545,000 converts.</p>
+<p>If the note compounds annually, use <code>Principal * (1 + Rate) ^ Years</code>, which gives $545,668.40. Monthly compounding gives $546,964.47. The gap is small at 6% over 18 months, but it grows with the rate and the term.</p>
+<p>Interest matters more than founders expect. At the conversion price below, the $45,000 of interest buys 56,250 shares. That is 0.4% of the company that shows up in nobody's pitch deck.</p>
+<h2>Step 2: cap price and discount price</h2>
+<p>The note converts at whichever price gives the holder more shares, which is the lower price.</p>
+<p><code>`</code> CapPrice      = Cap / PreShares DiscountPrice = RoundPrice * (1 - Discount) ConvPrice     = MIN(CapPrice, DiscountPrice) NoteShares    = Accrued / ConvPrice <code>`</code></p>
+<p>With 10,000,000 pre-round shares the cap price is $8,000,000 / 10,000,000 = $0.80.</p>
+<p>Check what your note defines as the cap denominator. Some notes use fully diluted shares including the pool, some exclude unissued pool shares, and a few include other converting instruments. That one definition can move the cap price by several percent, so match the document instead of assuming.</p>
+<h2>Step 3: the round price, and why it is circular</h2>
+<p>The quick way to set the round price is pre-money divided by pre-round shares:</p>
+<p><code>`</code> RoundPrice = PreMoney / PreShares <code>`</code></p>
+<p>That gives $20,000,000 / 10,000,000 = $2.00. The discount price is $1.60, so the cap wins at $0.80 and the note gets 681,250 shares.</p>
+<p>The problem is that most Series A term sheets say the pre-money valuation includes the shares issued on conversion of notes and SAFEs. If the note shares are inside the pre-money, the round price has to be:</p>
+<p><code>`</code> RoundPrice = PreMoney / (PreShares + NoteShares) <code>`</code></p>
+<p>But <code>NoteShares</code> depends on <code>ConvPrice</code>, which can depend on <code>RoundPrice</code>. That loop is why spreadsheets throw a circular reference warning or quietly skip the step.</p>
+<p>You do not need iterative calculation. Solve each case in closed form, then check which one is consistent.</p>
+<p><strong>If the cap wins</strong>, the note shares do not depend on the round price:</p>
+<p><code>`</code> NoteShares_cap = Accrued / CapPrice RoundPrice_cap = PreMoney / (PreShares + NoteShares_cap) <code>`</code></p>
+<p><strong>If the discount wins</strong>, substitute and solve. <code>RoundPrice <em> (PreShares + Accrued / ((1 - Discount) </em> RoundPrice)) = PreMoney</code> simplifies to:</p>
+<p><code>`</code> RoundPrice_disc = (PreMoney - Accrued / (1 - Discount)) / PreShares <code>`</code></p>
+<p><strong>Pick the one that holds.</strong> The cap case is valid when its discount price is no lower than the cap price:</p>
+<p><code>`</code> RoundPrice = IF((1 - Discount) <em> RoundPrice_cap &gt;= CapPrice, RoundPrice_cap, RoundPrice_disc) ConvPrice  = MIN(CapPrice, (1 - Discount) </em> RoundPrice) NoteShares = Accrued / ConvPrice <code>`</code></p>
+<p>Add a check cell that should equal the pre-money exactly:</p>
+<p><code>`</code> = RoundPrice * (PreShares + NoteShares) <code>`</code></p>
+<h2>Case A: the cap wins</h2>
+<p>At a $20M pre-money:</p>
+<p>| | Quick method | Pre-money includes the note | |---|---|---| | Round price | $2.0000 | $1.8724 | | Conversion price | $0.8000 (cap) | $0.8000 (cap) | | Note shares | 681,250 | 681,250 | | New investor shares for $5M | 2,500,000 | 2,670,312 | | Existing holders after the round | 75.87% | 74.90% |</p>
+<p>When the cap wins, the note holder gets the same shares either way. What changes is who pays for them. Under the quick method the note shares sit on top of the $20M, so the investor is really paying a $21.36M pre-money. Under the term sheet method the note shares come out of the $20M, the price drops to $1.8724, and the existing holders give up about one extra point of ownership.</p>
+<p>That point is real money at exit. It is also the most common surprise in a first priced round.</p>
+<h2>Case B: the discount wins</h2>
+<p>Now say the round is weaker: $2,000,000 at a $9,000,000 pre-money.</p>
+<p>| | Quick method | Pre-money includes the note | |---|---|---| | Round price | $0.9000 | $0.8319 | | Conversion price | $0.7200 (discount) | $0.6655 (discount) | | Note shares | 756,944 | 818,933 | | Note holder after the round | 5.83% | 6.19% | | Existing holders after the round | 77.05% | 75.63% |</p>
+<p>Here the formula choice changes the note holder's shares too. The discount price follows the round price down, so the note gets 61,989 more shares than the quick method shows. The check cell confirms it: $0.831875 times 10,818,933 shares is exactly $9,000,000.</p>
+<h2>Four mistakes to avoid</h2>
+<ol>
+<li><strong>Converting the face amount.</strong> Leaving out accrued interest undercounts the note. In Case A that is 56,250 missing shares.</li>
+<li><strong>Using <code>MAX</code> instead of <code>MIN</code>.</strong> The holder gets the lower price, which means more shares. A flipped function silently hands the founders a better deal than the note allows.</li>
+<li><strong>Turning on iterative calculation to fix the circular reference.</strong> It works until someone opens the file with iteration off, and then the cells break. The closed form needs no iteration.</li>
+<li><strong>Forgetting maturity.</strong> If the note matures before a round, it may convert at the cap, get repaid, or get extended, depending on its terms. Model the maturity date next to the close date so you can see which comes first.</li>
+</ol>
+<h2>Setting it up in a sheet</h2>
+<p>Put one note per row with columns for principal, rate, issue date, cap, and discount. Put the round inputs in a separate block. Build Accrued, CapPrice, and NoteShares_cap per row, then sum the note shares for the round price. With several notes and a discount case, the per-row closed form above no longer applies exactly, because each note's discount shares feed the same round price. The usual approach is to solve assuming every cap binds, then flag any note whose discount price beats its cap so you can check it by hand.</p>
+<p>If you would rather start from a working file, the Numbersmith cap table workbook already has note and SAFE conversion, the option pool top-up, a post-round cap table, three raise scenarios, and an exit waterfall built with open formulas: <a href="/products/cap-table-dilution-calculator.html">Cap Table and Dilution Calculator</a>.</p>
+<p><em>For education and planning only, not financial, legal, or tax advice. Have counsel review your actual note and term sheet.</em></p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
