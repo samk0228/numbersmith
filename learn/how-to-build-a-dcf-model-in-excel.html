@@ -77,29 +77,30 @@
 <li>Year 5 (t=4.5): factor 0.673 → PV of FCF = 211 × 0.673 = <strong>$142</strong></li>
 </ul>
 <p>Sum of PV of explicit cash flows: <strong>$701</strong> (rounded).</p>
-<p>Apply the same Year 5 factor (0.673) to the terminal value:</p>
+<p>The terminal value does not get the mid-year factor. It is a value measured as of the end of year 5, so it discounts at the full <code>t = 5</code>: factor <code>1 / 1.092^5</code> = 0.644.</p>
 <ul>
-<li>PV of TV, Gordon growth: 3,228 × 0.673 = <strong>$2,172</strong></li>
-<li>PV of TV, exit multiple: 4,030 × 0.673 = <strong>$2,712</strong></li>
+<li>PV of TV, Gordon growth: 3,228 × 0.644 = <strong>$2,079</strong></li>
+<li>PV of TV, exit multiple: 4,030 × 0.644 = <strong>$2,595</strong></li>
 </ul>
+<p>Using the Year 5 mid-year factor (0.673) on the terminal value is a common slip. Here it would overstate the exit multiple PV by about 4.5%, which is $117 of enterprise value.</p>
 <p><strong>Enterprise value:</strong></p>
 <ul>
-<li>Gordon growth: 701 + 2,172 = <strong>$2,873</strong></li>
-<li>Exit multiple: 701 + 2,712 = <strong>$3,413</strong></li>
+<li>Gordon growth: 701 + 2,079 = <strong>$2,780</strong></li>
+<li>Exit multiple: 701 + 2,595 = <strong>$3,296</strong></li>
 </ul>
 <h2>Step 6: Bridge from enterprise value to per-share value</h2>
 <p>Enterprise value belongs to everyone with a claim on the business, debt and equity alike. To get to what a share is worth, subtract net debt.</p>
 <p>Say the company carries <strong>$400</strong> of total debt and <strong>$150</strong> of cash, for net debt of <strong>$250</strong>, and has <strong>100 million</strong> diluted shares outstanding.</p>
 <ul>
-<li>Equity value (Gordon growth) = 2,873 − 250 = <strong>$2,623</strong>, or <strong>$26.23 per share</strong></li>
-<li>Equity value (exit multiple) = 3,413 − 250 = <strong>$3,163</strong>, or <strong>$31.63 per share</strong></li>
+<li>Equity value (Gordon growth) = 2,780 − 250 = <strong>$2,530</strong>, or <strong>$25.30 per share</strong></li>
+<li>Equity value (exit multiple) = 3,296 − 250 = <strong>$3,046</strong>, or <strong>$30.46 per share</strong></li>
 </ul>
-<p>That $26 to $32 spread between the two terminal value methods is normal. It is the model telling you where its uncertainty lives, and it is exactly what the sensitivity table in the next step is for.</p>
+<p>That $25 to $30 spread between the two terminal value methods is normal. It is the model telling you where its uncertainty lives, and it is exactly what the sensitivity table in the next step is for.</p>
 <h2>Step 7: Build a sensitivity table with formulas, not Excel's Data Table</h2>
 <p>Excel's built-in Data Table feature works, but it is slow to recalculate, opaque to anyone else opening the file, and easy to break by inserting a row. A formula-driven grid is faster and auditable. Five steps:</p>
 <ol>
 <li>Lay out WACC values across a row (for example 8.2%, 8.7%, 9.2%, 9.7%, 10.2%) and terminal growth values down a column (1.5%, 2.0%, 2.5%, 3.0%, 3.5%), on a dedicated sensitivity tab.</li>
-<li>In the top-left result cell, write one formula that recomputes enterprise value directly from that row's WACC and that column's growth rate, referencing the live FCF cells rather than a single cached output, for example: <code>=SUMPRODUCT($C$10:$G$10,1/(1+C$4)^({1,2,3,4,5}-0.5))+($G$10*(1+$B5)/(C$4-$B5))/(1+C$4)^4.5</code></li>
+<li>In the top-left result cell, write one formula that recomputes enterprise value directly from that row's WACC and that column's growth rate, referencing the live FCF cells rather than a single cached output, for example: <code>=SUMPRODUCT($C$10:$G$10,1/(1+C$4)^({1,2,3,4,5}-0.5))+($G$10*(1+$B5)/(C$4-$B5))/(1+C$4)^5</code></li>
 <li>Anchor the FCF range and the year exponents with dollar signs so they stay fixed, but leave the WACC cell (<code>C$4</code>) and growth cell (<code>$B5</code>) free so each references its own row and column as you copy the formula.</li>
 <li>Fill that formula right and down across the full grid. Because each cell recalculates independently from the underlying FCF, it updates instantly with the rest of the model and survives being copied into a new workbook.</li>
 <li>Wrap it in <code>=IFERROR(...,"n/a")</code> to handle the case where WACC equals the growth rate, which divides by zero.</li>
