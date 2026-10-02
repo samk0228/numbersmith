@@ -1,0 +1,84 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Calculate Net Worth in Excel (and the Three Adjustments Most Trackers Skip) | Numbersmith</title>
+<meta name="description" content="A net worth calculator you can build in Excel with one table and two SUMIFS formulas, worked on one household, plus the home, car, and 401(k) adjustments that move the answer by 15% or more and the right way to read the monthly change.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/how-to-calculate-net-worth-in-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>How to Calculate Net Worth in Excel (and the Three Adjustments Most Trackers Skip)</h1>
+<p>Net worth is what you own minus what you owe. The formula is one subtraction. The work is deciding what goes into each side and at what value.</p>
+<p>Two people with the same accounts can report net worth figures that differ by tens of thousands of dollars. One counts the house at the Zillow estimate. The other counts it at what they would actually walk away with. One counts the car at what they paid. The other counts it at what a buyer would pay today. Neither is lying. They are just measuring different things.</p>
+<p>This guide builds a net worth sheet in Excel from one worked household. Then it covers the three adjustments that matter most, and how to read the month-over-month change so it tells you something.</p>
+<h2>Step 1: one table, one row per account</h2>
+<p>Put every account in a single table. Do not split assets and liabilities into separate blocks. A single table lets one formula handle both sides, and it makes adding a new account a one-row job.</p>
+<p>| A: Account | B: Type | C: Group | D: Value | |---|---|---|---| | Checking | Asset | Cash | 4,200 | | Savings (emergency fund) | Asset | Cash | 18,000 | | Brokerage | Asset | Invested | 32,500 | | 401(k) | Asset | Retirement | 86,000 | | Roth IRA | Asset | Retirement | 21,000 | | Home (market estimate) | Asset | Property | 640,000 | | Car (private-party value) | Asset | Property | 14,500 | | Mortgage | Liability | Property | 412,000 | | Auto loan | Liability | Property | 9,800 | | Student loans | Liability | Other debt | 23,400 | | Credit card balance | Liability | Other debt | 2,300 |</p>
+<p>Enter every value as a positive number, including the debts. The Type column decides the sign. This avoids the most common net worth bug, which is a debt typed as a positive number and then added instead of subtracted.</p>
+<p>Turn the range into an Excel Table (Ctrl+T) and name it <code>NW</code>. Formulas that point at the table name expand on their own when you add a row.</p>
+<h2>Step 2: the net worth formula</h2>
+<p><code>`</code> Total assets:       =SUMIFS(NW[Value], NW[Type], "Asset")        -&gt; 816,200 Total liabilities:  =SUMIFS(NW[Value], NW[Type], "Liability")    -&gt; 447,500 Net worth:          =assets - liabilities                         -&gt; 368,700 <code>`</code></p>
+<p>That is the whole calculator. Everything after this is about making the inputs honest and the output readable.</p>
+<p>One ratio is worth adding next to it:</p>
+<p><code>`</code> Debt to assets:     =liabilities / assets                         -&gt; 54.83% <code>`</code></p>
+<p>This shows how much of what you hold is financed. It falls as you pay down debt and as assets grow, so it improves even in months when net worth looks flat.</p>
+<h2>Step 3: the views that answer real questions</h2>
+<p>Total net worth is dominated by the house for most homeowners. In this example the home equity is $640,000 minus $412,000, or $228,000. That is 61.8% of the $368,700 total. You cannot spend home equity without selling or borrowing, so a second view helps.</p>
+<p>Use the Group column to build them:</p>
+<p><code>`</code> Excluding home and car: =SUMIFS(NW[Value], NW[Type], "Asset", NW[Group], "&lt;&gt;Property")</p>
+<ul>
+<li>SUMIFS(NW[Value], NW[Type], "Liability", NW[Group], "&lt;&gt;Property")</li>
+<p>-&gt; 136,000</p>
+</ul>
+<p>Accessible now (cash and taxable investments only): =SUMIFS(NW[Value], NW[Type], "Asset", NW[Group], "Cash") + SUMIFS(NW[Value], NW[Type], "Asset", NW[Group], "Invested")</p>
+<ul>
+<li>SUMIFS(NW[Value], NW[Type], "Liability", NW[Group], "Other debt")</li>
+<p>-&gt; 29,000 <code>`</code></p>
+</ul>
+<p>The same household is worth $368,700, or $136,000 outside the house and car, or $29,000 that it could reach this month without selling property or touching retirement accounts. All three numbers are correct. The third one is the one that matters if a job ends.</p>
+<h2>Step 4: three adjustments most trackers skip</h2>
+<h3>1. The home at what you would net, not what it is listed at</h3>
+<p>An online estimate is a guess at the sale price. You do not keep the sale price. Agent commissions, transfer taxes, and closing costs come out first. A planning figure of 6% of the price is common.</p>
+<p><code>`</code> Selling cost:   =640000 * 6%      -&gt; 38,400 <code>`</code></p>
+<p>That one line lowers net worth by 10.4%. Put the rate in its own input cell so you can change it. Some people also apply a haircut to the estimate itself, because automated values can miss in either direction.</p>
+<h3>2. The car at today's resale value</h3>
+<p>A car bought for $31,000 that would sell for $14,500 today should be on the sheet at $14,500. Carrying it at cost overstates net worth by $16,500, or 4.5% here. Update it once or twice a year from a pricing guide. Do not try to track it monthly, because the noise is larger than the signal.</p>
+<h3>3. Pre-tax retirement money is not all yours yet</h3>
+<p>A traditional 401(k) balance of $86,000 has income tax owed on it when you withdraw. The Roth IRA does not. If you assume a 22% rate in retirement, the tax claim is:</p>
+<p><code>`</code> Deferred tax:   =86000 * 22%      -&gt; 18,920 <code>`</code></p>
+<p>You do not have to subtract it. But if you compare your net worth with someone who holds the same amount in a Roth, you are comparing different things unless you do.</p>
+<p>Apply all three and the adjusted figure is:</p>
+<p><code>`</code> =368700 - 38400 - 18920           -&gt; 311,380 <code>`</code></p>
+<p>That is 15.5% below the headline number. Pick one convention, write it in a note at the top of the sheet, and keep it. Consistency matters more than which convention you pick, because the trend is what you are tracking.</p>
+<h2>Step 5: reading the monthly change</h2>
+<p>Put one column per month and copy the net worth formula across. The change is simple:</p>
+<p><code>`</code> Change:   =this_month - last_month <code>`</code></p>
+<p>In this example last month was $361,900, so the change is $6,800. That number mixes two very different things: money you saved and markets moving. Split them.</p>
+<p>Add up what you put in during the month:</p>
+<p>| Source | Amount | |---|---| | 401(k) contribution with match | 1,500 | | Brokerage deposit | 500 | | Transfer to savings | 800 | | Mortgage principal paid | 950 | | Auto loan principal paid | 380 | | Student loan principal paid | 210 | | <strong>Total saved</strong> | <strong>4,340</strong> |</p>
+<p>Paying down principal counts, because it lowers a liability by exactly the amount paid. The interest part of the payment does not count.</p>
+<p><code>`</code> Saved:              4,340 Valuation change:   =6800 - 4340      -&gt; 2,460 <code>`</code></p>
+<p>So $4,340 of this month's gain came from your behavior and $2,460 came from prices. In a good market month the second number is large. In a bad month it is negative and can swamp the first. The saved line is the one you control. If it stays steady while net worth bounces around, the plan is working.</p>
+<h2>Five mistakes that distort the number</h2>
+<ol>
+<li><strong>Debts typed as negatives and then subtracted again.</strong> A negative mortgage minus a SUM turns a liability into an asset. Keep every value positive and let the Type column handle the sign.</li>
+<li><strong>Skipping the credit card because you pay it in full.</strong> Your checking balance already includes the money that will pay the card. List checking and leave out the card, and net worth is overstated by the card balance, $2,300 here.</li>
+<li><strong>Mixing snapshot dates.</strong> Take every value on the same day, ideally the last day of the month. A brokerage balance from the 30th and a loan balance from the 15th do not describe one moment.</li>
+<li><strong>Percentage change on a small base.</strong> Going from $5,000 to $10,000 is +100%, which says nothing useful. When net worth is near zero or negative, track the dollar change.</li>
+<li><strong>Updating the home every month.</strong> Monthly estimate swings will drown out your actual saving. Revalue the house once a year, or hold it at purchase price and track the mortgage paydown only.</li>
+</ol>
+<h2>Summary</h2>
+<ul>
+<li>Net worth is one table and two SUMIFS. Keep all values positive and let a Type column set the sign.</li>
+<li>Add views that exclude the house, and one that shows only what you can reach this month.</li>
+<li>Write down your convention for the home, the car, and pre-tax accounts. In this example they move the answer by 15.5%.</li>
+<li>Split the monthly change into saved and valuation change. The saved line is the one to manage.</li>
+</ul>
+<p>For education and planning only, not financial advice.</p>
+<p>If you would rather not build this from scratch, the <a href="/products/budget-net-worth-tracker.html">Numbersmith Annual Budget and Net Worth Tracker</a> tracks seven asset and five liability lines by month, calculates net worth and the month-over-month change, and charts it next to your budget.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
