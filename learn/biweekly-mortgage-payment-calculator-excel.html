@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Biweekly Mortgage Payments in Excel: How Much You Really Save and Where the Savings Come From | Numbersmith</title>
+<meta name="description" content="Build a biweekly mortgage schedule in Excel, compare it to a monthly extra payment and a once-a-year extra payment on the same loan, and see why almost all of the savings come from the extra money and not from paying every two weeks.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/biweekly-mortgage-payment-calculator-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>Biweekly Mortgage Payments in Excel: How Much You Really Save and Where the Savings Come From</h1>
+<p>Paying half your mortgage every two weeks is one of the most repeated pieces of payoff advice. The claim is that it cuts years off a 30-year loan. That claim is true. The reason it is true is usually explained wrong, and the wrong explanation costs people money when a service charges them to set it up.</p>
+<p>This guide builds the biweekly schedule in Excel and then runs three other versions of the same loan next to it. By the end you will know how much of the saving comes from the payment timing and how much comes from the extra money. You will also know which version is worth setting up yourself.</p>
+<p>Every formula here is plain Excel and also works in Google Sheets and LibreOffice.</p>
+<h2>The example loan</h2>
+<p>| Cell | Input | Example | |---|---|---| | B2 | Loan amount | 420,000 | | B3 | Annual rate | 6.5% | | B4 | Term in years | 30 |</p>
+<p>The scheduled monthly payment comes from PMT:</p>
+<p><code>`</code> =ROUND(PMT(B3/12, B4*12, -B2), 2) <code>`</code></p>
+<p>That returns 2,654.69. Over 360 months the loan charges 535,683.53 of interest. That is the baseline every other scenario is measured against.</p>
+<h2>Why biweekly works</h2>
+<p>A year has 52 weeks. Paying every two weeks means 26 payments a year. Each payment is half of 2,654.69, so 1,327.35. Twenty-six halves equal thirteen full payments. A monthly payer makes twelve.</p>
+<p>So a biweekly payer sends one extra full payment to the lender every year. That extra payment goes straight to principal, which shrinks the balance faster, which shrinks every later interest charge. That is the whole mechanism.</p>
+<p>There is a second, much smaller effect. Each half payment arrives two weeks earlier than it would on a monthly plan, so the balance is a little lower a little sooner. Most explanations lump the two effects together. Excel can separate them, which is the useful part.</p>
+<h2>Step 1: the biweekly schedule</h2>
+<p>Make a sheet with one row per payment. Put the period rate and the half payment in their own cells:</p>
+<p>| Cell | Item | Formula | |---|---|---| | E2 | Period rate | <code>=B3/26</code> | | E3 | Half payment | <code>=ROUND(PMT(B3/12, B4*12, -B2)/2, 2)</code> |</p>
+<p>Then the schedule, starting in row 8 with the opening balance in D7 set to <code>=B2</code>:</p>
+<p>| Column | Header | Formula in row 8 | |---|---|---| | A | Payment # | <code>=ROW()-7</code> | | B | Interest | <code>=ROUND(D7*$E$2, 2)</code> | | C | Principal | <code>=MIN($E$3-B8, D7)</code> | | D | Balance | <code>=D7-C8</code> |</p>
+<p>Fill down about 800 rows. The MIN in column C stops the final payment from pushing the balance below zero. Wrap B and C in <code>IF(D7&lt;=0, 0, ...)</code> so the rows after payoff show zeros instead of errors.</p>
+<p>On the example loan the first payment charges 1,050.00 of interest and pays 277.35 of principal. The loan reaches zero on payment 628, which is 24.15 years. Total interest is 412,309.98.</p>
+<p>You can check the payoff without the schedule using NPER:</p>
+<p><code>`</code> =NPER(E2, -E3, B2) <code>`</code></p>
+<p>That returns 627.05, which rounds up to 628 payments. The schedule and the formula agree.</p>
+<p>One modeling note. This sheet charges interest per two-week period at the annual rate divided by 26. That matches a loan that accrues interest every period. Many standard mortgages still accrue monthly, which comes up again below.</p>
+<h2>Step 2: three ways to send the same extra money</h2>
+<p>Now build the same loan three other ways. Each one is a copy of a standard monthly schedule with one change.</p>
+<p><strong>Monthly plus one twelfth.</strong> Add <code>ROUND(2654.69/12, 2)</code>, which is 221.22, to every monthly payment. Over a year that is exactly one extra payment, spread evenly.</p>
+<p><strong>One extra payment a year.</strong> Pay 2,654.69 normally and add one extra 2,654.69 every twelfth month. In the principal column that is <code>+IF(MOD(A8,12)=0, payment, 0)</code>.</p>
+<p><strong>Timing only.</strong> Pay every two weeks but send only 2,654.69 × 12 / 26, which is 1,225.24. This sends the same yearly total as a monthly payer. It isolates the effect of paying earlier with no extra money at all.</p>
+<p>Here is what all five versions produce on the example loan:</p>
+<p>| Scenario | Payoff | Total interest | Interest saved | |---|---|---|---| | Monthly, no extra | 30.0 years | 535,683.53 | 0 | | Timing only, biweekly | 29.96 years | 534,298.68 | 1,384.85 | | One extra payment a year | 292 months | 418,106.86 | 117,576.67 | | Monthly plus one twelfth | 290 months | 413,527.95 | 122,155.58 | | True biweekly | 628 payments, 24.15 years | 412,309.98 | 123,373.55 |</p>
+<h2>What the table says</h2>
+<p>Paying every two weeks with no extra money saves 1,384.85 over thirty years. The extra thirteenth payment saves about 122,000. The money does the work and the calendar barely matters.</p>
+<p>The gap between true biweekly and monthly plus one twelfth is 1,217.97 over 24 years. That is about 50 a year. The gap between monthly plus one twelfth and one lump a year is 4,578.91. Spreading the extra money out helps a little because it starts reducing the balance sooner. But all three options land within about 5% of each other.</p>
+<p>So the honest summary is simple. Biweekly payments work because they add a thirteenth payment. Any method that adds a thirteenth payment gets nearly the same result.</p>
+<h2>Where biweekly plans go wrong</h2>
+<p><strong>The lender holds the half payment.</strong> Many servicers do not apply a half payment when it arrives. They park it until the second half lands and then apply one full monthly payment. On that setup the timing benefit is zero. The extra thirteenth payment usually gets applied once a year, so the result looks like the "one extra payment a year" row and not the "true biweekly" row.</p>
+<p><strong>The loan accrues monthly anyway.</strong> If interest is calculated on the monthly balance, paying half early does not reduce that month's interest. Again the timing effect disappears and only the extra money counts.</p>
+<p><strong>A service charges for it.</strong> Some third-party programs charge an enrollment fee and a per-debit fee to run biweekly drafts. Take a hypothetical program with a 395 setup fee and 2 per debit. Over 628 debits that is 1,256 in debit fees plus 395, so 1,651 in total. That is more than the entire 1,217.97 advantage of true biweekly over simply adding 221.22 to each monthly payment yourself. The fee eats the benefit and the extra money you could have sent directly does the rest.</p>
+<p><strong>The extra payment is not marked as principal.</strong> Some servicers treat an overpayment as an early next payment unless you tell them otherwise. Then it does not reduce principal at all until the scheduled date. Check your statement after the first extra payment and confirm the principal line moved.</p>
+<h2>How to check your own sheet</h2>
+<p>Run these four checks before trusting any scenario:</p>
+<ul>
+<li>On the no-extra monthly schedule, total interest should match payment × 360 minus the loan amount within a few dollars of rounding. Here that is 535,688.40 against 535,683.53. The small gap is the smaller final payment.</li>
+<li>On the biweekly sheet, the payment count should match NPER rounded up.</li>
+<li>The sum of the principal column on every sheet must equal 420,000 to the cent.</li>
+<li>The timing-only row should save very little. If your timing-only version saves tens of thousands, the payment amount is wrong and you are sending 13 payments a year by accident.</li>
+</ul>
+<h2>Which version to use</h2>
+<p>If your servicer applies extra principal when it arrives, adding one twelfth of your payment to each monthly payment gets within about 1% of true biweekly savings. It also needs no new schedule, no fees and no change to your payment date. If your budget runs on a two-week paycheck, true biweekly is fine as long as the servicer applies each half on arrival and charges nothing. Either way the number to watch is the extra money per year. The payment frequency is a detail.</p>
+<p>If you would rather not build the four sheets yourself, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has the extra monthly payment, annual lump sum, biweekly view and a no-extras baseline already wired on open formulas. For education and planning only, not financial advice.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
