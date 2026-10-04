@@ -1,0 +1,93 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How Much Can I Pay for a Rental Property? The Max Offer Price Formula in Excel | Numbersmith</title>
+<meta name="description" content="Work backward from a target DSCR, cash-on-cash return and cap rate to the highest price a rental deal can carry, with closed-form Excel formulas and a worked duplex example.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/max-offer-price-rental-property-formula.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>How Much Can I Pay for a Rental Property? The Max Offer Price Formula in Excel</h1>
+<p>Most rental calculators run forward. You type in the asking price and they tell you the cash flow. That answers "does this deal work at this price" but not the question you need before you make an offer. That question is "what is the most I can pay and still hit my numbers."</p>
+<p>You can solve that directly. Each return target turns into one formula for price. You run all three and the lowest one is your ceiling. This guide works through it with one duplex so every number can be checked.</p>
+<h2>The deal</h2>
+<p>The example is the same duplex used in our <a href="/learn/rental-property-cash-flow-formula.html">rental property cash flow guide</a>. The seller is asking $350,000.</p>
+<ul>
+<li>Two units at $1,500 a month gives gross rent of $36,000 a year</li>
+<li>Vacancy at 5% leaves effective gross income (EGI) of $34,200</li>
+<li>Management at 8% of EGI is $2,736</li>
+<li>Maintenance at 5% of EGI is $1,710</li>
+<li>Capex reserve at 5% of EGI is $1,710</li>
+<li>Insurance is $1,200</li>
+<li>Property tax is 1.2% of the price, which is $4,200 at the asking price</li>
+<li>Financing is 25% down at 7% over 30 years</li>
+<li>Closing costs are 2% of the price</li>
+</ul>
+<p>At $350,000 the deal produces NOI of $22,644. The payment is $1,746.42 a month, or $20,957.03 a year. That leaves cash flow of $1,686.97 and a DSCR of 1.08.</p>
+<p>Now assume your targets are a DSCR of at least 1.25, cash-on-cash of at least 6% and a cap rate of at least 6.5%. The question is how far the price has to come down.</p>
+<h2>Step 1: split NOI into the part that moves with price</h2>
+<p>Most expenses do not care what you paid. Rent, vacancy, management, maintenance, capex and insurance are the same at $300,000 or $350,000. Property tax is the exception because it is assessed on the price.</p>
+<p>So NOI is a straight line in price:</p>
+<p><code>NOI(P) = 26,844 − 0.012 × P</code></p>
+<p>The 26,844 is EGI minus every expense except tax. The 0.012 is the tax rate. This one line is what makes the whole problem solvable without goal seek.</p>
+<h2>Step 2: turn the loan payment into a rate per dollar</h2>
+<p>The annual payment on a loan is the loan amount times a fixed factor. That factor is called the loan constant. At 7% over 30 years it is:</p>
+<p><code>=PMT(7%/12, 360, -1) * 12</code> which returns 0.079836</p>
+<p>Every dollar you borrow costs about 7.98 cents a year. With 25% down you borrow 75% of the price, so annual debt service is:</p>
+<p><code>DS(P) = 0.75 × 0.079836 × P</code></p>
+<p>Debt service is also a straight line in price. Now each target can be solved for P.</p>
+<h2>Step 3: solve each target for price</h2>
+<p><strong>DSCR target.</strong> DSCR is NOI over debt service. Set it equal to 1.25 and solve:</p>
+<p><code>P = 26,844 / (0.012 + 1.25 × 0.75 × 0.079836)</code></p>
+<p>That gives <strong>$309,097</strong>. At that price NOI is $23,134.84 and debt service is $18,507.87. The ratio is exactly 1.25.</p>
+<p><strong>Cash-on-cash target.</strong> Cash invested is the 25% down payment plus 2% closing, so 27% of the price. Cash flow is NOI minus debt service. Set cash flow equal to 6% of cash invested and solve:</p>
+<p><code>P = 26,844 / (0.012 + 0.75 × 0.079836 + 0.06 × 0.27)</code></p>
+<p>That gives <strong>$304,778</strong>. At that price cash invested is $82,290 and cash flow is $4,937.40, which is a 6.00% return.</p>
+<p><strong>Cap rate target.</strong> Cap rate is NOI over price with no financing involved:</p>
+<p><code>P = 26,844 / (0.012 + 0.065)</code></p>
+<p>That gives <strong>$348,623</strong>.</p>
+<h2>Step 4: the lowest price wins</h2>
+<p>| Target | Max price | |---|---| | Cap rate 6.5% | $348,623 | | DSCR 1.25 | $309,097 | | Cash-on-cash 6% | $304,778 |</p>
+<p>Your ceiling is $304,778 because it is the only price that passes all three. That is $45,222 under asking, about 13%.</p>
+<p>The table also tells you something the forward calculator hides. The cap rate barely binds. This deal is close to fine as a property and the problem is the financing. At 7% the loan eats almost all of the NOI. A seller who points to the cap rate is telling the truth. It just is not the number that limits you.</p>
+<p>Note that the DSCR price does not clear your cash target. At $309,097 cash-on-cash is only 5.54%. You need to run all three every time because you cannot tell in advance which one binds.</p>
+<h2>Step 5: see how the ceiling moves with the rate</h2>
+<p>The same three formulas at different rates, with nothing else changed:</p>
+<p>| Rate | DSCR 1.25 | CoC 6% | Cap 6.5% | Max offer | |---|---|---|---|---| | 6.0% | $337,875 | $326,730 | $348,623 | $326,730 | | 6.5% | $323,003 | $315,492 | $348,623 | $315,492 | | 7.0% | $309,097 | $304,778 | $348,623 | $304,778 | | 7.5% | $296,090 | $294,570 | $348,623 | $294,570 | | 8.0% | $283,918 | $284,851 | $348,623 | $283,918 |</p>
+<p>Two things stand out. Each half point of rate moves the ceiling by roughly $10,000 to $11,000. And at 8% the binding target flips from cash-on-cash to DSCR. That is why one target is not enough. Which one limits you depends on the rate you can actually get.</p>
+<h2>The lender's version of the same question</h2>
+<p>A lender asks the question from the other side. Given this NOI, what is the largest loan that still covers 1.25x? Excel answers that with PV:</p>
+<p><code>=PV(7%/12, 360, -NOI/1.25/12)</code></p>
+<p>At the asking price NOI is $22,644. The maximum loan is $226,904.30, which is 64.8% of $350,000. To buy at asking you would need $123,095.70 down instead of $87,500. That is the same constraint as Step 3. You either pay less or you put in more cash.</p>
+<h2>Bonus: break-even occupancy</h2>
+<p>One more number belongs next to the max offer. It is the share of rent you need to collect just to cover costs. Management, maintenance and capex scale with collected rent, which is 18% of it here. Tax, insurance and the loan do not.</p>
+<p><code>Break-even occupancy = (tax + insurance + debt service) / (gross rent × (1 − 0.18))</code></p>
+<p>At asking that is (4,200 + 1,200 + 20,957.03) / 29,520 = <strong>89.3%</strong>. An empty unit costs $1,230 a month after the variable costs it saves. So one unit sitting empty for about six weeks wipes out the year's $1,686.97 of cash flow. At the $304,778 ceiling the cushion is wider because both the loan and the tax shrink.</p>
+<h2>Setting it up in Excel</h2>
+<p>Put each input in its own cell: gross rent, vacancy, each expense percent, insurance, tax rate, down payment percent, closing percent, rate and term. Then add three helper cells.</p>
+<ul>
+<li>Fixed NOI: <code>=EGI - mgmt - maint - capex - insurance</code></li>
+<li>Loan constant: <code>=PMT(rate/12, term<em>12, -1) </em> 12</code></li>
+<li>Loan share: <code>=1 - down_pct</code></li>
+</ul>
+<p>The three max price cells are then one line each:</p>
+<ul>
+<li><code>=FixedNOI / (tax_rate + DSCR_target <em> LoanShare </em> LoanConst)</code></li>
+<li><code>=FixedNOI / (tax_rate + LoanShare <em> LoanConst + CoC_target </em> (down_pct + closing_pct))</code></li>
+<li><code>=FixedNOI / (tax_rate + Cap_target)</code></li>
+</ul>
+<p>Finish with <code>=MIN()</code> over the three. Now changing the rate or the rent updates your ceiling at once.</p>
+<h2>Where this breaks</h2>
+<ul>
+<li><strong>Tax reassessment.</strong> The formula assumes tax resets to your purchase price. In places where it does not, use the current tax bill as a fixed cost and drop the 0.012 term.</li>
+<li><strong>Fixed closing costs.</strong> If closing costs are a flat amount, add it to the cash term as a constant. The formula becomes linear in a slightly different way but still solves in one line.</li>
+<li><strong>Year one only.</strong> This is a year-one ceiling. It ignores appreciation and paydown, which a 10-year IRR captures. Use the ceiling to decide whether to offer and the IRR to decide whether the deal is worth holding.</li>
+</ul>
+<p>For education and planning only, not financial advice.</p>
+<p>If you want the forward version with the PASS, CAUTION or FAIL scorecard and the 10-year IRR already built, see <a href="/products/rental-property-analyzer.html">the Numbersmith rental property analyzer</a>.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
