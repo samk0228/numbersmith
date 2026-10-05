@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How Much Should a Startup Raise? The Seed Round Sizing Formula in Excel | Numbersmith</title>
+<meta name="description" content="Size a seed round from a month-by-month cash plan instead of a guess. A worked example shows why burn times 24 undershoots by more than half a million, and how growth and dilution change the answer.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/how-much-to-raise-seed-round-formula.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>How Much Should a Startup Raise? The Seed Round Sizing Formula in Excel</h1>
+<p>Most founders size a round one of two ways. They pick a number that sounds normal for their stage, or they take today's burn and multiply it by 18 or 24. Both methods skip the thing that actually decides the answer. That is the shape of your spending and revenue between now and the next round.</p>
+<p>This guide builds the raise number from a monthly cash plan. It uses one sample company all the way through so you can check every figure.</p>
+<h2>The formula</h2>
+<p>The amount to raise is the cash you will burn before the next round closes, minus the cash you already have, plus a cushion.</p>
+<p><code>Raise = Cumulative net burn to the next round − Cash on hand + Contingency</code></p>
+<p>Each part needs a definition.</p>
+<p><strong>Cumulative net burn</strong> is the sum of monthly net burn across the whole period. Net burn is gross spend minus cash revenue in that month. You add up the months because burn changes as you hire and as revenue grows.</p>
+<p><strong>The period</strong> is the months to your next milestone plus the months a raise takes. If you need 18 months to reach Series A metrics and a raise takes 6 months, plan for 24.</p>
+<p><strong>Contingency</strong> covers the things that go wrong. A common choice is 10% of the gap.</p>
+<h2>The sample company</h2>
+<p>A seed-stage B2B software company has these numbers.</p>
+<ul>
+<li>Cash in the bank: 300,000</li>
+<li>Gross burn: 90,000 a month for months 1 to 3</li>
+<li>Two engineers and a salesperson start in month 4, so gross burn rises to 130,000</li>
+<li>Two more hires start in month 13, so gross burn rises to 160,000</li>
+<li>Monthly revenue starts at 10,000 and grows 10% a month</li>
+<li>Goal: reach Series A metrics by month 18, then allow 6 months to close the round</li>
+</ul>
+<h2>The shortcut and why it fails</h2>
+<p>The shortcut takes today's net burn and multiplies it by the period.</p>
+<p>Net burn today is 90,000 minus 10,000, which is 80,000. Over 24 months that is 1,920,000. Subtract the 300,000 in the bank and the shortcut says raise 1,620,000.</p>
+<p>The shortcut misses the hiring plan. Burn in month 1 is the lowest it will be for the next year. Once the month 4 hires start, net burn jumps to about 116,700. The shortcut never sees that jump.</p>
+<h2>The month-by-month build</h2>
+<p>Set up one row per month with five columns: gross burn, revenue, net burn, cumulative net burn and cash left.</p>
+<p>In Excel, with month numbers in column A starting in A2:</p>
+<ul>
+<li>Gross burn in B2: <code>=IF(A2&lt;=3,90000,IF(A2&lt;=12,130000,160000))</code></li>
+<li>Revenue in C2: <code>=10000*(1+10%)^(A2-1)</code></li>
+<li>Net burn in D2: <code>=B2-C2</code></li>
+<li>Cumulative net burn in E2: <code>=SUM($D$2:D2)</code></li>
+<li>Cash left in F2: <code>=300000-E2</code></li>
+</ul>
+<p>Fill down to row 25. Here are selected months.</p>
+<p>| Month | Gross burn | Revenue | Net burn | Cumulative net burn | |---|---|---|---|---| | 1 | 90,000 | 10,000 | 80,000 | 80,000 | | 3 | 90,000 | 12,100 | 77,900 | 236,900 | | 4 | 130,000 | 13,310 | 116,690 | 353,590 | | 12 | 130,000 | 28,531 | 101,469 | 1,226,157 | | 13 | 160,000 | 31,384 | 128,616 | 1,354,773 | | 18 | 160,000 | 50,545 | 109,455 | 1,944,008 | | 24 | 160,000 | 89,543 | 70,457 | 2,475,027 |</p>
+<p>Cash runs out early. Cumulative burn passes 300,000 in month 4, which is why this company is raising now.</p>
+<h2>Reading the answer</h2>
+<p>Cumulative net burn over 24 months is 2,475,027. Subtract the 300,000 on hand and the gap is 2,175,027.</p>
+<p>Add 10% contingency and the number is 2,392,530. Round it to a raise of 2.4 million.</p>
+<p>Compare that to the shortcut. The shortcut said 1,620,000. The real gap is 2,175,027 before any cushion. The shortcut is short by 555,027, which is more than four months of burn at the month 13 level. A founder who raised the shortcut number would hit zero around month 18. That is the month the Series A pitch was supposed to start.</p>
+<p>Now look at the 18-month line. Cumulative burn at month 18 is 1,944,008, so a raise sized only to the milestone would be 1,644,008. That covers the work but not the fundraise that follows it. The 6 months of fundraising cost 531,019 on their own in this plan. They need to be in the number.</p>
+<h2>Growth is the biggest lever</h2>
+<p>Revenue growth changes the answer more than anything else in the plan. Here is the same company at three monthly growth rates, with hiring unchanged.</p>
+<p>| Monthly growth | Revenue in month 24 | 24-month burn | Gap after cash | Raise with 10% | |---|---|---|---|---| | 5% | 30,715 | 2,914,980 | 2,614,980 | 2,876,478 | | 10% | 89,543 | 2,475,027 | 2,175,027 | 2,392,530 | | 15% | 248,915 | 1,518,322 | 1,218,322 | 1,340,154 |</p>
+<p>Going from 10% to 5% growth adds almost half a million to the raise. Going from 10% to 15% cuts it by over a million.</p>
+<p>So which growth rate should you plan on? Plan on the rate you have actually seen for the last three to six months, not the rate in your pitch deck. If the 10% plan works but the 5% plan needs a raise you cannot get, you have learned something important. You may need to slow the hiring plan, or set a hiring trigger tied to revenue instead of a calendar month.</p>
+<h2>Checking the dilution</h2>
+<p>The raise has to make sense against the price. Seed rounds often sell somewhere around 15% to 25% of the company. The math is simple.</p>
+<p><code>Dilution = Raise ÷ Post-money valuation</code></p>
+<p>At a 2.4 million raise, here is what each post-money means.</p>
+<ul>
+<li>12.0 million post-money: 20% dilution</li>
+<li>10.0 million post-money: 24% dilution</li>
+</ul>
+<p>If the market will only pay 8 million post-money, a 2.4 million raise is 30% of the company. At that point you have three choices. You can raise less and reach a smaller milestone. You can cut the burn plan. Or you can accept the dilution. The model lets you test each one in a few minutes.</p>
+<p>Do not forget the option pool. If investors ask for a 10% pool created before the round, founders absorb that dilution too. The raise itself does not change, but your ownership after the round drops.</p>
+<h2>Common mistakes</h2>
+<p><strong>Using booked revenue.</strong> Runway is about cash. An annual contract billed upfront is cash today. A customer on 45-day terms pays a month and a half late. Use the month the money arrives.</p>
+<p><strong>Leaving out one-time costs.</strong> Legal fees for the round, a yearly insurance bill, a conference, a laptop for each new hire. They do not show up in a normal month but they do show up in the bank.</p>
+<p><strong>Forgetting the minimum cash floor.</strong> Few companies can run to exactly zero. Payroll has to clear and vendors want to be paid. Many founders treat two months of burn as the true zero. In this example two months of gross spend at the month 24 level is 320,000.</p>
+<p><strong>Planning a single scenario.</strong> Build the base case, then a slow case at half the growth rate. Raise for something between them. The table above shows how wide the range can be.</p>
+<h2>A checklist before you send the number to investors</h2>
+<ul>
+<li>The raise comes from a monthly table, not burn times a multiple.</li>
+<li>The period covers the milestone plus 6 months to close the next round.</li>
+<li>Hiring starts on specific months in the plan.</li>
+<li>Revenue growth matches what you have actually achieved.</li>
+<li>You have run a slow-growth case and know what it needs.</li>
+<li>The raise divided by the likely post-money gives dilution you can accept.</li>
+</ul>
+<p>For a model that already has this built in, see the <a href="/products/startup-financial-model.html">Numbersmith startup financial model</a>. Its Runway and Raise tab sizes the round from a 36-month hiring and revenue plan that ties to all three statements.</p>
+<p>For education and planning only, not financial advice.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
