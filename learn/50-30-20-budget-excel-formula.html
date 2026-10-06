@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>50/30/20 Budget in Excel: The Formulas, and What to Do When Needs Are 64% | Numbersmith</title>
+<meta name="description" content="How to build a 50/30/20 budget in Excel with SUMIFS and a bucket column, which income figure the rule actually uses, where debt payments belong, and why the 20 is the only number worth defending.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/50-30-20-budget-excel-formula.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>50/30/20 Budget in Excel: The Formulas, and What to Do When Needs Are 64%</h1>
+<p>The 50/30/20 rule splits your after-tax income into three buckets. Half goes to needs, 30% goes to wants and 20% goes to savings and extra debt payoff. It is popular because it is simple. It is also easy to get wrong in a spreadsheet, because three small choices change the answer by several points.</p>
+<p>This guide builds the rule in Excel from one worked example. It covers the formulas, the income figure to divide by, where debt payments go and what to do when your needs come in well over 50%, which for most renters in an expensive city they will.</p>
+<h2>The worked example</h2>
+<p>A single renter takes home 5,200 a month after tax and after a 420 pre-tax 401(k) contribution. Here is one month of spending.</p>
+<p>| Category | Amount | Bucket | |---|---|---| | Rent | 1,650 | Need | | Utilities | 180 | Need | | Groceries | 520 | Need | | Car payment | 340 | Need | | Car insurance | 140 | Need | | Gas | 160 | Need | | Phone | 60 | Need | | Credit card minimum | 75 | Need | | Student loan payment | 220 | Need | | Dining out | 310 | Want | | Subscriptions | 65 | Want | | Shopping | 240 | Want | | Entertainment | 120 | Want | | Travel fund | 150 | Want | | Roth IRA | 500 | Save | | Emergency fund | 300 | Save | | Extra credit card payment | 170 | Save |</p>
+<p>Every dollar of the 5,200 has a job, so the three buckets add back to take-home pay.</p>
+<h2>Step 1: give every category a bucket</h2>
+<p>Make a small table on its own sheet with two columns, Category and Bucket. Format it as an Excel table (Ctrl+T) and name it <code>Categories</code>. The bucket column holds one of three words: Need, Want or Save.</p>
+<p>This table is the whole rule. Every judgment call about whether something is a need lives in one place, so you change it once and every month updates.</p>
+<h2>Step 2: tag each transaction</h2>
+<p>Your transaction log has Date, Category and Amount. Add a fourth column that looks up the bucket:</p>
+<p><code>`</code> =XLOOKUP([@Category], Categories[Category], Categories[Bucket], "Unassigned") <code>`</code></p>
+<p>If you are on an older Excel without XLOOKUP, use:</p>
+<p><code>`</code> =IFERROR(VLOOKUP([@Category], Categories, 2, FALSE), "Unassigned") <code>`</code></p>
+<p>The "Unassigned" fallback matters. A typo in a category name would otherwise drop that spending out of every bucket, and the budget would look better than it is. Add one check cell that counts them:</p>
+<p><code>`</code> =COUNTIF(Tx[Bucket], "Unassigned") <code>`</code></p>
+<p>Anything above zero means a category needs fixing before you trust the totals.</p>
+<h2>Step 3: total each bucket</h2>
+<p>With income in <code>B1</code>, the three totals are one SUMIFS each:</p>
+<p><code>`</code> Needs:   =SUMIFS(Tx[Amount], Tx[Bucket], "Need") Wants:   =SUMIFS(Tx[Amount], Tx[Bucket], "Want") Savings: =SUMIFS(Tx[Amount], Tx[Bucket], "Save") <code>`</code></p>
+<p>To limit it to one month, add a date range:</p>
+<p><code>`</code> =SUMIFS(Tx[Amount], Tx[Bucket], "Need", Tx[Date], "&gt;="&amp;D1, Tx[Date], "&lt;"&amp;EDATE(D1, 1)) <code>`</code></p>
+<p>where <code>D1</code> holds the first day of the month. Then the shares and targets:</p>
+<p><code>`</code> Share:   =Needs / $B$1 Target:  =$B$1 * 0.5        (0.3 for wants, 0.2 for savings) Gap:     =Needs - Target <code>`</code></p>
+<p>Last, add a check that the three totals add back to income. If they do not, some income is unassigned or some spending is missing.</p>
+<h2>The result</h2>
+<p>| Bucket | Actual | Share | Target | Target amount | |---|---|---|---|---| | Needs | 3,345 | 64.33% | 50% | 2,600 | | Wants | 885 | 17.02% | 30% | 1,560 | | Savings | 970 | 18.65% | 20% | 1,040 |</p>
+<p>Needs are 745 over target. Wants are well under. Savings are 70 short of 20%. Rent alone is 31.73% of take-home pay, which uses most of the needs bucket before anything else is counted.</p>
+<h2>Choice 1: which income do you divide by</h2>
+<p>The rule, as Elizabeth Warren and Amelia Warren Tyagi set it out, uses after-tax income. That is income after taxes, not after every deduction. The 420 that goes to the 401(k) before the paycheck arrives is still savings. If you divide by take-home pay alone, it disappears from both sides.</p>
+<p>Add it back to income and to savings:</p>
+<p>| Bucket | Actual | Share of 5,620 | |---|---|---| | Needs | 3,345 | 59.52% | | Wants | 885 | 15.75% | | Savings | 1,390 | 24.73% |</p>
+<p>Same person, same month. The savings rate moves from 18.65% to 24.73% and clears the 20% target. Needs fall from 64% to under 60%.</p>
+<p>In Excel, keep pre-tax savings as its own input cell. Add it to the income in <code>B1</code> and to the Savings total. Pick one version and keep it, because comparing a take-home month with an adjusted month makes your progress look like noise.</p>
+<h2>Choice 2: where debt payments go</h2>
+<p>Minimum payments are needs. You owe them whether you like it or not. Anything above the minimum is a choice to get ahead, so it belongs in savings.</p>
+<p>Spreadsheets that put the whole credit card payment in one bucket get this wrong both ways. In the example, if the extra 170 were filed as a want, wants would rise to 20.29% and savings would fall to 15.38%. The person would look like a worse saver for paying down a card faster.</p>
+<p>Set up two categories, "Credit card minimum" (Need) and "Extra debt payment" (Save), and split the payment when you log it.</p>
+<h2>Choice 3: monthly or annual</h2>
+<p>Some needs arrive once or twice a year. Say car registration is 360, paid in March. In March, needs jump to 3,705, which is 71.25% of take-home pay. A monthly view would flag March as a disaster when nothing changed.</p>
+<p>There are two fixes. You can put 30 a month into a "Car registration" sinking fund and file that as a need. Or you can judge the rule on a trailing 12-month total instead of a single month. The sinking fund is cleaner, because it also makes sure the money is there in March. Give the March payment out of the fund a category whose bucket is Transfer, which none of the three SUMIFS picks up, or you will count the 360 twice.</p>
+<h2>When needs are 64%, defend the 20</h2>
+<p>The rule was written as a guide, not a law. In a high-rent city many people cannot get needs to 50% without moving. The good news is that the three numbers are not equally important.</p>
+<p>The 20 is the one that builds wealth. The 50 and the 30 are just a way to get there. So treat 20% savings as the floor and let needs and wants trade places.</p>
+<p>In the example the take-home version needs savings of 1,040. Needs are fixed at 3,345 this year. So wants can be at most:</p>
+<p><code>`</code> =B1 - Needs - B1*0.2 <code>`</code></p>
+<p>That is 5,200 minus 3,345 minus 1,040, or 815. Current wants are 885. Cutting 70 a month from dining out hits the target. That is a much smaller problem than "needs are 745 over," and it is the one you can actually solve this month.</p>
+<p>The needs number is still useful over a longer horizon. Rent and the car payment are 1,990 of the 3,345. Those are decided at lease renewal and at the next car purchase, not at the grocery store. Put a note in your sheet with the renewal dates, because that is when the 64% can move.</p>
+<h2>A checklist for your sheet</h2>
+<ol>
+<li>A Categories table with one bucket per category.</li>
+<li>A bucket column on every transaction with an "Unassigned" fallback and a count.</li>
+<li>One SUMIFS per bucket, with a monthly date filter.</li>
+<li>Pre-tax savings added to income and to savings, or left out of both. Never one side only.</li>
+<li>Minimum payments as needs and extra payments as savings.</li>
+<li>Sinking funds for annual bills.</li>
+<li>A wants ceiling formula that holds savings at 20%.</li>
+</ol>
+<h2>A ready-made version</h2>
+<p>If you would rather start from a working file, the <a href="/products/budget-net-worth-tracker.html">Annual Budget and Net Worth Tracker</a> has the transaction log, the category dropdown and Budget versus Actual by month already built. It groups categories into eight groups (Housing, Transport, Food and so on) rather than three buckets, so you would add the Need, Want and Save mapping from Step 1 yourself. It also tracks your savings rate against a target on the dashboard.</p>
+<p>For education and planning only, not financial advice.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
