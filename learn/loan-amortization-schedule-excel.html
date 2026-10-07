@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Make a Loan Amortization Schedule in Excel (PMT, IPMT, PPMT and CUMIPMT) | Numbersmith</title>
+<meta name="description" content="Build a month-by-month loan amortization schedule in Excel with PMT and three columns of formulas, check it against IPMT, PPMT and CUMIPMT, and read the three numbers in it that matter: the crossover month, the halfway month and the cost of rounding.">
+<link rel="canonical" href="https://numbersmithfinance.com/learn/loan-amortization-schedule-excel.html">
+<link rel="stylesheet" href="/assets/style.css">
+
+
+</head><body>
+<header class="top"><a class="logo" href="/">Numbersmith</a>
+<nav><a href="/#products">Templates</a><a href="/model-in-24-hours.html">Model in 24h</a><a href="/tools/">Tools</a><a href="/learn/">Learn</a></nav></header>
+<main><article><h1>How to Make a Loan Amortization Schedule in Excel (PMT, IPMT, PPMT and CUMIPMT)</h1>
+<p>An amortization schedule shows every payment on a loan split into interest and principal, with the balance left after each one. Your lender has one. Building your own takes about ten minutes in Excel. Once you have it you can answer questions the lender's statement does not, like how much interest you will pay in year 7 or when you will owe less than half the original balance.</p>
+<p>This guide uses one example the whole way through: a <strong>$300,000 loan at 6.75% for 30 years</strong>, paid monthly.</p>
+<h2>Step 1: Put the inputs in their own cells</h2>
+<p>Keep every assumption in one block at the top so the schedule never contains a typed number.</p>
+<p>| Cell | Label | Value | |---|---|---| | B1 | Loan amount | 300000 | | B2 | Annual rate | 6.75% | | B3 | Years | 30 | | B4 | Payments per year | 12 |</p>
+<p>Then two helper cells:</p>
+<ul>
+<li><code>B5</code> monthly rate: <code>=B2/B4</code> which gives 0.5625%</li>
+<li><code>B6</code> number of payments: <code>=B3*B4</code> which gives 360</li>
+</ul>
+<h2>Step 2: The payment with PMT</h2>
+<p><code>`</code> B7: =PMT(B5, B6, -B1) <code>`</code></p>
+<p>This returns <strong>$1,945.79</strong>. The loan amount goes in as a negative because Excel treats money you receive as positive and money you pay as negative. Leave the minus sign off and you get the same number with a minus in front, which then flips the sign of every formula below it.</p>
+<p>PMT assumes the payment is the same every month and the rate never changes. That fits a fixed-rate mortgage, a car loan or a student loan. It does not fit an ARM after its reset or a loan with a balloon payment.</p>
+<h2>Step 3: The schedule, three formulas</h2>
+<p>Start the table at row 10 with these headers: Month, Payment, Interest, Principal, Balance.</p>
+<p>Row 10 is month 0. Put <code>0</code> in A10 and <code>=B1</code> in E10. That is the starting balance.</p>
+<p>Row 11 is month 1:</p>
+<p>| Column | Formula | Month 1 result | |---|---|---| | A11 Month | <code>=A10+1</code> | 1 | | B11 Payment | <code>=$B$7</code> | 1,945.79 | | C11 Interest | <code>=E10*$B$5</code> | 1,687.50 | | D11 Principal | <code>=B11-C11</code> | 258.29 | | E11 Balance | <code>=E10-D11</code> | 299,741.71 |</p>
+<p>Fill row 11 down to row 370 and you have all 360 months. The last balance should be zero. If it is not, one of the absolute references is missing a <code>$</code>.</p>
+<p>Interest is always last month's balance times the monthly rate. That one line is the whole engine. Everything else is subtraction.</p>
+<h2>Step 4: Check it against IPMT, PPMT and CUMIPMT</h2>
+<p>Excel has built-in functions that compute any single row without the table. Use them as a test.</p>
+<ul>
+<li><code>=IPMT($B$5, A11, $B$6, -$B$1)</code> returns the interest in month A11. For month 1 it is 1,687.50.</li>
+<li><code>=PPMT($B$5, A11, $B$6, -$B$1)</code> returns the principal. For month 1 it is 258.29.</li>
+<li><code>=CUMIPMT($B$5, $B$6, $B$1, 1, 12, 0)</code> returns total interest for months 1 to 12. It comes back as negative 20,152.29.</li>
+</ul>
+<p>Add a check column <code>=ROUND(C11-IPMT($B$5,A11,$B$6,-$B$1),6)</code> and fill it down. Every row should show 0. If any row does not, your schedule and Excel's math disagree, and that is worth knowing before you trust it.</p>
+<p>CUMIPMT is also the fastest way to get one year of mortgage interest for a tax estimate. Year 1 here is $20,152.29 of interest and only $3,197.24 of principal.</p>
+<h2>Step 5: Read the schedule</h2>
+<p>A finished schedule has 360 rows and most people scroll it once and close it. These are the three rows worth finding.</p>
+<p><strong>The crossover month.</strong> Early payments are mostly interest. In month 1, 87% of the $1,945.79 is interest. Principal grows a little every month because the balance shrinks and so does the interest charged on it. The month where principal first beats interest is the crossover:</p>
+<p><code>`</code> =INDEX(A11:A370, MATCH(TRUE, INDEX(D11:D370&gt;C11:C370, 0), 0)) <code>`</code></p>
+<p>Here it is <strong>month 238</strong>, almost 20 years in. That is why the first decade of a 30-year loan builds equity so slowly. After 10 years you have paid $233,495 in total payments. Only $44,096.58 of that reduced the balance.</p>
+<p><strong>The halfway month.</strong> When do you owe less than $150,000?</p>
+<p><code>`</code> =INDEX(A11:A370, MATCH(TRUE, INDEX(E11:E370&lt;=B1/2, 0), 0)) <code>`</code></p>
+<p>This returns <strong>month 259</strong>, about 21.6 years in. Most borrowers guess 15 years. The gap is the same front-loading effect.</p>
+<p><strong>Total interest.</strong> <code>=SUM(C11:C370)</code> gives <strong>$400,485.94</strong>. You borrow $300,000 and repay $700,485.94. At 6.75% the interest is more than the loan.</p>
+<p>| Point in the loan | Interest so far | Balance | |---|---|---| | Month 12 | 20,152.29 | 296,802.76 | | Month 60 | 98,374.79 | 281,627.13 | | Month 120 | 189,398.31 | 255,903.00 | | Month 180 | 270,129.23 | 219,886.26 | | Month 240 | 336,449.31 | 169,458.68 | | Month 360 | 400,485.94 | 0.00 |</p>
+<h2>Step 6: Rounding, the last-payment problem</h2>
+<p>The table above keeps full precision. A real lender rounds the payment to the cent and rounds each month's interest to the cent. Change B7 to <code>=ROUND(PMT(B5,B6,-B1),2)</code>, add <code>ROUND(...,2)</code> to the interest and balance columns and run it again. The schedule now ends with <strong>$5.29</strong> still owed after payment 360.</p>
+<p>That is not an error in your sheet. It is why the final payment on a real loan is usually a few dollars different from the rest. Handle it in the payment column so the last row clears the balance:</p>
+<p><code>`</code> B11: =IF(A11=$B$6, E10+ROUND(E10*$B$5,2), $B$7) <code>`</code></p>
+<p>If you plan to compare your schedule against a lender statement, use the rounded version. If you only want totals, full precision is fine. The difference over 30 years is a few dollars.</p>
+<h2>Step 7: Two quick what-ifs</h2>
+<p>The schedule makes trade-offs visible.</p>
+<p><strong>Shorter term.</strong> Change B3 to 15 and the rate to a typical 15-year rate of 6.25%. The payment rises to $2,572.27 and total interest falls to $163,008.35. That is $237,477.59 less interest for $626.48 more per month.</p>
+<p><strong>Extra principal.</strong> Add an Extra column and subtract it in the balance formula. $200 a month extra pays the loan off in 276 months instead of 360 and cuts total interest to $290,558.43. The full method, including the three mistakes that make most payoff calculators overstate the savings, is in the <a href="/learn/mortgage-extra-payment-formula-excel.html">mortgage extra payment guide</a>.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Using the annual rate in the interest column.</strong> <code>=E10*$B$2</code> charges a full year of interest every month. The schedule pays off nothing and the balance grows.</li>
+<li><strong>Forgetting the <code>$</code> signs.</strong> <code>=E10*B5</code> drifts to B6, B7 and so on as you fill down. Row 12 then multiplies by 360.</li>
+<li><strong>Mixing signs.</strong> If PMT returns a negative payment and you subtract it, the balance goes up. Pick one convention and stick to it. Passing the loan as <code>-B1</code> is the simplest.</li>
+<li><strong>Treating the schedule as a forecast for an ARM.</strong> PMT assumes the rate is fixed. Once an adjustable rate resets, rebuild from that month with the new rate and the remaining balance.</li>
+</ul>
+<h2>Where this fits</h2>
+<p>The sheet above is the core of every loan payoff calculator. If you want the finished version with extra payments, a lump sum input, a biweekly view, a refinance break-even comparison and balance and interest charts already built, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has all of it on open formulas. For education and planning only, not financial advice.</p></article></main>
+<footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
+<p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
+<script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
+</body></html>
