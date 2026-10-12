@@ -22,7 +22,7 @@
 <li><strong>Effective tax rate</strong> from the income tax footnote, and the statutory rate the company expects to trend toward.</li>
 <li><strong>Debt schedule</strong> from the long-term debt footnote, for the interest rate and the mix of fixed and floating debt.</li>
 <li><strong>Share count</strong>, basic and diluted, from the cover page and the earnings-per-share footnote.</li>
-<li><strong>Net debt</strong>, cash plus short-term investments minus total debt, from the balance sheet.</li>
+<li><strong>Net debt</strong>, total debt minus cash and short-term investments, from the balance sheet. A company with more cash than debt has negative net debt, which adds to equity value instead of subtracting from it.</li>
 </ul>
 <p>Management's Discussion and Analysis (Item 7) is where you find the qualitative color: why margins moved, what capex is funding, what management expects for the next year. Use it to sanity-check the numbers you project, not as a substitute for them.</p>
 <h2>Step 2: Project free cash flow (a worked 5-year example)</h2>
@@ -30,11 +30,12 @@
 <p>Assumptions: revenue starts at <strong>$1,000</strong> and grows <strong>10% a year</strong>, operating margin holds at <strong>20%</strong>, the tax rate is <strong>25%</strong>, D&amp;A runs at <strong>5% of revenue</strong>, capex runs at <strong>6% of revenue</strong>, and working capital equals <strong>10% of revenue</strong> (so the cash tied up each year is 10% of the year-over-year revenue increase).</p>
 <ul>
 <li><strong>Year 1:</strong> revenue $1,100, EBIT $220, NOPAT $165, D&amp;A $55, capex $66, change in NWC $10 → <strong>FCF $144</strong></li>
-<li><strong>Year 2:</strong> revenue $1,210, EBIT $242, NOPAT $182, D&amp;A $61, capex $73, change in NWC $11 → <strong>FCF $159</strong></li>
-<li><strong>Year 3:</strong> revenue $1,331, EBIT $266, NOPAT $200, D&amp;A $67, capex $80, change in NWC $12 → <strong>FCF $175</strong></li>
+<li><strong>Year 2:</strong> revenue $1,210, EBIT $242, NOPAT $182, D&amp;A $61, capex $73, change in NWC $11 → <strong>FCF $158</strong></li>
+<li><strong>Year 3:</strong> revenue $1,331, EBIT $266, NOPAT $200, D&amp;A $67, capex $80, change in NWC $12 → <strong>FCF $174</strong></li>
 <li><strong>Year 4:</strong> revenue $1,464, EBIT $293, NOPAT $220, D&amp;A $73, capex $88, change in NWC $13 → <strong>FCF $192</strong></li>
 <li><strong>Year 5:</strong> revenue $1,610, EBIT $322, NOPAT $242, D&amp;A $81, capex $97, change in NWC $15 → <strong>FCF $211</strong></li>
 </ul>
+<p>Each line above is rounded for display, but the FCF figures come from the unrounded rows. Year 2 is 181.5 + 60.5 − 72.6 − 11.0 = 158.4, not the 159 you get by adding the rounded line items. Let Excel carry full precision and only format the display, or small rounding errors will compound through the rest of the model.</p>
 <p>In Excel, build this as five rows (revenue, EBIT, tax, NOPAT, D&amp;A, capex, change in NWC, FCF) across five year columns, with every line as a formula off the assumptions cell, not a typed number. That is what lets the sensitivity table in Step 7 actually work.</p>
 <h2>Step 3: Calculate WACC</h2>
 <p>The weighted average cost of capital is the discount rate. It blends the cost of equity and the after-tax cost of debt, weighted by their share of the capital structure.</p>
@@ -56,14 +57,14 @@
 <h2>Step 4: Terminal value, two ways</h2>
 <p>The terminal value captures everything after the explicit forecast period, and it is usually the majority of enterprise value, so build it two ways and compare.</p>
 <p><strong>Gordon growth method:</strong> <code>TV = FCF_final × (1 + g) / (WACC − g)</code></p>
-<p>Using Year 5 FCF of $211, a long-run growth rate of <strong>2.5%</strong>, and WACC of 9.2%:</p>
+<p>Using Year 5 FCF of $210.8, a long-run growth rate of <strong>2.5%</strong>, and WACC of 9.2%:</p>
 <ul>
-<li>TV = 211 × 1.025 / (0.092 − 0.025) = 216.3 / 0.067 = <strong>$3,228</strong></li>
+<li>TV = 210.8 × 1.025 / (0.092 − 0.025) = 216.1 / 0.067 = <strong>$3,225</strong></li>
 </ul>
 <p><strong>Exit multiple method:</strong> <code>TV = Final-year EBITDA × Exit multiple</code></p>
-<p>Year 5 EBITDA is EBIT plus D&amp;A: 322 + 81 = $403. At a <strong>10x EV/EBITDA</strong> exit multiple:</p>
+<p>Year 5 EBITDA is EBIT plus D&amp;A: 322.1 + 80.5 = $402.6. At a <strong>10x EV/EBITDA</strong> exit multiple:</p>
 <ul>
-<li>TV = 403 × 10 = <strong>$4,030</strong></li>
+<li>TV = 402.6 × 10 = <strong>$4,026</strong></li>
 </ul>
 <p>Run both. If they imply wildly different growth rates or multiples once you back into them, that is a signal one of your assumptions is off, not a reason to pick whichever number you like better.</p>
 <h2>Step 5: Discount back to present value (mid-year convention)</h2>
@@ -71,29 +72,29 @@
 <p>Discount factor: <code>1 / (1 + WACC)^(t − 0.5)</code>. At a 9.2% WACC:</p>
 <ul>
 <li>Year 1 (t=0.5): factor 0.957 → PV of FCF = 144 × 0.957 = <strong>$138</strong></li>
-<li>Year 2 (t=1.5): factor 0.876 → PV of FCF = 159 × 0.876 = <strong>$139</strong></li>
-<li>Year 3 (t=2.5): factor 0.803 → PV of FCF = 175 × 0.803 = <strong>$140</strong></li>
+<li>Year 2 (t=1.5): factor 0.876 → PV of FCF = 158.4 × 0.876 = <strong>$139</strong></li>
+<li>Year 3 (t=2.5): factor 0.803 → PV of FCF = 174.2 × 0.803 = <strong>$140</strong></li>
 <li>Year 4 (t=3.5): factor 0.735 → PV of FCF = 192 × 0.735 = <strong>$141</strong></li>
 <li>Year 5 (t=4.5): factor 0.673 → PV of FCF = 211 × 0.673 = <strong>$142</strong></li>
 </ul>
-<p>Sum of PV of explicit cash flows: <strong>$701</strong> (rounded).</p>
+<p>Sum of PV of explicit cash flows: <strong>$699</strong>. The five rounded rows add to $700, and the unrounded sum is 699.2.</p>
 <p>The terminal value does not get the mid-year factor. It is a value measured as of the end of year 5, so it discounts at the full <code>t = 5</code>: factor <code>1 / 1.092^5</code> = 0.644.</p>
 <ul>
-<li>PV of TV, Gordon growth: 3,228 × 0.644 = <strong>$2,079</strong></li>
-<li>PV of TV, exit multiple: 4,030 × 0.644 = <strong>$2,595</strong></li>
+<li>PV of TV, Gordon growth: 3,225 × 0.644 = <strong>$2,077</strong></li>
+<li>PV of TV, exit multiple: 4,026 × 0.644 = <strong>$2,593</strong></li>
 </ul>
-<p>Using the Year 5 mid-year factor (0.673) on the terminal value is a common slip. Here it would overstate the exit multiple PV by about 4.5%, which is $117 of enterprise value. The Gordon value is a judgment call. Many banks discount it at <code>t − 0.5</code> because the perpetuity is built from cash flows that also arrive mid-year, which here would give $2,172 instead of $2,079. This guide uses the full year for both so the two methods compare on one basis. Whichever you pick, label it.</p>
+<p>Using the Year 5 mid-year factor (0.673) on the terminal value is a common slip. Here it would overstate the exit multiple PV by about 4.5%, which is $117 of enterprise value. The Gordon value is a judgment call. Many banks discount it at <code>t − 0.5</code> because the perpetuity is built from cash flows that also arrive mid-year, which here would give $2,171 instead of $2,077. This guide uses the full year for both so the two methods compare on one basis. Whichever you pick, label it.</p>
 <p><strong>Enterprise value:</strong></p>
 <ul>
-<li>Gordon growth: 701 + 2,079 = <strong>$2,780</strong></li>
-<li>Exit multiple: 701 + 2,595 = <strong>$3,296</strong></li>
+<li>Gordon growth: 699 + 2,077 = <strong>$2,776</strong></li>
+<li>Exit multiple: 699 + 2,593 = <strong>$3,292</strong></li>
 </ul>
 <h2>Step 6: Bridge from enterprise value to per-share value</h2>
 <p>Enterprise value belongs to everyone with a claim on the business, debt and equity alike. To get to what a share is worth, subtract net debt.</p>
 <p>Say the company carries <strong>$400</strong> of total debt and <strong>$150</strong> of cash, for net debt of <strong>$250</strong>, and has <strong>100 million</strong> diluted shares outstanding.</p>
 <ul>
-<li>Equity value (Gordon growth) = 2,780 − 250 = <strong>$2,530</strong>, or <strong>$25.30 per share</strong></li>
-<li>Equity value (exit multiple) = 3,296 − 250 = <strong>$3,046</strong>, or <strong>$30.46 per share</strong></li>
+<li>Equity value (Gordon growth) = 2,776 − 250 = <strong>$2,526</strong>, or <strong>$25.26 per share</strong></li>
+<li>Equity value (exit multiple) = 3,292 − 250 = <strong>$3,042</strong>, or <strong>$30.42 per share</strong></li>
 </ul>
 <p>That $25 to $30 spread between the two terminal value methods is normal. It is the model telling you where its uncertainty lives, and it is exactly what the sensitivity table in the next step is for.</p>
 <h2>Step 7: Build a sensitivity table with formulas, not Excel's Data Table</h2>
@@ -106,7 +107,8 @@
 <li>Wrap it in <code>=IFERROR(...,"n/a")</code> to handle the case where WACC equals the growth rate, which divides by zero.</li>
 </ol>
 <p>The result is a 5x5 grid of implied enterprise values you can scan in one glance, built entirely from formulas you can trace, cell by cell, back to the assumptions tab.</p>
-<p>If you would rather start from a finished version of everything above, complete with the sensitivity grid pre-built, see <a href="/products/dcf-valuation-model.html">a finished version of everything above</a>.</p></article></main>
+<p><em>Built with AI assistance and formula-checked. For education and planning only, not financial advice.</em></p>
+<p>If you would rather start from a finished version of everything above, complete with the sensitivity grid pre-built, see the <a href="/products/dcf-valuation-model.html">DCF Valuation Model</a>. One known issue is open in that model: with the mid-year toggle on, it discounts the exit multiple terminal value at year 4.5 instead of year 5, the slip described in Step 5. The product page explains it and the one-cell fix.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 <script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
