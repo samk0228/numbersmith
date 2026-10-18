@@ -16,7 +16,7 @@
 <p>The amount to raise is the cash you will burn before the next round closes, minus the cash you already have, plus a cushion.</p>
 <p><code>Raise = Cumulative net burn to the next round − Cash on hand + Contingency</code></p>
 <p>Each part needs a definition.</p>
-<p><strong>Cumulative net burn</strong> is the sum of monthly net burn across the whole period. Net burn is gross spend minus cash revenue in that month. You add up the months because burn changes as you hire and as revenue grows.</p>
+<p><strong>Cumulative net burn</strong> is the sum of monthly net burn across the whole period. Net burn is gross spend minus cash revenue in that month. You add up the months because burn changes as you hire and as revenue grows. If the plan turns cash-flow positive before the period ends, use the highest point the running total reaches, not the last month. That peak is the deepest the bank account ever goes.</p>
 <p><strong>The period</strong> is the months to your next milestone plus the months a raise takes. If you need 18 months to reach Series A metrics and a raise takes 6 months, plan for 24.</p>
 <p><strong>Contingency</strong> covers the things that go wrong. A common choice is 10% of the gap.</p>
 <h2>The sample company</h2>
@@ -43,7 +43,7 @@
 <li>Cumulative net burn in E2: <code>=SUM($D$2:D2)</code></li>
 <li>Cash left in F2: <code>=300000-E2</code></li>
 </ul>
-<p>Fill down to row 25. Here are selected months.</p>
+<p>Fill down to row 25. The gap before contingency is then <code>=MAX(E2:E25)-300000</code>. MAX picks the peak of the running total, which is the same as the last row whenever net burn stays positive. Here are selected months.</p>
 <p>| Month | Gross burn | Revenue | Net burn | Cumulative net burn | |---|---|---|---|---| | 1 | 90,000 | 10,000 | 80,000 | 80,000 | | 3 | 90,000 | 12,100 | 77,900 | 236,900 | | 4 | 130,000 | 13,310 | 116,690 | 353,590 | | 12 | 130,000 | 28,531 | 101,469 | 1,226,157 | | 13 | 160,000 | 31,384 | 128,616 | 1,354,773 | | 18 | 160,000 | 50,545 | 109,455 | 1,944,008 | | 24 | 160,000 | 89,543 | 70,457 | 2,475,027 |</p>
 <p>Cash runs out early. Cumulative burn passes 300,000 in month 4, which is why this company is raising now.</p>
 <h2>Reading the answer</h2>
@@ -53,8 +53,9 @@
 <p>Now look at the 18-month line. Cumulative burn at month 18 is 1,944,008, so a raise sized only to the milestone would be 1,644,008. That covers the work but not the fundraise that follows it. The 6 months of fundraising cost 531,019 on their own in this plan. They need to be in the number.</p>
 <h2>Growth is the biggest lever</h2>
 <p>Revenue growth changes the answer more than anything else in the plan. Here is the same company at three monthly growth rates, with hiring unchanged.</p>
-<p>| Monthly growth | Revenue in month 24 | 24-month burn | Gap after cash | Raise with 10% | |---|---|---|---|---| | 5% | 30,715 | 2,914,980 | 2,614,980 | 2,876,478 | | 10% | 89,543 | 2,475,027 | 2,175,027 | 2,392,530 | | 15% | 248,915 | 1,518,322 | 1,218,322 | 1,340,154 |</p>
-<p>Going from 10% to 5% growth adds almost half a million to the raise. Going from 10% to 15% cuts it by over a million.</p>
+<p>| Monthly growth | Revenue in month 24 | Peak cumulative burn | Gap after cash | Raise with 10% | |---|---|---|---|---| | 5% | 30,715 | 2,914,980 (month 24) | 2,614,980 | 2,876,478 | | 10% | 89,543 | 2,475,027 (month 24) | 2,175,027 | 2,392,530 | | 15% | 248,915 | 1,695,564 (month 20) | 1,395,564 | 1,535,121 |</p>
+<p>Going from 10% to 5% growth adds almost half a million to the raise. Going from 10% to 15% cuts it by about 860,000.</p>
+<p>The 15% row is where the peak matters. Revenue passes 160,000 in month 21, so net burn turns negative and the running total starts to fall. By month 24 it is back down to 1,518,322. A raise sized on that last row would be 1,340,154, which is 194,967 short. Even counting the 10% cushion, the company would run out of cash in month 18, three months before it turns cash-flow positive.</p>
 <p>So which growth rate should you plan on? Plan on the rate you have actually seen for the last three to six months, not the rate in your pitch deck. If the 10% plan works but the 5% plan needs a raise you cannot get, you have learned something important. You may need to slow the hiring plan, or set a hiring trigger tied to revenue instead of a calendar month.</p>
 <h2>Checking the dilution</h2>
 <p>The raise has to make sense against the price. Seed rounds often sell somewhere around 15% to 25% of the company. The math is simple.</p>
@@ -81,6 +82,7 @@
 <li>The raise divided by the likely post-money gives dilution you can accept.</li>
 </ul>
 <p>For a model that already has this built in, see the <a href="/products/startup-financial-model.html">Numbersmith startup financial model</a>. Its Runway and Raise tab sizes the round from a 36-month hiring and revenue plan that ties to all three statements.</p>
+<p>This guide was written with AI assistance. Every figure was re-checked month by month.</p>
 <p>For education and planning only, not financial advice.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
