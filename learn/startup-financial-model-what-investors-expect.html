@@ -43,22 +43,35 @@
 <p>The company plans to hire four people at a fully loaded cost of <strong>$12,000 per month</strong> each, adding <strong>$48,000</strong> a month in new operating expense starting immediately.</p>
 <ul>
 <li>New monthly burn = 100,000 + 48,000 = <strong>$148,000</strong></li>
+<li>Runway after the hires = 600,000 / 148,000 ≈ <strong>4.1 months</strong></li>
 </ul>
+<p>That second line matters. Hiring before the round closes cuts the time left to raise from 6 months to about 4.</p>
 <p>The target is 18 months of runway after the raise closes. The raise amount needed:</p>
 <ul>
-<li>Raise = (New monthly burn × Target runway in months) − Cash on hand</li>
-<li>Raise = (148,000 × 18) − 600,000 = 2,664,000 − 600,000 = <strong>$2,064,000</strong></li>
+<li>Raise = (New monthly burn × Target runway in months) − Cash at close</li>
+<li>If the round closed today: (148,000 × 18) − 600,000 = 2,664,000 − 600,000 = <strong>$2,064,000</strong></li>
 </ul>
+<p>Rounds rarely close today. If it takes 4 months, the company burns 4 × 148,000 = 592,000 while raising, so cash at close is only 8,000:</p>
+<ul>
+<li>Raise if it closes in month 4 = 2,664,000 − 8,000 = <strong>$2,656,000</strong></li>
+</ul>
+<p>Subtracting today's cash instead of cash at close understates the raise by almost $600,000 here. Use the cash balance you expect on the day the money lands.</p>
 <p>Add a buffer for one-time costs (legal fees, a security deposit on new office space, a slower-than-planned ramp in revenue), typically 10% to 15%:</p>
 <ul>
-<li>Raise with buffer = 2,064,000 × 1.15 ≈ <strong>$2,373,600</strong></li>
+<li>Raise with buffer, closing today = 2,064,000 × 1.15 ≈ <strong>$2,373,600</strong></li>
+<li>Raise with buffer, closing in month 4 = 2,656,000 × 1.15 ≈ <strong>$3,054,400</strong></li>
 </ul>
-<p>So the founder should be raising roughly <strong>$2.1M to $2.4M</strong>, not a round number pulled from what a peer company raised. That is the difference between a raise size that is defensible in a partner meeting and one that is not.</p>
-<p>For the burn multiple check on this same business: if the $48,000 in new hires is expected to drive <strong>$1,200,000</strong> in net new annualized recurring revenue over the following year, and annualized net burn is 148,000 × 12 = $1,776,000:</p>
+<p>So the founder should be raising roughly <strong>$2.4M to $3.1M</strong> depending on how long the round takes, not a round number pulled from what a peer company raised. That is the difference between a raise size that is defensible in a partner meeting and one that is not. This version holds burn flat at 148,000, which is conservative if revenue grows. When the model has burn changing month to month, size the raise on the lowest cash point, not on an average.</p>
+<p>For the burn multiple check on this same business: say the $48,000 a month in new hires is expected to drive <strong>$1,200,000</strong> in net new annualized recurring revenue over the following year. That is $100,000 of new monthly revenue by month 12.</p>
+<p>The quick version holds burn at 148,000 for all 12 months, so net burn is 148,000 × 12 = $1,776,000:</p>
 <ul>
-<li>Burn multiple = Net burn / Net new ARR = 1,776,000 / 1,200,000 ≈ <strong>1.5</strong></li>
+<li>Quick burn multiple = 1,776,000 / 1,200,000 ≈ <strong>1.48</strong></li>
 </ul>
-<p>A burn multiple near 1.5 is reasonable for an early-stage company still building its go-to-market motion; below 1 is strong, and above 2 to 3 invites questions about whether growth spend is actually working.</p>
+<p>That overstates it, because the new revenue reduces burn as it arrives. If new monthly revenue ramps evenly from $8,333 in month 1 to $100,000 in month 12, it adds up to $650,000 over the year. Net burn is then 1,776,000 − 650,000 = $1,126,000:</p>
+<ul>
+<li>Burn multiple = Net burn / Net new ARR = 1,126,000 / 1,200,000 ≈ <strong>0.94</strong></li>
+</ul>
+<p>Same business, same plan, and the answer moves from "reasonable" to "strong" once burn and revenue come from the same months. Below 1 is strong, around 1.5 is reasonable for an early-stage company still building its go-to-market motion, and above 2 to 3 invites questions about whether growth spend is actually working.</p>
 <h2>Common mistakes</h2>
 <ul>
 <li><strong>Typing in revenue instead of deriving it</strong> from leads, conversion rate, and average deal size, or from signups, activation rate, and pricing.</li>
@@ -81,7 +94,9 @@
 <li>There is a base case, an upside case, and a downside case, not just one scenario.</li>
 <li>The file opens cleanly with no broken links, no broken cell references, and no unresolved circular references.</li>
 </ul>
-<p>If you want a starting point that already has these links built correctly, see <a href="/products/startup-financial-model.html">a finished startup financial model template</a>. For a quick runway and raise-size check without opening a full model, try the free <a href="/tools/runway-calculator.html">runway calculator</a>.</p></article></main>
+<p>If you want a starting point that already has these links built correctly, see <a href="/products/startup-financial-model.html">a finished startup financial model template</a>. For a quick runway and raise-size check without opening a full model, try the free <a href="/tools/runway-calculator.html">runway calculator</a>.</p>
+<p>This guide was written with AI assistance. Every figure was re-checked by hand.</p>
+<p>For education and planning only, not financial advice.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 <script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
