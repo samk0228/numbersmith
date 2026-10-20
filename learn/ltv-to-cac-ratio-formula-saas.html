@@ -27,12 +27,12 @@
 <p>Take a sample B2B SaaS company in its first year. It sells a $500 a month core subscription and a $180 a month add-on. Its marketing budget is 25% of revenue. In Year 1 it:</p>
 <ul>
 <li>Spends $242,951 on marketing</li>
-<li>Adds 465 new customers</li>
+<li>Adds about 465 new customers (464.7 in the model, which grows customers in fractions)</li>
 <li>Earns a blended ARPU of $414.29 a month</li>
 <li>Runs a blended gross margin of 81.2%</li>
 <li>Loses about 4.4% of customers a month</li>
 </ul>
-<p>CAC is $242,951 ÷ 465 = <strong>$522.77</strong>.</p>
+<p>CAC is $242,951 ÷ 464.7 = <strong>$522.77</strong>. Dividing by the rounded 465 gives $522.48, so keep the unrounded count in the formula.</p>
 <p>Monthly gross profit per customer is $414.29 × 81.2% = $336.40.</p>
 <p>LTV is $336.40 ÷ 4.4% = about <strong>$7,650</strong>. The model computes $7,662.45 because it carries churn to more decimal places than the rounded 4.4%.</p>
 <p>LTV:CAC is $7,662.45 ÷ $522.77 = <strong>14.66x</strong>, and payback is $522.77 ÷ $336.40 = <strong>1.6 months</strong>.</p>
@@ -45,20 +45,20 @@
 <li>Marketing manager: 2 months × $8,500 = $17,000</li>
 <li>Total: $102,500</li>
 </ul>
-<p>Fully loaded CAC is ($242,951 + $102,500) ÷ 465 = <strong>$742.91</strong>, up 42%.</p>
+<p>Fully loaded CAC is ($242,951 + $102,500) ÷ 464.7 = <strong>$743.32</strong>, up 42%.</p>
 <p>Run the same adjustment across three years and the picture changes:</p>
-<p>| | Year 1 | Year 2 | Year 3 | |---|---|---|---| | Marketing-only CAC | $522.77 | $931.44 | $1,069.46 | | Sales and marketing payroll | $102,500 | $272,000 | $312,000 | | Fully loaded CAC | $742.91 | $1,230.58 | $1,244.90 | | LTV | $7,662.45 | $7,874.60 | $8,073.23 | | LTV:CAC, marketing only | 14.66x | 8.45x | 7.55x | | LTV:CAC, fully loaded | 10.31x | 6.40x | 6.49x | | Payback, fully loaded (months) | 2.2 | 3.6 | 3.6 |</p>
-<p>Two things stand out. The fully loaded ratio is a third lower in every year. And the Year 1 ratio is the least trustworthy number in the table. In year one the sales team is only partly hired and the first customers often come from founder networks at close to zero cost. CAC rises as you exhaust the easy customers, which is exactly what Years 2 and 3 show. If you quote one ratio, quote a mature year, not the first.</p>
+<p>| | Year 1 | Year 2 | Year 3 | |---|---|---|---| | Marketing-only CAC | $522.77 | $931.44 | $1,069.46 | | Sales and marketing payroll | $102,500 | $272,000 | $312,000 | | Fully loaded CAC | $743.32 | $1,230.58 | $1,244.90 | | LTV | $7,662.45 | $7,874.60 | $8,073.23 | | LTV:CAC, marketing only | 14.66x | 8.45x | 7.55x | | LTV:CAC, fully loaded | 10.31x | 6.40x | 6.49x | | Payback, fully loaded (months) | 2.2 | 3.6 | 3.6 |</p>
+<p>Two things stand out. The fully loaded ratio is lower in every year, by 30% in Year 1, 24% in Year 2 and 14% in Year 3. The gap shrinks because the marketing budget scales with revenue while the team does not, so payroll falls from 42% of the marketing CAC in Year 1 to 16% in Year 3. And the Year 1 ratio is the least trustworthy number in the table. In year one the sales team is only partly hired and the first customers often come from founder networks at close to zero cost. CAC rises as you exhaust the easy customers, which is exactly what Years 2 and 3 show. If you quote one ratio, quote a mature year, not the first.</p>
 <p>A fair question is how much salary to allocate. Include anyone whose main job is acquiring new customers: sales, sales engineering, marketing, and the tools they use. Leave out customer success if it mainly serves existing accounts. Whatever you choose, write it down and apply it the same way every year.</p>
 <h2>Adjustment 2: cap the lifetime</h2>
 <p>The <code>ARPU × margin ÷ churn</code> formula assumes churn stays constant forever. At 4.4% monthly churn the implied average lifetime is 1 ÷ 0.044 = 22.7 months, which sounds modest. But the formula also counts the small tail of customers who stay for five and ten years. For a young company with two years of data, nobody knows if those customers exist.</p>
 <p>A more conservative approach counts only the gross profit a customer produces in the first 36 months. The Excel formula for a capped LTV is:</p>
 <p><code>= GP_per_month × (1 − (1 − churn)^36) ÷ churn</code></p>
 <p>This is the sum of a geometric series. It adds up expected gross profit month by month, with the chance that the customer is still around shrinking each month, and then stops at month 36.</p>
-<p>For Year 3 of the sample company, gross profit per customer is $428.85 × 81.3% = $348.66 a month and churn is 4.3%. The capped LTV is about <strong>$6,442</strong> against $8,073 uncapped. Against the fully loaded Year 3 CAC of $1,244.90 the ratio is <strong>5.17x</strong>.</p>
-<p>So the same company, from the same model, can honestly report anything from 14.66x to 5.17x depending on the choices above. 5x is still a healthy business. The difference is that 5x survives a skeptical investor's own recalculation, and 14.66x does not.</p>
+<p>For Year 3 of the sample company, gross profit per customer is $428.85 × 81.3% = $348.66 a month and churn is 4.32% (shown as 4.3%, and $348.66 ÷ 4.3% would give $8,108, not the model's $8,073). The capped LTV at the model's churn is about <strong>$6,426</strong> against $8,073 uncapped. In other words, about a fifth of the uncapped value comes from months 37 onward, which is the part no young company has data for. Against the fully loaded Year 3 CAC of $1,244.90 the ratio is <strong>5.16x</strong>.</p>
+<p>So the same company, from the same model, can honestly report anything from 14.66x to 5.16x depending on the choices above. 5x is still a healthy business. The difference is that 5x survives a skeptical investor's own recalculation, and 14.66x does not.</p>
 <h2>Check the churn number itself</h2>
-<p>The ratio is more sensitive to churn than to anything else, because churn sits in the denominator of LTV. If Year 3 churn were 6% instead of 4.3%, uncapped LTV would fall to $348.66 ÷ 6% = $5,811 and the fully loaded ratio would drop to 4.67x.</p>
+<p>A 10% change in churn moves LTV about as much as a 10% change in ARPU or margin. The difference is that churn is the input you know least well, and small moves in it are large in relative terms. If Year 3 churn were 6% instead of 4.3%, that is a 39% increase in churn, uncapped LTV would fall 28% to $348.66 ÷ 6% = $5,811, and the fully loaded ratio would drop to 4.67x (4.16x capped).</p>
 <p>Also translate monthly churn to annual before you present it. 4.4% a month sounds small, but (1 − 0.044)^12 = 58.3%, so the company keeps only about 58% of a starting group of customers after a year. That can be normal for small-business customers and alarming for enterprise ones. Know which you are before someone asks.</p>
 <p>Measure churn on customers who have been around at least a few months. A single month in which three of your first twenty customers leave gives you a 15% churn rate that means almost nothing.</p>
 <h2>Building it in Excel</h2>
@@ -84,6 +84,7 @@
 <li>Payback is stated in months alongside the ratio.</li>
 </ul>
 <p>The worked example above comes from the sample company in the <a href="/products/startup-financial-model.html">Numbersmith startup financial model</a>. Its Unit Economics tab computes CAC, LTV, LTV:CAC, and payback by year from a 36-month build. As shipped, its CAC counts the marketing budget only, so add your sales payroll using the steps above.</p>
+<p>This guide was written with AI assistance. Every figure was re-checked in awk.</p>
 <p><em>For education and planning only, not financial advice.</em></p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
