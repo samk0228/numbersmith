@@ -24,8 +24,10 @@
 <h2>Step 1: accrued interest</h2>
 <p>Most notes accrue simple interest, and the note converts on the full balance. Read your note, because a few compound.</p>
 <p>Put the inputs in named cells: <code>Principal</code>, <code>Rate</code>, <code>IssueDate</code>, <code>CloseDate</code>.</p>
-<p><code>`</code> Years      = YEARFRAC(IssueDate, CloseDate, 1) Accrued    = Principal <em> (1 + Rate </em> Years) <code>`</code></p>
-<p>For 18 months that is $500,000 plus $45,000 of interest, so $545,000 converts.</p>
+<p><code>`</code> Years      = YEARFRAC(IssueDate, CloseDate, 3) Accrued    = Principal <em> (1 + Rate </em> Years) <code>`</code></p>
+<p>Basis 3 is actual/365, which is what most notes specify. Check the day count clause, because some notes use a 360-day year.</p>
+<p>The day count moves the interest more than people expect. A note signed January 15, 2025 and converted July 15, 2026 has run 546 days, not exactly 1.5 years. On actual/365 the interest is $44,876.71. On actual/360 it is $45,500.00. That is a $623 spread on the same note.</p>
+<p>This guide uses a clean 1.5 years so the numbers stay round. That gives $500,000 plus $45,000 of interest, so $545,000 converts.</p>
 <p>If the note compounds annually, use <code>Principal * (1 + Rate) ^ Years</code>, which gives $545,668.40. Monthly compounding gives $546,964.47. The gap is small at 6% over 18 months, but it grows with the rate and the term.</p>
 <p>Interest matters more than founders expect. At the conversion price below, the $45,000 of interest buys 56,250 shares. That is 0.4% of the company that shows up in nobody's pitch deck.</p>
 <h2>Step 2: cap price and discount price</h2>
@@ -68,6 +70,7 @@
 <h2>Setting it up in a sheet</h2>
 <p>Put one note per row with columns for principal, rate, issue date, cap, and discount. Put the round inputs in a separate block. Build Accrued, CapPrice, and NoteShares_cap per row, then sum the note shares for the round price. With several notes and a discount case, the per-row closed form above no longer applies exactly, because each note's discount shares feed the same round price. The usual approach is to solve assuming every cap binds, then flag any note whose discount price beats its cap so you can check it by hand.</p>
 <p>If you would rather start from a working file, the Numbersmith cap table workbook already has note and SAFE conversion, the option pool top-up, a post-round cap table, three raise scenarios, and an exit waterfall built with open formulas: <a href="/products/cap-table-dilution-calculator.html">Cap Table and Dilution Calculator</a>.</p>
+<p><em>This guide was written with AI assistance and its figures were re-checked by formula.</em></p>
 <p><em>For education and planning only, not financial, legal, or tax advice. Have counsel review your actual note and term sheet.</em></p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
