@@ -14,7 +14,7 @@
 <p>This guide works one seed round three ways. It gives the Excel formula for the top-up in closed form, so you do not need a circular reference or Goal Seek.</p>
 <h2>The round</h2>
 <p>| Input | Value | |---|---| | Founder shares | 8,400,000 | | Existing option pool (granted and unissued) | 1,000,000 | | Fully diluted shares before the round | 9,400,000 | | Pre-money valuation | $12,000,000 | | New money | $3,000,000 | | Post-money valuation | $15,000,000 | | Target pool after the round | 10% |</p>
-<p>The new investor buys $3 million of a $15 million company, so they own 20% in every version below. What changes is who pays for the extra pool.</p>
+<p>The new investor buys $3 million of a $15 million company, so they own 20% when the round closes. The only exception is Case 3, where the pool is added after the round and dilutes the investor too. What changes from case to case is who pays for the extra pool.</p>
 <h2>Case 1: no top-up</h2>
 <p>Ignore the pool requirement for a moment. The price per share is the pre-money divided by the shares already out:</p>
 <p><code>=12,000,000 / 9,400,000</code> returns <strong>$1.2766</strong></p>
@@ -43,7 +43,7 @@
 <p><code>`</code> TopUp = (Target * (PreShares + InvestorShares) - ExistingPool) / (1 - Target) <code>`</code></p>
 <p><code>=(0.10*(9400000+2350000) - 1000000) / 0.90</code> returns <strong>194,444</strong></p>
 <p>| Holder | Shares | Ownership | |---|---|---| | Founders | 8,400,000 | 70.33% | | Option pool | 1,194,444 | 10.00% | | Investor | 2,350,000 | 19.67% |</p>
-<p>The investor now carries part of the pool. Their stake falls from 20% to 19.67%, and the founders keep 0.33 points more than in the shuffle.</p>
+<p>The investor now carries part of the pool. Their stake falls from 20% to 19.67%, and the founders keep 0.33 points more than in the shuffle. At $1.2766 a share the 11,944,444 shares are worth about $15.25 million, so the true post-money is above the $15 million headline. Investors know this, which is why most term sheets ask for Case 2.</p>
 <h2>What the shuffle actually costs</h2>
 <p>Put the three cases side by side.</p>
 <p>| | No top-up | Pool after round | Pool in pre-money | |---|---|---|---| | Price per share | $1.2766 | $1.2766 | $1.25 | | Founder ownership | 71.49% | 70.33% | 70.00% | | Investor ownership | 20.00% | 19.67% | 20.00% | | Value of founder shares at the round price | $10.72M | $10.72M | $10.50M |</p>
