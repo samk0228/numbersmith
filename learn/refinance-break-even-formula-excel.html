@@ -22,7 +22,7 @@
 <p>That gives 2,865.14.</p>
 <p>The balance after 36 payments is the amount you would refinance. FV gives it in one cell:</p>
 <p><code>`</code> B11: =-FV(B3/12, B5, -B10, B2) <code>`</code></p>
-<p>That gives about 406,868. An amortization schedule that rounds interest to the cent each month lands on 406,868.06, which is the figure used from here on. The two methods agree to within a few cents.</p>
+<p>That gives about 406,868. An amortization schedule that rounds interest to the cent each month lands on 406,868.06, which is the figure used from here on. The two methods agree to within a cent.</p>
 <h2>Step 2: the new payment</h2>
 <p>The new loan starts at the remaining balance:</p>
 <p><code>`</code> B12: =ROUND(PMT(B6/12, B7*12, -B11), 2) <code>`</code></p>
@@ -54,8 +54,8 @@
 <h2>Step 5: check the lifetime cost</h2>
 <p>Break-even tells you when a refinance pays for itself. It does not tell you how much it pays over the full loan. For that, compare total interest plus closing costs over each loan's life:</p>
 <p><code>`</code> B16: =-CUMIPMT(B3/12, B4<em>12-B5, B11, 1, B4</em>12-B5, 0) B17: =-CUMIPMT(B6/12, B7<em>12, B11, 1, B7</em>12, 0)+B8 <code>`</code></p>
-<p>For the example, keeping the current loan costs about 521,437 in remaining interest. The 30-year refinance costs about 494,986 in interest plus 6,000 in closing costs, so it saves about 20,451 over its life. You also make payments for three more years than you would have.</p>
-<p>The 25-year refinance costs about 398,329 in interest plus 6,000. It saves about 117,109 and finishes two years earlier than the current loan. The payment is 181.16 lower rather than 359.98 lower, and that is the trade.</p>
+<p>For the example, keeping the current loan costs about 521,437 in remaining interest. The 30-year refinance costs about 494,988 in interest plus 6,000 in closing costs, so it saves about 20,449 over its life. You also make payments for three more years than you would have.</p>
+<p>The 25-year refinance costs about 398,327 in interest plus 6,000. It saves about 117,110 and finishes two years earlier than the current loan. The payment is 181.16 lower rather than 359.98 lower, and that is the trade.</p>
 <h2>If closing costs are rolled into the loan</h2>
 <p>Many refinances add closing costs to the new balance. Then you pay nothing in cash, but you start the new loan owing more. The new payment uses <code>B11+B8</code> as the loan amount, which gives 2,542.10 for the example. The monthly saving drops to 323.04.</p>
 <p>The cleanest test here is your net position. That is payments saved to date minus the extra balance you owe. Add two columns next to the month numbers:</p>
@@ -68,7 +68,8 @@
 <li>For any month, payments saved minus interest saved should equal the new balance minus the old balance. If it does not, one of the schedules is off.</li>
 </ul>
 <h2>Where this fits</h2>
-<p>The sheet above answers one refinance question. If you want it next to a full amortization schedule, extra payment scenarios, and a biweekly view, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has a Refinance tab with the side by side comparison, a break-even month on closing costs, and a plain verdict, all on open formulas. You enter your own quote, and it does not suggest any lender or loan. For education and planning only, not financial advice.</p></article></main>
+<p>The sheet above answers one refinance question. If you want it next to a full amortization schedule, extra payment scenarios, and a biweekly view, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has a Refinance tab with the side by side comparison, a break-even month on closing costs, and a plain verdict, all on open formulas. You enter your own quote, and it does not suggest any lender or loan.</p>
+<p><em>Written with AI assistance and checked by recalculation. For education and planning only, not financial advice.</em></p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 <script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
