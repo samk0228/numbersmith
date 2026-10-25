@@ -41,7 +41,7 @@
 <h2>The same household, five answers</h2>
 <p>| Version | Numerator | Denominator | Rate | |---|---|---|---| | 1. Cash over take-home | 1,600 | 7,800 | 20.51% | | 2. Plus 401(k) | 2,200 | 8,400 | 26.19% | | 3. Plus match | 2,500 | 8,700 | 28.74% | | 4. Gross basis | 2,500 | 10,300 | 24.27% | | 5. Plus principal | 3,000 | 8,700 | 34.48% |</p>
 <p>A 14-point spread from one paycheck. The spread is the reason to write your definition down in the workbook before you start tracking.</p>
-<p>A good default is Version 3. It counts every dollar you kept, and it excludes taxes you cannot control. It also has a useful property: its denominator minus its numerator is exactly your spending. 8,700 minus 2,500 is 6,200, the same as B6. So Version 3 is the only one on the list that connects your savings rate directly to the life you are paying for. If you want to credit principal, track it as a second line rather than blending it in.</p>
+<p>A good default is Version 3. It counts every dollar you kept, and it excludes taxes you cannot control. It also has a useful property: its denominator minus its numerator is exactly your spending. 8,700 minus 2,500 is 6,200, the same as B6. Versions 1 and 2 share that property (7,800 minus 1,600 and 8,400 minus 2,200 are also 6,200), but they leave out savings you made. Version 4 leaves 7,800, which includes your taxes, and Version 5 leaves 5,700, which hides the principal. So Version 3 is the only one on the list that counts every dollar kept and still connects your savings rate directly to the life you are paying for. If you want to credit principal, track it as a second line rather than blending it in.</p>
 <h2>Why the rate matters more than the dollar amount</h2>
 <p>Each month this household saves $2,500 and spends $6,200. So each month of saving covers about 0.40 months of spending. At the Version 1 rate it would look like 0.26 months.</p>
 <p>That ratio is the reason the savings rate matters more than the dollar amount. A raise that goes straight into spending leaves the ratio flat. A cut in spending moves it twice. You save more and you need less. This is arithmetic, not a forecast of any investment return.</p>
@@ -59,8 +59,8 @@
 <p><code>`</code> =SUM(INDEX(C:C,ROW()-11):C13)/SUM(INDEX(B:B,ROW()-11):B13) <code>`</code></p>
 <h2>Pulling the inputs from a transaction log</h2>
 <p>If you log each transaction with a date, an amount, and a category, SUMIFS fills the monthly table for you. With dates in column A, categories in column B, and amounts in column C of a sheet called Transactions:</p>
-<p><code>`</code> Income:  =SUMIFS(Transactions!C:C, Transactions!B:B, "Income", Transactions!A:A, "&gt;="&amp;E2, Transactions!A:A, "&lt;"&amp;EDATE(E2,1)) Spent:   =SUMIFS(Transactions!C:C, Transactions!B:B, "&lt;&gt;Income", Transactions!A:A, "&gt;="&amp;E2, Transactions!A:A, "&lt;"&amp;EDATE(E2,1)) <code>`</code></p>
-<p>E2 holds the first day of the month. The EDATE bound catches every date in that month without hard-coding 28, 30, or 31 days. Add the payroll items (the 401(k) and the match) as their own monthly rows, because they never pass through checking and your log will not see them.</p>
+<p><code>`</code> Income:  =SUMIFS(Transactions!C:C, Transactions!B:B, "Income", Transactions!A:A, "&gt;="&amp;E2, Transactions!A:A, "&lt;"&amp;EDATE(E2,1)) Spent:   =SUMIFS(Transactions!C:C, Transactions!B:B, "&lt;&gt;Income", Transactions!B:B, "&lt;&gt;Transfer", Transactions!A:A, "&gt;="&amp;E2, Transactions!A:A, "&lt;"&amp;EDATE(E2,1)) <code>`</code></p>
+<p>E2 holds the first day of the month. Enter amounts as positive numbers and refunds as negative ones in the category they reverse. The second condition on column B keeps transfers out of spending, which is check 1 below. The EDATE bound catches every date in that month without hard-coding 28, 30, or 31 days. Add the payroll items (the 401(k) and the match) as their own monthly rows, because they never pass through checking and your log will not see them.</p>
 <h2>Three checks before you trust the number</h2>
 <ol>
 <li><strong>Transfers are not spending.</strong> A move from checking to savings is not an expense. If your log counts it as one, your rate drops for no reason. Give transfers their own category and leave them out of the Spent formula.</li>
@@ -74,7 +74,7 @@
 <li>Version 3, all savings over after-tax income, is a solid default, and its denominator minus its numerator equals your spending.</li>
 <li>For year-to-date and trailing rates, sum first and divide once. Never average monthly rates.</li>
 </ul>
-<p>For education and planning only, not financial advice.</p>
+<p><em>Written with AI assistance and checked by recalculation. For education and planning only, not financial advice.</em></p>
 <p>If you would rather not build this from scratch, the <a href="/products/budget-net-worth-tracker.html">Numbersmith Annual Budget and Net Worth Tracker</a> fills a monthly budget from a transaction log, calculates the savings rate each month and year to date, and charts it against a target you set.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
