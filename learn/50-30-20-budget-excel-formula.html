@@ -43,7 +43,8 @@
 <p>Add it back to income and to savings:</p>
 <p>| Bucket | Actual | Share of 5,620 | |---|---|---| | Needs | 3,345 | 59.52% | | Wants | 885 | 15.75% | | Savings | 1,390 | 24.73% |</p>
 <p>Same person, same month. The savings rate moves from 18.65% to 24.73% and clears the 20% target. Needs fall from 64% to under 60%.</p>
-<p>In Excel, keep pre-tax savings as its own input cell. Add it to the income in <code>B1</code> and to the Savings total. Pick one version and keep it, because comparing a take-home month with an adjusted month makes your progress look like noise.</p>
+<p>The same logic works on the needs side. Anything else your employer takes out before pay arrives is still spending, so it belongs in a bucket. Say a 180 pre-tax health insurance premium also comes out of each paycheck. Income becomes 5,800 and needs become 3,525, which is 60.78%. Savings is 23.97% and wants are 15.26%. If you leave the premium out, needs look 1.26 points lower than they really are.</p>
+<p>In Excel, keep pre-tax savings and pre-tax needs as their own input cells. Add both to the income in <code>B1</code>, the 401(k) to the Savings total and the premium to the Needs total. Pick one version and keep it, because comparing a take-home month with an adjusted month makes your progress look like noise.</p>
 <h2>Choice 2: where debt payments go</h2>
 <p>Minimum payments are needs. You owe them whether you like it or not. Anything above the minimum is a choice to get ahead, so it belongs in savings.</p>
 <p>Spreadsheets that put the whole credit card payment in one bucket get this wrong both ways. In the example, if the extra 170 were filed as a want, wants would rise to 20.29% and savings would fall to 15.38%. The person would look like a worse saver for paying down a card faster.</p>
@@ -63,14 +64,14 @@
 <li>A Categories table with one bucket per category.</li>
 <li>A bucket column on every transaction with an "Unassigned" fallback and a count.</li>
 <li>One SUMIFS per bucket, with a monthly date filter.</li>
-<li>Pre-tax savings added to income and to savings, or left out of both. Never one side only.</li>
+<li>Pre-tax deductions added to income and to their bucket, or left out of both. Never one side only.</li>
 <li>Minimum payments as needs and extra payments as savings.</li>
 <li>Sinking funds for annual bills.</li>
 <li>A wants ceiling formula that holds savings at 20%.</li>
 </ol>
 <h2>A ready-made version</h2>
 <p>If you would rather start from a working file, the <a href="/products/budget-net-worth-tracker.html">Annual Budget and Net Worth Tracker</a> has the transaction log, the category dropdown and Budget versus Actual by month already built. It groups categories into eight groups (Housing, Transport, Food and so on) rather than three buckets, so you would add the Need, Want and Save mapping from Step 1 yourself. It also tracks your savings rate against a target on the dashboard.</p>
-<p>For education and planning only, not financial advice.</p></article></main>
+<p><em>Written with AI assistance and checked by recalculation. For education and planning only, not financial advice.</em></p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 <script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
