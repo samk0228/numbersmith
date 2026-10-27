@@ -24,7 +24,8 @@
 <p>There is a second, much smaller effect. Each half payment arrives two weeks earlier than it would on a monthly plan, so the balance is a little lower a little sooner. Most explanations lump the two effects together. Excel can separate them, which is the useful part.</p>
 <h2>Step 1: the biweekly schedule</h2>
 <p>Make a sheet with one row per payment. Put the period rate and the half payment in their own cells:</p>
-<p>| Cell | Item | Formula | |---|---|---| | E2 | Period rate | <code>=B3/26</code> | | E3 | Half payment | <code>=ROUND(PMT(B3/12, B4*12, -B2)/2, 2)</code> |</p>
+<p>| Cell | Item | Formula | |---|---|---| | E2 | Period rate | <code>=B3/26</code> | | E3 | Half payment | <code>=ROUNDUP(PMT(B3/12, B4*12, -B2)/2, 2)</code> |</p>
+<p>Use ROUNDUP here. The unrounded payment is 2,654.6857, so half of it is 1,327.3428 and plain ROUND gives 1,327.34. ROUNDUP gives 1,327.35, which is exactly half of the 2,654.69 you actually pay each month. Every biweekly figure below uses 1,327.35. With 1,327.34 the payoff is still 628 payments but total interest comes out 9.00 higher at 412,318.98.</p>
 <p>Then the schedule, starting in row 8 with the opening balance in D7 set to <code>=B2</code>:</p>
 <p>| Column | Header | Formula in row 8 | |---|---|---| | A | Payment # | <code>=ROW()-7</code> | | B | Interest | <code>=ROUND(D7*$E$2, 2)</code> | | C | Principal | <code>=MIN($E$3-B8, D7)</code> | | D | Balance | <code>=D7-C8</code> |</p>
 <p>Fill down about 800 rows. The MIN in column C stops the final payment from pushing the balance below zero. Wrap B and C in <code>IF(D7&lt;=0, 0, ...)</code> so the rows after payoff show zeros instead of errors.</p>
@@ -35,7 +36,7 @@
 <p>One modeling note. This sheet charges interest per two-week period at the annual rate divided by 26. That matches a loan that accrues interest every period. Many standard mortgages still accrue monthly, which comes up again below.</p>
 <h2>Step 2: three ways to send the same extra money</h2>
 <p>Now build the same loan three other ways. Each one is a copy of a standard monthly schedule with one change.</p>
-<p><strong>Monthly plus one twelfth.</strong> Add <code>ROUND(2654.69/12, 2)</code>, which is 221.22, to every monthly payment. Over a year that is exactly one extra payment, spread evenly.</p>
+<p><strong>Monthly plus one twelfth.</strong> Add <code>ROUND(2654.69/12, 2)</code>, which is 221.22, to every monthly payment. Over a year that is 2,654.64, which is one extra payment less 5 cents of rounding, spread evenly.</p>
 <p><strong>One extra payment a year.</strong> Pay 2,654.69 normally and add one extra 2,654.69 every twelfth month. In the principal column that is <code>+IF(MOD(A8,12)=0, payment, 0)</code>.</p>
 <p><strong>Timing only.</strong> Pay every two weeks but send only 2,654.69 × 12 / 26, which is 1,225.24. This sends the same yearly total as a monthly payer. It isolates the effect of paying earlier with no extra money at all.</p>
 <p>Here is what all five versions produce on the example loan:</p>
@@ -59,7 +60,8 @@
 </ul>
 <h2>Which version to use</h2>
 <p>If your servicer applies extra principal when it arrives, adding one twelfth of your payment to each monthly payment gets within about 1% of true biweekly savings. It also needs no new schedule, no fees and no change to your payment date. If your budget runs on a two-week paycheck, true biweekly is fine as long as the servicer applies each half on arrival and charges nothing. Either way the number to watch is the extra money per year. The payment frequency is a detail.</p>
-<p>If you would rather not build the four sheets yourself, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has the extra monthly payment, annual lump sum, biweekly view and a no-extras baseline already wired on open formulas. For education and planning only, not financial advice.</p></article></main>
+<p>If you would rather not build the four sheets yourself, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has the extra monthly payment, annual lump sum, biweekly view and a no-extras baseline already wired on open formulas.</p>
+<p><em>Written with AI assistance and checked by recalculation. For education and planning only, not financial advice.</em></p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 <script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
