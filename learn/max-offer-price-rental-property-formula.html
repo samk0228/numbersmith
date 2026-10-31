@@ -51,7 +51,7 @@
 <h2>Step 4: the lowest price wins</h2>
 <p>| Target | Max price | |---|---| | Cap rate 6.5% | $348,623 | | DSCR 1.25 | $309,097 | | Cash-on-cash 6% | $304,778 |</p>
 <p>Your ceiling is $304,778 because it is the only price that passes all three. That is $45,222 under asking, about 13%.</p>
-<p>The table also tells you something the forward calculator hides. The cap rate barely binds. This deal is close to fine as a property and the problem is the financing. At 7% the loan eats almost all of the NOI. A seller who points to the cap rate is telling the truth. It just is not the number that limits you.</p>
+<p>The table also tells you something the forward calculator hides. The cap rate never binds here. Its ceiling sits only $1,377 under asking, so this deal is close to fine as a property and the problem is the financing. At 7% the loan eats almost all of the NOI. A seller who points to the cap rate is telling the truth. It just is not the number that limits you.</p>
 <p>Note that the DSCR price does not clear your cash target. At $309,097 cash-on-cash is only 5.54%. You need to run all three every time because you cannot tell in advance which one binds.</p>
 <h2>Step 5: see how the ceiling moves with the rate</h2>
 <p>The same three formulas at different rates, with nothing else changed:</p>
@@ -64,7 +64,7 @@
 <h2>Bonus: break-even occupancy</h2>
 <p>One more number belongs next to the max offer. It is the share of rent you need to collect just to cover costs. Management, maintenance and capex scale with collected rent, which is 18% of it here. Tax, insurance and the loan do not.</p>
 <p><code>Break-even occupancy = (tax + insurance + debt service) / (gross rent × (1 − 0.18))</code></p>
-<p>At asking that is (4,200 + 1,200 + 20,957.03) / 29,520 = <strong>89.3%</strong>. An empty unit costs $1,230 a month after the variable costs it saves. So one unit sitting empty for about six weeks wipes out the year's $1,686.97 of cash flow. At the $304,778 ceiling the cushion is wider because both the loan and the tax shrink.</p>
+<p>At asking that is (4,200 + 1,200 + 20,957.03) / 29,520 = <strong>89.3%</strong>. An empty unit costs $1,230 a month after the variable costs it saves. So one unit sitting empty for about six weeks wipes out the year's $1,686.97 of cash flow. At the $304,778 ceiling break-even occupancy drops to 78.3% because both the loan and the tax shrink.</p>
 <h2>Setting it up in Excel</h2>
 <p>Put each input in its own cell: gross rent, vacancy, each expense percent, insurance, tax rate, down payment percent, closing percent, rate and term. Then add three helper cells.</p>
 <ul>
@@ -82,10 +82,10 @@
 <h2>Where this breaks</h2>
 <ul>
 <li><strong>Tax reassessment.</strong> The formula assumes tax resets to your purchase price. In places where it does not, use the current tax bill as a fixed cost and drop the 0.012 term.</li>
-<li><strong>Fixed closing costs.</strong> If closing costs are a flat amount, add it to the cash term as a constant. The formula becomes linear in a slightly different way but still solves in one line.</li>
+<li><strong>Fixed closing costs.</strong> If closing costs are a flat amount K, drop closing_pct from the cash term and subtract CoC_target × K from the numerator: <code>=(FixedNOI - CoC_target <em> K) / (tax_rate + LoanShare </em> LoanConst + CoC_target * down_pct)</code>. It still solves in one line.</li>
 <li><strong>Year one only.</strong> This is a year-one ceiling. It ignores appreciation and paydown, which a 10-year IRR captures. Use the ceiling to decide whether to offer and the IRR to decide whether the deal is worth holding.</li>
 </ul>
-<p>For education and planning only, not financial advice.</p>
+<p><em>Written with AI assistance and checked by recalculation. For education and planning only, not financial advice.</em></p>
 <p>If you want the forward version with the PASS, CAUTION or FAIL scorecard and the 10-year IRR already built, see <a href="/products/rental-property-analyzer.html">the Numbersmith rental property analyzer</a>.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
