@@ -49,9 +49,9 @@
 <p>A traditional 401(k) balance of $86,000 has income tax owed on it when you withdraw. The Roth IRA does not. If you assume a 22% rate in retirement, the tax claim is:</p>
 <p><code>`</code> Deferred tax:   =86000 * 22%      -&gt; 18,920 <code>`</code></p>
 <p>You do not have to subtract it. But if you compare your net worth with someone who holds the same amount in a Roth, you are comparing different things unless you do.</p>
-<p>Apply all three and the adjusted figure is:</p>
+<p>The car is already on the sheet at resale value, so only the other two come off. The adjusted figure is:</p>
 <p><code>`</code> =368700 - 38400 - 18920           -&gt; 311,380 <code>`</code></p>
-<p>That is 15.5% below the headline number. Pick one convention, write it in a note at the top of the sheet, and keep it. Consistency matters more than which convention you pick, because the trend is what you are tracking.</p>
+<p>That is 15.5% below the headline number. A tracker that also carried the car at cost would show $385,200, so the full gap from that sheet to this one is $73,820, or 19.2%. Pick one convention, write it in a note at the top of the sheet, and keep it. Consistency matters more than which convention you pick, because the trend is what you are tracking.</p>
 <h2>Step 5: reading the monthly change</h2>
 <p>Put one column per month and copy the net worth formula across. The change is simple:</p>
 <p><code>`</code> Change:   =this_month - last_month <code>`</code></p>
@@ -59,6 +59,8 @@
 <p>Add up what you put in during the month:</p>
 <p>| Source | Amount | |---|---| | 401(k) contribution with match | 1,500 | | Brokerage deposit | 500 | | Transfer to savings | 800 | | Mortgage principal paid | 950 | | Auto loan principal paid | 380 | | Student loan principal paid | 210 | | <strong>Total saved</strong> | <strong>4,340</strong> |</p>
 <p>Paying down principal counts, because it lowers a liability by exactly the amount paid. The interest part of the payment does not count.</p>
+<p>The transfer to savings only counts as saving if checking ended the month where it started. Moving $800 from checking to savings changes nothing on its own. If checking fell by $800 in the same month, the two cancel and the saved total is $3,540. The clean rule is to add the change in checking to the table, positive or negative.</p>
+<p>The employer match is in the 401(k) line. It is real money, but it is not your behavior, so some people list it on its own row to see what they saved themselves.</p>
 <p><code>`</code> Saved:              4,340 Valuation change:   =6800 - 4340      -&gt; 2,460 <code>`</code></p>
 <p>So $4,340 of this month's gain came from your behavior and $2,460 came from prices. In a good market month the second number is large. In a bad month it is negative and can swamp the first. The saved line is the one you control. If it stays steady while net worth bounces around, the plan is working.</p>
 <h2>Five mistakes that distort the number</h2>
@@ -73,10 +75,10 @@
 <ul>
 <li>Net worth is one table and two SUMIFS. Keep all values positive and let a Type column set the sign.</li>
 <li>Add views that exclude the house, and one that shows only what you can reach this month.</li>
-<li>Write down your convention for the home, the car, and pre-tax accounts. In this example they move the answer by 15.5%.</li>
-<li>Split the monthly change into saved and valuation change. The saved line is the one to manage.</li>
+<li>Write down your convention for the home, the car, and pre-tax accounts. In this example the home and the 401(k) tax move the answer by 15.5%, and 19.2% if the car was carried at cost.</li>
+<li>Split the monthly change into saved and valuation change. Count the change in checking so internal transfers do not look like saving.</li>
 </ul>
-<p>For education and planning only, not financial advice.</p>
+<p><em>Written with AI assistance and checked by recalculation. For education and planning only, not financial advice.</em></p>
 <p>If you would rather not build this from scratch, the <a href="/products/budget-net-worth-tracker.html">Numbersmith Annual Budget and Net Worth Tracker</a> tracks seven asset and five liability lines by month, calculates net worth and the month-over-month change, and charts it next to your budget.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
