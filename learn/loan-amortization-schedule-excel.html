@@ -44,10 +44,10 @@
 <p>A finished schedule has 360 rows and most people scroll it once and close it. These are the three rows worth finding.</p>
 <p><strong>The crossover month.</strong> Early payments are mostly interest. In month 1, 87% of the $1,945.79 is interest. Principal grows a little every month because the balance shrinks and so does the interest charged on it. The month where principal first beats interest is the crossover:</p>
 <p><code>`</code> =INDEX(A11:A370, MATCH(TRUE, INDEX(D11:D370&gt;C11:C370, 0), 0)) <code>`</code></p>
-<p>Here it is <strong>month 238</strong>, almost 20 years in. That is why the first decade of a 30-year loan builds equity so slowly. After 10 years you have paid $233,495 in total payments. Only $44,096.58 of that reduced the balance.</p>
+<p>Here it is <strong>month 238</strong>, almost 20 years in. That is why the first decade of a 30-year loan builds equity so slowly. After 10 years you have paid $233,495 in total payments. Only $44,097 of that reduced the balance (300,000 minus the month 120 balance of 255,903). The other $189,398 was interest.</p>
 <p><strong>The halfway month.</strong> When do you owe less than $150,000?</p>
 <p><code>`</code> =INDEX(A11:A370, MATCH(TRUE, INDEX(E11:E370&lt;=B1/2, 0), 0)) <code>`</code></p>
-<p>This returns <strong>month 259</strong>, about 21.6 years in. Most borrowers guess 15 years. The gap is the same front-loading effect.</p>
+<p>This returns <strong>month 259</strong>, about 21.6 years in. The natural guess is 15 years, the midpoint of the term, and it is off by more than six years. The gap is the same front-loading effect. At month 180 the balance is still $219,886, which is 73% of the loan.</p>
 <p><strong>Total interest.</strong> <code>=SUM(C11:C370)</code> gives <strong>$400,485.94</strong>. You borrow $300,000 and repay $700,485.94. At 6.75% the interest is more than the loan.</p>
 <p>| Point in the loan | Interest so far | Balance | |---|---|---| | Month 12 | 20,152.29 | 296,802.76 | | Month 60 | 98,374.79 | 281,627.13 | | Month 120 | 189,398.31 | 255,903.00 | | Month 180 | 270,129.23 | 219,886.26 | | Month 240 | 336,449.31 | 169,458.68 | | Month 360 | 400,485.94 | 0.00 |</p>
 <h2>Step 6: Rounding, the last-payment problem</h2>
@@ -67,7 +67,8 @@
 <li><strong>Treating the schedule as a forecast for an ARM.</strong> PMT assumes the rate is fixed. Once an adjustable rate resets, rebuild from that month with the new rate and the remaining balance.</li>
 </ul>
 <h2>Where this fits</h2>
-<p>The sheet above is the core of every loan payoff calculator. If you want the finished version with extra payments, a lump sum input, a biweekly view, a refinance break-even comparison and balance and interest charts already built, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has all of it on open formulas. For education and planning only, not financial advice.</p></article></main>
+<p>The sheet above is the core of every loan payoff calculator. If you want the finished version with extra payments, a lump sum input, a biweekly view, a refinance break-even comparison and balance and interest charts already built, the <a href="/products/mortgage-payoff-calculator.html">Numbersmith mortgage and loan payoff calculator</a> has all of it on open formulas.</p>
+<p><em>Written with AI assistance and checked by recalculation. For education and planning only, not financial advice.</em></p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
 <script>(function(){function h(k){var u="https://numbersmith-analytics.numbersmith.workers.dev/px?k="+k+"&p="+encodeURIComponent(location.pathname)+"&r="+Math.random();try{if(navigator.sendBeacon&&navigator.sendBeacon(u))return;}catch(e){}try{var i=new Image();i.referrerPolicy="no-referrer";i.src=u;}catch(e){}}h("page");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.btn[href]");if(a&&/gumroad\.com/.test(a.getAttribute("href")))h("intent");},true);})();</script>
