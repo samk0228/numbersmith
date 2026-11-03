@@ -27,7 +27,7 @@
 <p>Management's Discussion and Analysis (Item 7) is where you find the qualitative color: why margins moved, what capex is funding, what management expects for the next year. Use it to sanity-check the numbers you project, not as a substitute for them.</p>
 <h2>Step 2: Project free cash flow (a worked 5-year example)</h2>
 <p>Free cash flow to the firm is <code>NOPAT + D&amp;A − Capex − Increase in net working capital</code>. Here is a full five-year projection using clean, round inputs so the mechanics are easy to follow.</p>
-<p>Assumptions: revenue starts at <strong>$1,000</strong> and grows <strong>10% a year</strong>, operating margin holds at <strong>20%</strong>, the tax rate is <strong>25%</strong>, D&amp;A runs at <strong>5% of revenue</strong>, capex runs at <strong>6% of revenue</strong>, and working capital equals <strong>10% of revenue</strong> (so the cash tied up each year is 10% of the year-over-year revenue increase).</p>
+<p>Assumptions (all dollar figures in this guide are in millions): revenue starts at <strong>$1,000</strong> and grows <strong>10% a year</strong>, operating margin holds at <strong>20%</strong>, the tax rate is <strong>25%</strong>, D&amp;A runs at <strong>5% of revenue</strong>, capex runs at <strong>6% of revenue</strong>, and working capital equals <strong>10% of revenue</strong> (so the cash tied up each year is 10% of the year-over-year revenue increase).</p>
 <ul>
 <li><strong>Year 1:</strong> revenue $1,100, EBIT $220, NOPAT $165, D&amp;A $55, capex $66, change in NWC $10 → <strong>FCF $144</strong></li>
 <li><strong>Year 2:</strong> revenue $1,210, EBIT $242, NOPAT $182, D&amp;A $61, capex $73, change in NWC $11 → <strong>FCF $158</strong></li>
@@ -67,6 +67,7 @@
 <li>TV = 402.6 × 10 = <strong>$4,026</strong></li>
 </ul>
 <p>Run both. If they imply wildly different growth rates or multiples once you back into them, that is a signal one of your assumptions is off, not a reason to pick whichever number you like better.</p>
+<p>Here is that check on the example. The Gordon value of $3,225 divided by Year 5 EBITDA of $402.6 implies an exit multiple of about <strong>8.0x</strong>. Going the other way, the exit multiple value implies a perpetual growth rate of <code>g = (TV × WACC − FCF_final) / (TV + FCF_final)</code> = (4,026 × 0.092 − 210.8) / (4,026 + 210.8) = <strong>3.8%</strong>. So the 10x multiple assumes the business grows at 3.8% forever, which is faster than most long-run growth assumptions. In this example the exit multiple is the more aggressive of the two, and the gap between them is a question about that multiple.</p>
 <h2>Step 5: Discount back to present value (mid-year convention)</h2>
 <p>Standard end-of-year discounting assumes every dollar of cash flow arrives on December 31, which understates value since real businesses generate cash all year round. The mid-year convention corrects for this by discounting each cash flow at <code>t − 0.5</code> instead of <code>t</code>.</p>
 <p>Discount factor: <code>1 / (1 + WACC)^(t − 0.5)</code>. At a 9.2% WACC:</p>
@@ -101,12 +102,12 @@
 <p>Excel's built-in Data Table feature works, but it is slow to recalculate, opaque to anyone else opening the file, and easy to break by inserting a row. A formula-driven grid is faster and auditable. Five steps:</p>
 <ol>
 <li>Lay out WACC values across a row (for example 8.2%, 8.7%, 9.2%, 9.7%, 10.2%) and terminal growth values down a column (1.5%, 2.0%, 2.5%, 3.0%, 3.5%), on a dedicated sensitivity tab.</li>
-<li>In the top-left result cell, write one formula that recomputes enterprise value directly from that row's WACC and that column's growth rate, referencing the live FCF cells rather than a single cached output, for example: <code>=SUMPRODUCT($C$10:$G$10,1/(1+C$4)^({1,2,3,4,5}-0.5))+($G$10*(1+$B5)/(C$4-$B5))/(1+C$4)^5</code></li>
+<li>In the top-left result cell, write one formula that recomputes enterprise value directly from that row's WACC and that column's growth rate, referencing the live FCF cells rather than a single cached output, for example: <code>=SUMPRODUCT(Model!$C$10:$G$10,1/(1+C$4)^({1,2,3,4,5}-0.5))+(Model!$G$10*(1+$B5)/(C$4-$B5))/(1+C$4)^5</code>. Here <code>Model!$C$10:$G$10</code> is the FCF row on your model tab, and <code>C$4</code> and <code>$B5</code> are the WACC and growth headers on the sensitivity tab.</li>
 <li>Anchor the FCF range and the year exponents with dollar signs so they stay fixed, but leave the WACC cell (<code>C$4</code>) and growth cell (<code>$B5</code>) free so each references its own row and column as you copy the formula.</li>
 <li>Fill that formula right and down across the full grid. Because each cell recalculates independently from the underlying FCF, it updates instantly with the rest of the model and survives being copied into a new workbook.</li>
 <li>Wrap it in <code>=IFERROR(...,"n/a")</code> to handle the case where WACC equals the growth rate, which divides by zero.</li>
 </ol>
-<p>The result is a 5x5 grid of implied enterprise values you can scan in one glance, built entirely from formulas you can trace, cell by cell, back to the assumptions tab.</p>
+<p>The result is a 5x5 grid of implied enterprise values you can scan in one glance, built entirely from formulas you can trace, cell by cell, back to the assumptions tab. Check it with the center cell. At 9.2% and 2.5% it should show $2,776, the Gordon growth enterprise value from Step 5. If it does not, the grid is pointing at the wrong row or using a different discount convention than the model.</p>
 <p><em>Built with AI assistance and formula-checked. For education and planning only, not financial advice.</em></p>
 <p>If you would rather start from a finished version of everything above, complete with the sensitivity grid pre-built, see the <a href="/products/dcf-valuation-model.html">DCF Valuation Model</a>. One known issue is open in that model: with the mid-year toggle on, it discounts the exit multiple terminal value at year 4.5 instead of year 5, the slip described in Step 5. The product page explains it and the one-cell fix.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
