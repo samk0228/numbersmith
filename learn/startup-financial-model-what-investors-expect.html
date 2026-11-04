@@ -23,8 +23,8 @@
 <li>The <strong>balance sheet</strong>, which shows what the company owns and owes at a point in time.</li>
 </ul>
 <p>The balance sheet has to balance: <code>Assets = Liabilities + Equity</code>, every month, every year, with no plug. If it does not balance, something in the model is broken, usually a cash flow item that is not flowing back into the cash balance, or a change in a balance sheet account that never hit the cash flow statement. Investors who know how to build models will check this first, often by scrolling straight to the balance sheet tab and looking at whether assets minus liabilities minus equity nets to zero in every column. A model that fails this test does not get a second look, regardless of how good the story is.</p>
-<h2>The 8 assumptions investors pull on</h2>
-<p>These are the cells an experienced investor clicks into first, because they reveal whether the founder understands their own unit economics or is telling a story on top of round numbers.</p>
+<h2>The 8 numbers investors pull on</h2>
+<p>These are the cells an experienced investor clicks into first, because they reveal whether the founder understands their own unit economics or is telling a story on top of round numbers. Growth, churn, gross margin and the hiring plan are inputs. CAC comes from your spend and new customer counts, and payback, burn multiple and runway are outputs, so an investor tests those four by tracing them back to the inputs.</p>
 <ol>
 <li><strong>Growth rate.</strong> Month-over-month or year-over-year, and whether it is consistent with what similar companies actually achieved at the same stage, not an aspirational curve that bends upward for no operational reason.</li>
 <li><strong>Churn.</strong> Monthly logo churn and revenue churn, separately. A model with 2% monthly churn typed in but no explanation of how that compares to the company's actual cohort data is a red flag.</li>
@@ -56,6 +56,11 @@
 <li>Raise if it closes in month 4 = 2,664,000 − 8,000 = <strong>$2,656,000</strong></li>
 </ul>
 <p>Subtracting today's cash instead of cash at close understates the raise by almost $600,000 here. Use the cash balance you expect on the day the money lands.</p>
+<p>Look at that $8,000 again. At $148,000 a month it is under two days of cash, so a round that slips one week puts this company out of money. Holding the hires until the round closes changes both numbers. Burn stays at 100,000 while raising, so cash at close is 600,000 − 400,000 = 200,000, which is two months of cushion:</p>
+<ul>
+<li>Raise if the hires wait for the close = 2,664,000 − 200,000 = <strong>$2,464,000</strong></li>
+</ul>
+<p>That is $192,000 less to raise, exactly the four months of hiring cost you did not spend early. The tradeoff is real, because those hires may be what makes the round possible. Run both versions before you pick one.</p>
 <p>Add a buffer for one-time costs (legal fees, a security deposit on new office space, a slower-than-planned ramp in revenue), typically 10% to 15%:</p>
 <ul>
 <li>Raise with buffer, closing today = 2,064,000 × 1.15 ≈ <strong>$2,373,600</strong></li>
@@ -67,11 +72,15 @@
 <ul>
 <li>Quick burn multiple = 1,776,000 / 1,200,000 ≈ <strong>1.48</strong></li>
 </ul>
-<p>That overstates it, because the new revenue reduces burn as it arrives. If new monthly revenue ramps evenly from $8,333 in month 1 to $100,000 in month 12, it adds up to $650,000 over the year. Net burn is then 1,776,000 − 650,000 = $1,126,000:</p>
+<p>That overstates it, because the new revenue reduces burn as it arrives. If new monthly revenue ramps evenly from $8,333 in month 1 to $100,000 in month 12, it adds up to $650,000 over the year. Subtracting all of it gives net burn of 1,776,000 − 650,000 = $1,126,000:</p>
 <ul>
-<li>Burn multiple = Net burn / Net new ARR = 1,126,000 / 1,200,000 ≈ <strong>0.94</strong></li>
+<li>Burn multiple with no cost to serve = 1,126,000 / 1,200,000 ≈ <strong>0.94</strong></li>
 </ul>
-<p>Same business, same plan, and the answer moves from "reasonable" to "strong" once burn and revenue come from the same months. Below 1 is strong, around 1.5 is reasonable for an early-stage company still building its go-to-market motion, and above 2 to 3 invites questions about whether growth spend is actually working.</p>
+<p>That one is too kind, because new customers cost money to serve. Only the gross profit on that revenue reduces burn. At an illustrative 80% gross margin, the new revenue offsets 650,000 × 0.80 = $520,000, so net burn is 1,776,000 − 520,000 = $1,256,000:</p>
+<ul>
+<li>Burn multiple = Net burn / Net new ARR = 1,256,000 / 1,200,000 ≈ <strong>1.05</strong></li>
+</ul>
+<p>Same business, same plan, and the answer runs from 1.48 to 0.94 depending on what you subtract. The honest figure sits at 1.05. Below 1 is strong, around 1.5 is reasonable for an early-stage company still building its go-to-market motion, and above 2 to 3 invites questions about whether growth spend is actually working. So this plan is close to strong and not past it, and an investor who sees 0.94 will ask where the cost to serve went.</p>
 <h2>Common mistakes</h2>
 <ul>
 <li><strong>Typing in revenue instead of deriving it</strong> from leads, conversion rate, and average deal size, or from signups, activation rate, and pricing.</li>
@@ -94,8 +103,8 @@
 <li>There is a base case, an upside case, and a downside case, not just one scenario.</li>
 <li>The file opens cleanly with no broken links, no broken cell references, and no unresolved circular references.</li>
 </ul>
-<p>If you want a starting point that already has these links built correctly, see <a href="/products/startup-financial-model.html">a finished startup financial model template</a>. For a quick runway and raise-size check without opening a full model, try the free <a href="/tools/runway-calculator.html">runway calculator</a>.</p>
-<p>This guide was written with AI assistance. Every figure was re-checked by hand.</p>
+<p>If you want a starting point with the three statements already linked, see <a href="/products/startup-financial-model.html">a finished startup financial model template</a>. One thing to change when you use it: its Unit Economics tab counts the marketing budget only in CAC, so add sales and marketing payroll yourself to get the fully loaded number this guide describes. For a quick runway and raise-size check without opening a full model, try the free <a href="/tools/runway-calculator.html">runway calculator</a>.</p>
+<p>This guide was written with AI assistance. Every figure was re-checked by recalculation.</p>
 <p>For education and planning only, not financial advice.</p></article></main>
 <footer><p>Numbersmith. Spreadsheets and calculators for people who make decisions with numbers. Built with AI assistance and formula-checked. For education and planning only, not financial advice.</p>
 <p><a href="/learn/">Learn</a> · <a href="/support.html">Support and refunds</a> · <a href="/privacy.html">Privacy</a></p></footer>
